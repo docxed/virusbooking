@@ -4,7 +4,7 @@
     <div v-if="loggedIn">
       <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/main">
+          <a class="navbar-brand" href="/home">
             <img
               src="./assets/logo.png"
               alt=""
@@ -37,8 +37,7 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/grace"
-                  ><i class="fas fa-procedures"></i>
-                  ค้นหาเตียง</a
+                  ><i class="fas fa-procedures"></i> ค้นหาเตียง</a
                 >
               </li>
             </ul>
@@ -52,7 +51,8 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  <i class="fas fa-user-circle fa-lg mx-1"></i> {{ fname }} {{ lname }}
+                  <i class="fas fa-user-circle fa-lg mx-1"></i> {{ fname }}
+                  {{ lname }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
@@ -62,7 +62,9 @@
                     <div class="dropdown-divider"></div>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="/sellbeds">ฉันต้องการลงเตียง</a>
+                    <a class="dropdown-item" href="/addbedsforsell"
+                      >ฉันต้องการลงเตียง</a
+                    >
                   </li>
                   <li>
                     <a class="dropdown-item" href="/logout"
@@ -117,8 +119,8 @@ export default {
   data() {
     return {
       loggedIn: true,
-      fname: 'อคิราภ์',
-      lname: 'สีแสนยง',
+      fname: "อคิราภ์",
+      lname: "สีแสนยง",
     };
   },
 };

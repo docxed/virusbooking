@@ -2,7 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import Index from "@/components/index.vue";
 import Login from "@/components/login.vue";
 import Register from "@/components/register.vue";
-import Sellbeds from "@/components/sellbeds.vue";
+import Addbedsforsell from "@/components/addbedsforsell.vue";
 
 const routes = [
   {
@@ -21,9 +21,9 @@ const routes = [
     component: Register,
   },
   {
-    path: "/sellbeds",
-    name: "sellbeds",
-    component: Sellbeds,
+    path: "/addbedsforsell",
+    name: "addbedsforsell",
+    component: Addbedsforsell,
   },
 ];
 
