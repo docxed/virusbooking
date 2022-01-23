@@ -3,38 +3,59 @@
     <br /><br />
     <h3>สถิติผู้ติดเชื้อโควิด-19 ในไทย</h3>
     <p>
-      ข้อมูลอัปเดตล่าสุด:
-      {{
-        `${covidData.txn_date.getDate()}-${
-          month_th[covidData.txn_date.getMonth()]
-        }-${covidData.txn_date.getFullYear()}`
-      }}
+      ข้อมูลอัปเดตล่าสุด: {{ convertToThaiDate(covidData.updated) }}
+    </p>
+    <p>
+
     </p>
 
     <div class="row">
-      <div class="col-sm-12 col-lg-3">
+      <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-danger">
           <p class="fs-5">ติดเชื้อเพิ่มขึ้น</p>
-          <p class="fs-1 text-center">+{{ covidData.new_case }}</p>
+          <p class="fs-1 text-center">
+            +{{ covidData.todayCases.toLocaleString() }}
+          </p>
+          <p class="text-end fs-5">
+            สะสม {{ covidData.cases.toLocaleString() }}
+          </p>
         </div>
       </div>
-      <div class="col-sm-12 col-lg-3">
+      <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-dark">
-            <p class="fs-5">เสียชีวิตเพิ่มขึ้น</p>
-          <p class="fs-1 text-center">+{{ covidData.new_death }}</p>
+          <p class="fs-5">เสียชีวิตเพิ่มขึ้น</p>
+          <p class="fs-1 text-center">+{{ covidData.todayDeaths }}</p>
+          <p class="text-end fs-5">
+            สะสม {{ covidData.deaths.toLocaleString() }}
+          </p>
         </div>
       </div>
-      <div class="col-sm-12 col-lg-3">
+      <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-info">
-          <p class="fs-1 text-center">+1000</p>
+          <p class="fs-5">รักษาตัวอยู่ใน รพ.</p>
+          <p class="fs-1 text-center">{{ covidData.active.toLocaleString() }}</p>
+          <p class="text-end fs-5">สะสมทั้งหมด</p>
         </div>
       </div>
-      <div class="col-sm-12 col-lg-3">
+      <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-success">
-          <p class="fs-1 text-center">+1000</p>
+          <p class="fs-5">หายแล้วเพิ่มขึ้น</p>
+          <p class="fs-1 text-center">+{{ covidData.todayRecovered }}</p>
+          <p class="text-end fs-5">
+            สะสม {{ covidData.recovered.toLocaleString() }}
+          </p>
         </div>
       </div>
     </div>
+    <p class="text-end text-secondary">ข้อมูลโดย disease.sh</p>
+
+    <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
+    <p>จำนวนเตียงว่างทั้งหมด 0 เตียง</p>
+    <div class="content">
+      <p class="text-center"> <button class="btn col-12 col-lg-4 btn-info text-white"><i class="fas fa-search-location fa-lg"></i> ค้นหาเตียง</button> </p>
+      <p class="text-center"> <button class="btn col-12 col-lg-4 btn-success"><i class="fas fa-clipboard-list fa-lg"></i> การจองเตียง</button> </p>
+    </div>
+
   </div>
 </template>
 
@@ -45,7 +66,25 @@ export default {
   data() {
     return {
       covidData: null,
-      month_th: [
+    };
+  },
+  methods: {
+    GetcovidData() {
+      let apiCovid19Today =
+        "https://corona.lmao.ninja/v2/countries/TH";
+      axios
+        .get(apiCovid19Today)
+        .then((res) => {
+          console.log(res.data);
+          this.covidData = res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    convertToThaiDate(rawDate) {
+      let date = new Date(rawDate);
+      let monthTH = [
         "มกราคม",
         "กุมภาพันธ์",
         "มีนาคม",
@@ -58,23 +97,15 @@ export default {
         "ตุลาคม",
         "พฤศจิกายน",
         "ธันวาคม",
-      ],
-    };
-  },
-  methods: {
-    GetcovidData() {
-      let apiCovid19Today =
-        "https://covid19.ddc.moph.go.th/api/Cases/today-cases-all";
-      axios
-        .get(apiCovid19Today)
-        .then((res) => {
-          console.log(res.data);
-          this.covidData = res.data[0];
-          this.covidData.txn_date = new Date(this.covidData.txn_date);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      ];
+      let year = date.getFullYear();
+      let month = monthTH[date.getMonth()];
+      let numOfDay = date.getDate();
+
+      let hour = date.getHours().toString().padStart(2, "0");
+      let minutes = date.getMinutes().toString().padStart(2, "0");
+      // let second = date.getSeconds().toString().padStart(2, "0");
+      return `${numOfDay} ${month} ${year} | ${hour}:${minutes} น.`;
     },
   },
   created() {
@@ -85,10 +116,10 @@ export default {
 <style scoped>
 .box {
   width: 100%;
-  padding-top: 60px;
-  padding-bottom: 60px;
+  padding-top: 50px;
+  padding-bottom: 50px;
   border-radius: 12px;
-  margin: 10px;
+  margin-bottom: 10px;
   color: #ffffff;
 }
 .box p {

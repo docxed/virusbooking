@@ -37,7 +37,7 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/grace"
-                  ><i class="fas fa-address-book"></i>
+                  ><i class="fas fa-procedures"></i>
                   ค้นหาเตียง</a
                 >
               </li>
@@ -60,6 +60,9 @@
                   </li>
                   <li>
                     <div class="dropdown-divider"></div>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/sellbeds">ฉันต้องการลงเตียง</a>
                   </li>
                   <li>
                     <a class="dropdown-item" href="/logout"
