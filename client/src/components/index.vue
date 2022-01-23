@@ -40,7 +40,7 @@
       <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-success">
           <p class="fs-5">หายแล้วเพิ่มขึ้น</p>
-          <p class="fs-1 text-center">+{{ covidData.todayRecovered }}</p>
+          <p class="fs-1 text-center">+{{ covidData.todayRecovered.toLocaleString() }}</p>
           <p class="text-end fs-5">
             สะสม {{ covidData.recovered.toLocaleString() }}
           </p>
