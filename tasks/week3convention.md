@@ -43,3 +43,10 @@ fix(orders)
 ## 5. ส่วนท้าย (ถ้ามี)
 - เป็นภาษาไทย
 - ใช้เพื่ออ้างอิงปัญหาที่ได้รับผลกระทบจากการเปลี่ยนแปลงโค้ดหรือแสดงความคิดเห็นกับนักพัฒนาหรือผู้ทดสอบรายอื่น
+
+<br />
+<p align="center">
+  <img src="https://github.com/docxed/virusbooking/blob/main/tasks/Task3/%E0%B8%95%E0%B8%A2.png?raw=true" /><br />
+  ตัวอย่าง commit message
+</p>
+
