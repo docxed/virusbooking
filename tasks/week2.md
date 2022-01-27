@@ -3,6 +3,13 @@
 - [2. ผู้ให้บริการเตียงเพิ่ม/ลดจำนวนเตียงที่ให้บริการได้]()
 - [3. อัปเดตผู้ติดเชื้อรายวัน]()
 
+
+<p align="center">
+<a href="https://github.com/Po-Pon/SW-Development-Tool-And-Environments-Group1/blob/main/Tasks/Task2/trello.png?raw=true"><img src="https://github.com/Po-Pon/SW-Development-Tool-And-Environments-Group1/blob/main/Tasks/Task2/trello.png?raw=true" /></a>
+</p>
+
+>Trello
+
 # 1. ค้นหาและจองเตียง
 ## User Flow
 <p align="center">
