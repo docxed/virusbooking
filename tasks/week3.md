@@ -5,7 +5,7 @@
 <p align="center">
 <img src="https://github.com/docxed/virusbooking/blob/main/tasks/Task3/process.png?raw=true">
 </p>
-กระบวนการ branch process เริ่มจากแต่ละคนในทีม folk base repository ไปเป็น personal repository ของตนเอง จากนั้นก็ clone ลงเครื่องตัวเอง เพื่อลงมือทำพัฒนางานที่ได้รับมอบหมาย เมื่อเสร็จแล้วก็ commit และ push เข้า personal repository ของตนเอง จากนั้นก็ทำการขอ pull request มาที่ base repository
+กระบวนการ branch process เริ่มจากแต่ละคนในทีม fork base repository ไปเป็น personal repository ของตนเอง จากนั้นก็ clone ลงเครื่องตัวเอง เพื่อลงมือทำพัฒนางานที่ได้รับมอบหมาย เมื่อเสร็จแล้วก็ commit และ push เข้า personal repository ของตนเอง จากนั้นก็ทำการขอ pull request มาที่ base repository
 
 # Development Workflow 
 <p align="center">
