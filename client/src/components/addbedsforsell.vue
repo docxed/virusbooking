@@ -79,6 +79,9 @@
         v-model="phone"
         readonly
       />
+      <p class="text-center">
+            <button class="btn btn-primary" @click="addbeds()">เพิ่มเตียง</button>
+        </p>
     </div>
   </div>
 </template>
@@ -104,6 +107,10 @@ export default {
     decreaseBeds() {
       this.beds--;
       if (this.beds < 0) this.beds = 0;
+    },
+    addbeds() {
+      console.log('do addbeds')
+      this.$router.push('/')
     },
   },
 };

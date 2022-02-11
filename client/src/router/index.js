@@ -3,6 +3,7 @@ import Index from "@/components/index.vue";
 import Login from "@/components/login.vue";
 import Register from "@/components/register.vue";
 import Addbedsforsell from "@/components/addbedsforsell.vue";
+import Profile from "@/components/profile.vue";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/addbedsforsell",
     name: "addbedsforsell",
     component: Addbedsforsell,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
   },
 ];
 

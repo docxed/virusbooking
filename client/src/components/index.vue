@@ -52,8 +52,8 @@
     <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
     <p>จำนวนเตียงว่างทั้งหมด 0 เตียง</p>
     <div class="content">
-      <p class="text-center"> <button class="btn col-12 col-lg-4 btn-info text-white"><i class="fas fa-search-location fa-lg"></i> ค้นหาเตียง</button> </p>
-      <p class="text-center"> <button class="btn col-12 col-lg-4 btn-success"><i class="fas fa-clipboard-list fa-lg"></i> การจองเตียง</button> </p>
+      <p class="text-center"> <a href="/findbeds"><button class="btn col-12 col-lg-4 btn-info text-white"><i class="fas fa-search-location fa-lg"></i> ค้นหาเตียง</button></a> </p>
+      <p class="text-center"> <a href="/beds"><button class="btn col-12 col-lg-4 btn-success"><i class="fas fa-clipboard-list fa-lg"></i> การจองเตียง</button></a> </p>
     </div>
 
   </div>

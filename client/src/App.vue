@@ -4,7 +4,7 @@
     <div v-if="loggedIn">
       <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/home">
+          <a class="navbar-brand" href="/">
             <img
               src="./assets/logo.png"
               alt=""
@@ -31,12 +31,12 @@
           >
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link" href="/home"
+                <a class="nav-link" href="/"
                   ><i class="fas fa-home"></i> หน้าแรก</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/grace"
+                <a class="nav-link" href="/findbeds"
                   ><i class="fas fa-procedures"></i> ค้นหาเตียง</a
                 >
               </li>
@@ -56,7 +56,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
-                    <a class="dropdown-item">ข้อมูลส่วนตัว</a>
+                    <a class="dropdown-item" href="/profile">ข้อมูลส่วนตัว</a>
                   </li>
                   <li>
                     <div class="dropdown-divider"></div>
@@ -82,7 +82,7 @@
     <div v-else>
       <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/main">
+          <a class="navbar-brand" href="/">
             <img
               src="./assets/logo.png"
               alt=""
