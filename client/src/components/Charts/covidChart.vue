@@ -17,35 +17,45 @@ export default {
     };
   },
   mounted() {
+    moment.locale('th');
     let timelineCasesAll =
       "https://covid19.ddc.moph.go.th/api/Cases/timeline-cases-all";
     axios
       .get(timelineCasesAll)
       .then((res) => {
         let covidDataSet = res.data;
-        moment.locale('th');
+        let txn_date = [] // Date
+        let total_case = []  // Total Case
+        let total_death = []  // Total Dead
+        let total_recovered = [] // Total Cured
+        covidDataSet.forEach(item => {
+          txn_date.push(moment(item.txn_date).format('LL'))
+          total_case.push(item.total_case)
+          total_death.push(item.total_death)
+          total_recovered.push(item.total_recovered)
+        });
         this.covidData = {
           type: "line",
           data: {
-            labels: covidDataSet.map((data) => moment(data.txn_date).format('Do MMMM')),
+            labels: txn_date,
             datasets: [
               {
                 label: "ติดเชื้อสะสม",
-                data: covidDataSet.map((data) => data.total_case),
+                data: total_case,
                 backgroundColor: "rgba(60, 174, 235, 0.8)",
                 borderColor: "#308bbc",
                 borderWidth: 3,
               },
               {
                 label: "เสียชีวิต",
-                data: covidDataSet.map((data) => data.total_death),
+                data: total_death,
                 backgroundColor: "rgba(95, 101, 104, 0.8)",
                 borderColor: "#4c5153",
                 borderWidth: 3,
               },
               {
                 label: "หายแล้ว",
-                data: covidDataSet.map((data) => data.total_recovered),
+                data: total_recovered,
                 backgroundColor: "rgba(71, 183,132,.5)",
                 borderColor: "#47b784",
                 borderWidth: 3,
@@ -67,7 +77,6 @@ export default {
             },
           },
         };
-
         const ctx = document.getElementById("covid-chart");
         new Chart(ctx, this.covidData);
       })

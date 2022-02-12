@@ -2,13 +2,11 @@
   <div v-if="covidData != null">
     <br /><br />
     <h3>สถิติผู้ติดเชื้อโควิด-19 ในไทย</h3>
+
+    <!-- CovidDaily Section -->
     <p>
       ข้อมูลอัปเดตล่าสุด: {{ convertToThaiDate(covidData.updated) }}
     </p>
-    <p>
-
-    </p>
-
     <div class="row">
       <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-danger">
@@ -49,10 +47,12 @@
     </div>
     <p class="text-end text-secondary">ข้อมูลโดย disease.sh</p>
 
-    <div>
+    <!-- Chart Section -->
+    <div class="my-3">
       <CovidChart />
     </div>
 
+    <!-- Findbeds Section -->
     <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
     <p>จำนวนเตียงว่างทั้งหมด <span class="text-primary">0</span> เตียง</p>
     <div class="content">
