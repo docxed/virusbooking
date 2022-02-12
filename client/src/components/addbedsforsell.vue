@@ -1,7 +1,7 @@
 <template>
   <div>
     <br /><br />
-    <h3><i class="fas fa-plus-circle"></i> เพิ่มสถานที่</h3>
+    <h3>เพิ่มสถานที่</h3>
 
     <p class="my-3 m-auto col-lg-8 h5">จำนวนเตียง</p>
     <div class="m-auto col-lg-6">

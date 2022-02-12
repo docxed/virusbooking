@@ -12,7 +12,7 @@
               height="40"
               class="d-inline-block align-center"
             />
-            เตียงพร้อม
+            Bestbeds
           </a>
           <button
             class="navbar-toggler"
