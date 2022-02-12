@@ -90,7 +90,7 @@
               height="40"
               class="d-inline-block align-center"
             />
-            เตียงพร้อม
+            Bestbeds
           </a>
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item" v-if="$route.name == 'login'">
