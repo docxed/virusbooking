@@ -39,7 +39,7 @@
             type="text"
             class="form-control"
             placeholder="ชื่อ"
-            v-model="fname"
+            v-model="user.fname"
           />
         </div>
         <div class="col">
@@ -48,7 +48,7 @@
             type="text"
             class="form-control"
             placeholder="นามสกุล"
-            v-model="lname"
+            v-model="user.lname"
           />
         </div>
       </div>
@@ -57,28 +57,30 @@
         type="text"
         class="form-control"
         placeholder="รหัสบัตรประชาชน 13 หลัก"
-        v-model="idcard"
+        v-model="user.idcard"
+        readonly
       />
       <label class="form-label">เบอร์ติดต่อ</label>
       <input
         type="text"
         class="form-control"
         placeholder="เบอร์ติดต่อ"
-        v-model="phone"
+        v-model="user.phone"
       />
       <label class="form-label">อีเมล</label>
       <input
         type="email"
         class="form-control mb-3"
         placeholder="อีเมล"
-        v-model="email"
+        v-model="user.email"
+        readonly
       />
       <label class="form-label">LINE ID</label>
       <input
         type="text"
         class="form-control mb-3"
         placeholder="LINE ID"
-        v-model="lineid"
+        v-model="user.lineid"
       />
       <p class="text-center">
         <button class="btn btn-info mx-1" @click="update()">บันทึก</button>
@@ -103,6 +105,7 @@ export default {
       idcard: "",
       phone: "",
       lineid: "",
+      user: null,
       showChangePass: false,
     };
   },
@@ -120,6 +123,7 @@ export default {
       if (info != null) {
         this.$root.info = info;
         this.$root.loggedIn = true;
+        this.user = info;
       } else {
         this.loggedIn = false;
         alert("โปรดลงชื่อเข้าใช้งาน");

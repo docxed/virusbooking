@@ -1,6 +1,7 @@
 <template>
   <div>
     <br /><br />
+    <!-- AddBeds Section -->
     <h3><i class="fas fa-plus-circle"></i> เพิ่มสถานที่</h3>
 
     <p class="my-3 m-auto col-lg-8 h5">จำนวนเตียง</p>
@@ -27,21 +28,21 @@
       <div class="row g-2">
         <div class="col">
           <label class="form-label">เลขที่</label>
-          <input type="text" class="form-control mb-3" placeholder="เลขที่" />
+          <input type="text" class="form-control mb-3" placeholder="เลขที่" v-model="hno" />
         </div>
         <div class="col">
           <label class="form-label">หมู่ที่</label>
-          <input type="text" class="form-control mb-3" placeholder="หมู่ที่" />
+          <input type="text" class="form-control mb-3" placeholder="หมู่ที่" v-model="no" />
         </div>
         <div class="col">
           <label class="form-label">ซอย</label>
-          <input type="text" class="form-control mb-3" placeholder="ซอย" />
+          <input type="text" class="form-control mb-3" placeholder="ซอย" v-model="lane" />
         </div>
       </div>
       <label class="form-label">ตำบล/แขวง</label>
-      <input type="text" class="form-control mb-3" placeholder="ตำบล/แขวง" />
+      <input type="text" class="form-control mb-3" placeholder="ตำบล/แขวง" v-model="district" />
       <label class="form-label">อำเภอ/เขต</label>
-      <input type="text" class="form-control mb-3" placeholder="อำเภอ/เขต" />
+      <input type="text" class="form-control mb-3" placeholder="อำเภอ/เขต" v-model="area" />
       <label class="form-label">จังหวัด</label>
       <select class="form-select mb-3" v-model="province">
         <option
@@ -53,7 +54,7 @@
         </option>
       </select>
       <label class="form-label">รหัสไปรษณีย์</label>
-      <input type="text" class="form-control mb-3" placeholder="รหัสไปรษณีย์" />
+      <input type="text" class="form-control mb-3" placeholder="รหัสไปรษณีย์" v-model="zipcode" />
     </div>
 
     <p class="my-3 m-auto col-lg-8 h5">ข้อมูลผู้ใช้</p>
@@ -65,7 +66,7 @@
             type="text"
             class="form-control mb-3"
             placeholder="ชื่อ"
-            v-model="fname"
+            v-model="user.fname"
             readonly
           />
         </div>
@@ -75,7 +76,7 @@
             type="text"
             class="form-control mb-3"
             placeholder="นามสกุล"
-            v-model="lname"
+            v-model="user.lname"
             readonly
           />
         </div>
@@ -85,12 +86,43 @@
         type="text"
         class="form-control mb-3"
         placeholder="เบอร์ติดต่อ"
-        v-model="phone"
+        v-model="user.phone"
         readonly
       />
       <p class="text-center">
         <button class="btn btn-primary" @click="addbeds()">เพิ่มสถานที่</button>
       </p>
+    </div>
+
+    <!-- History Section -->
+    <h3 class="mt-5 mb-3">
+      <i class="fas fa-history"></i> ประวัติการเพิ่มสถานที่
+    </h3>
+    <div class="content">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <td><b>วันที่สร้างข้อมูล</b></td>
+            <td><b>สถานที่</b></td>
+            <td><b>มีผู้จองแล้ว</b></td>
+            <td><b></b></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>First</td>
+            <td>First</td>
+            <td>Last</td>
+            <td>
+              <a href="/editbedsforsell/1"
+                ><button class="btn btn-outline-primary btn-sm">
+                  แก้ไขข้อมูล
+                </button></a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -100,12 +132,17 @@ import { provinceTH } from "../assets/js/province.js";
 export default {
   data() {
     return {
-      province: "",
       allProvinceTH: [],
-      fname: "อคิราภ์",
-      lname: "สีแสนยง",
-      phone: "0882923741",
+      user: "",
       beds: 0,
+      hno: "",
+      no: "",
+      lane: "",
+      district: "",
+      area: "",
+      province: "",
+      zipcode: "",
+      user_id: "",
     };
   },
   methods: {
@@ -126,6 +163,7 @@ export default {
       if (info != null) {
         this.$root.info = info;
         this.$root.loggedIn = true;
+        this.user = info;
       } else {
         this.loggedIn = false;
         alert("โปรดลงชื่อเข้าใช้งาน");
@@ -134,7 +172,7 @@ export default {
     },
   },
   created() {
-    this.authentication()
+    this.authentication();
     this.allProvinceTH = provinceTH;
     this.province = this.allProvinceTH[0];
   },

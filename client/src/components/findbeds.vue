@@ -2,7 +2,9 @@
   <br /><br /><br />
   <div>
     <h3 class="my-3"><i class="fas fa-search"></i> ค้นหาเตียง</h3>
-    <div class="row">
+    <div class="row g-2">
+      <div class="col">
+      </div>
       <div class="col">
         <select class="form-select" v-model="province">
           <option
@@ -16,23 +18,30 @@
         </select>
       </div>
       <div class="col">
-        <button class="btn btn-info" @click="find()"><i class="fas fa-search"></i></button>
+        <button class="btn btn-info" @click="find()">
+          <i class="fas fa-search"></i>
+        </button>
       </div>
     </div>
+
     <br />
 
     <div>
-      <p>ค้นพบ <span class="text-primary">{{ beds.length }}</span> เตียง</p>
+      <p class="col-lg-8 m-auto my-3">
+        ค้นพบ <span class="text-primary">{{ beds.length }}</span> เตียง
+      </p>
       <div class="content col-lg-8 m-auto">
         <p>สถานที่ ...</p>
         <p>
-            <button type="button" class="btn btn-success btn-sm">
-                พร้อมจอง <span class="badge bg-white text-dark">0</span> เตียง
-            </button>
+          <button type="button" class="btn btn-success btn-sm">
+            พร้อมจอง <span class="badge bg-white text-dark">0</span> เตียง
+          </button>
         </p>
-        <p class="text-end">โดย </p>
+        <p class="text-end">โดย</p>
         <p class="text-center">
-            <a href="/buybeds/1"><button class="btn btn-primary btn-sm">ดูรายละเอียด</button></a>
+          <a href="/buybeds/1"
+            ><button class="btn btn-primary btn-sm">ดูรายละเอียด</button></a
+          >
         </p>
       </div>
     </div>
@@ -65,7 +74,7 @@ export default {
     },
   },
   created() {
-    this.authentication()
+    this.authentication();
     this.allProvinceTH = ["ทุกจังหวัด", ...provinceTH];
     this.province = this.allProvinceTH[0];
   },
