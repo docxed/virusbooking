@@ -1,15 +1,15 @@
 <template>
   <br /><br /><br />
   <div>
-    <h3>ข้อมูลผู้ใช้</h3>
+    <h3><i class="fas fa-user-circle"></i> ข้อมูลผู้ใช้</h3>
     <br />
     <div class="content m-auto col-lg-8" v-if="showChangePass">
         <label class="form-label">รหัสผ่านเดิม</label>
         <input type="password" class="form-control mb-3" placeholder="รหัสผ่านเดิม" v-model="oldpass" />
         <label class="form-label">รหัสผ่านใหม่</label>
         <input type="password" class="form-control mb-3" placeholder="รหัสผ่านใหม่" v-model="pass" />
-        <label class="form-label">ยืนยันรหัสผ่าน</label>
-        <input type="password" class="form-control mb-3" placeholder="ยืนยันรหัสผ่าน" v-model="repass" />
+        <label class="form-label">ยืนยันรหัสผ่านใหม่</label>
+        <input type="password" class="form-control mb-3" placeholder="ยืนยันรหัสผ่านใหม่" v-model="repass" />
         <p class="text-center">
             <button class="btn btn-warning" @click="changePass()">เปลี่ยนรหัสผ่าน</button>
         </p>
@@ -25,8 +25,8 @@
                 <input type="text" class="form-control" placeholder="นามสกุล" v-model="lname" />
             </div>
         </div>
-        <label class="form-label">รหัสบัตรประชาชน</label>
-        <input type="text" class="form-control" placeholder="รหัสบัตรประชาชน" v-model="idcard" />
+        <label class="form-label">รหัสบัตรประชาชน 13 หลัก</label>
+        <input type="text" class="form-control" placeholder="รหัสบัตรประชาชน 13 หลัก" v-model="idcard" />
         <label class="form-label">เบอร์ติดต่อ</label>
         <input type="text" class="form-control" placeholder="เบอร์ติดต่อ" v-model="phone" />
         <label class="form-label">อีเมล</label>

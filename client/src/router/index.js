@@ -4,6 +4,9 @@ import Login from "@/components/login.vue";
 import Register from "@/components/register.vue";
 import Addbedsforsell from "@/components/addbedsforsell.vue";
 import Profile from "@/components/profile.vue";
+import Findbeds from "@/components/findbeds.vue";
+import Buybeds from "@/components/buybeds.vue";
+import Beds from "@/components/beds.vue";
 
 const routes = [
   {
@@ -30,6 +33,21 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: Profile,
+  },
+  {
+    path: "/findbeds",
+    name: "findbeds",
+    component: Findbeds,
+  },
+  {
+    path: "/buybeds/:id",
+    name: "buybeds",
+    component: Buybeds,
+  },
+  {
+    path: "/beds",
+    name: "beds",
+    component: Beds,
   },
 ];
 

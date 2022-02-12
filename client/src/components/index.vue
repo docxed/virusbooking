@@ -49,8 +49,12 @@
     </div>
     <p class="text-end text-secondary">ข้อมูลโดย disease.sh</p>
 
+    <div>
+      <CovidChart />
+    </div>
+
     <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
-    <p>จำนวนเตียงว่างทั้งหมด 0 เตียง</p>
+    <p>จำนวนเตียงว่างทั้งหมด <span class="text-primary">0</span> เตียง</p>
     <div class="content">
       <p class="text-center"> <a href="/findbeds"><button class="btn col-12 col-lg-4 btn-info text-white"><i class="fas fa-search-location fa-lg"></i> ค้นหาเตียง</button></a> </p>
       <p class="text-center"> <a href="/beds"><button class="btn col-12 col-lg-4 btn-success"><i class="fas fa-clipboard-list fa-lg"></i> การจองเตียง</button></a> </p>
@@ -61,8 +65,13 @@
 
 <script>
 import axios from "axios";
+import moment from 'moment';
+import CovidChart from "./Charts/covidChart.vue";
 
 export default {
+  components: {
+    CovidChart,
+  },
   data() {
     return {
       covidData: null,
@@ -75,7 +84,6 @@ export default {
       axios
         .get(apiCovid19Today)
         .then((res) => {
-          console.log(res.data);
           this.covidData = res.data;
         })
         .catch((err) => {
@@ -83,29 +91,8 @@ export default {
         });
     },
     convertToThaiDate(rawDate) {
-      let date = new Date(rawDate);
-      let monthTH = [
-        "มกราคม",
-        "กุมภาพันธ์",
-        "มีนาคม",
-        "เมษายน",
-        "พฤษภาคม",
-        "มิถุนายน",
-        "กรกฎาคม",
-        "สิงหาคม",
-        "กันยายน",
-        "ตุลาคม",
-        "พฤศจิกายน",
-        "ธันวาคม",
-      ];
-      let year = date.getFullYear();
-      let month = monthTH[date.getMonth()];
-      let numOfDay = date.getDate();
-
-      let hour = date.getHours().toString().padStart(2, "0");
-      let minutes = date.getMinutes().toString().padStart(2, "0");
-      // let second = date.getSeconds().toString().padStart(2, "0");
-      return `${numOfDay} ${month} ${year} | ${hour}:${minutes} น.`;
+      moment.locale('th');
+      return moment(rawDate).format(`Do MMMM YYYY | HH:mm น.`)
     },
   },
   created() {
