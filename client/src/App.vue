@@ -123,7 +123,7 @@
 export default {
   data() {
     return {
-      loggedIn: true,
+      loggedIn: false,
       fname: "อคิราภ์",
       lname: "สีแสนยง",
     };
