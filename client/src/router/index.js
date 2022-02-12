@@ -7,6 +7,7 @@ import Profile from "@/components/profile.vue";
 import Findbeds from "@/components/findbeds.vue";
 import Buybeds from "@/components/buybeds.vue";
 import Beds from "@/components/beds.vue";
+import Bedsdetail from "@/components/bedsdetail.vue";
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: "/beds",
     name: "beds",
     component: Beds,
+  },
+  {
+    path: "/bedsdetail/:id",
+    name: "bedsdetail",
+    component: Bedsdetail,
   },
 ];
 

@@ -18,7 +18,7 @@
           <td>First</td>
           <td>Last</td>
           <td>Handle</td>
-          <td><button class="btn btn-outline-primary btn-sm">ดูข้อมูล</button></td>
+          <td><a href="/bedsdetail/1"><button class="btn btn-outline-primary btn-sm">ดูข้อมูล</button></a></td>
         </tr>
       </tbody>
     </table>
