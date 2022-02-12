@@ -56,8 +56,8 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  <i class="fas fa-user-circle fa-lg mx-1"></i> {{ fname }}
-                  {{ lname }}
+                  <i class="fas fa-user-circle fa-lg mx-1"></i> {{ info.fname }}
+                  {{ info.lname }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
@@ -72,7 +72,7 @@
                     >
                   </li>
                   <li>
-                    <a class="dropdown-item" href="/logout"
+                    <a class="dropdown-item" @click="logout()"
                       ><span class="text-danger">ออกจากระบบ</span></a
                     >
                   </li>
@@ -123,10 +123,22 @@
 export default {
   data() {
     return {
-      loggedIn: true,
-      fname: "อคิราภ์",
-      lname: "สีแสนยง",
+      loggedIn: false,
+      info: null,
     };
+  },
+  methods: {
+    login(data) {
+      let myJSON = JSON.stringify(data.info);
+      localStorage.setItem("info", myJSON);
+      this.$router.push("/");
+    },
+    logout() {
+      localStorage.removeItem("info");
+      this.loggedIn = false;
+      this.info = null;
+      this.$router.push("/login");
+    },
   },
 };
 </script>

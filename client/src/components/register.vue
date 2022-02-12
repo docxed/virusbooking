@@ -95,15 +95,34 @@ export default {
         lineid: this.lineid, // not required
       };
       axios
-        .post(`${SERVER_IP}:${PORT}/`, formData)
+        .post(`http://${SERVER_IP}:${PORT}/register`, formData)
         .then((res) => {
-          console.log(res.data);
+          const data = res.data;
+          if (data.status) {
+            this.$router.push("/login");
+          } else {
+            this.pass = "";
+            this.repass = "";
+            alert(data.message);
+          }
         })
         .catch((err) => {
           console.error(err);
         });
-      // this.$router.push('/login')
     },
+    authentication() {
+      let info = JSON.parse(localStorage.getItem("info"));
+      if (info != null) {
+        this.$root.info = info;
+        this.$root.loggedIn = true;
+        this.$router.push("/");
+      } else {
+        this.loggedIn = false;
+      }
+    },
+  },
+  created() {
+    this.authentication();
   },
 };
 </script>

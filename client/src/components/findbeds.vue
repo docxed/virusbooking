@@ -54,8 +54,18 @@ export default {
     find() {
       console.log("do find");
     },
+    authentication() {
+      let info = JSON.parse(localStorage.getItem("info"));
+      if (info != null) {
+        this.$root.info = info;
+        this.$root.loggedIn = true;
+      } else {
+        this.loggedIn = false;
+      }
+    },
   },
   created() {
+    this.authentication()
     this.allProvinceTH = ["ทุกจังหวัด", ...provinceTH];
     this.province = this.allProvinceTH[0];
   },

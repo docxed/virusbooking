@@ -4,9 +4,7 @@
     <h3>สถิติผู้ติดเชื้อโควิด-19 ในไทย</h3>
 
     <!-- CovidDaily Section -->
-    <p>
-      ข้อมูลอัปเดตล่าสุด: {{ convertToThaiDate(covidData.updated) }}
-    </p>
+    <p>ข้อมูลอัปเดตล่าสุด: {{ convertToThaiDate(covidData.updated) }}</p>
     <div class="row">
       <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-danger">
@@ -31,14 +29,18 @@
       <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-info">
           <p class="fs-5">รักษาตัวอยู่ใน รพ.</p>
-          <p class="fs-1 text-center">{{ covidData.active.toLocaleString() }}</p>
+          <p class="fs-1 text-center">
+            {{ covidData.active.toLocaleString() }}
+          </p>
           <p class="text-end fs-5">สะสมทั้งหมด</p>
         </div>
       </div>
       <div class="col-12 col-md-6 col-lg-3">
         <div class="box bg-success">
           <p class="fs-5">หายแล้วเพิ่มขึ้น</p>
-          <p class="fs-1 text-center">+{{ covidData.todayRecovered.toLocaleString() }}</p>
+          <p class="fs-1 text-center">
+            +{{ covidData.todayRecovered.toLocaleString() }}
+          </p>
           <p class="text-end fs-5">
             สะสม {{ covidData.recovered.toLocaleString() }}
           </p>
@@ -56,16 +58,27 @@
     <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
     <p>จำนวนเตียงว่างทั้งหมด <span class="text-primary">0</span> เตียง</p>
     <div class="content">
-      <p class="text-center"> <a href="/findbeds"><button class="btn col-12 col-lg-4 btn-info text-white"><i class="fas fa-search-location fa-lg"></i> ค้นหาเตียง</button></a> </p>
-      <p class="text-center"> <a href="/beds"><button class="btn col-12 col-lg-4 btn-success"><i class="fas fa-clipboard-list fa-lg"></i> การจองเตียง</button></a> </p>
+      <p class="text-center">
+        <a href="/findbeds"
+          ><button class="btn col-12 col-lg-4 btn-info text-white">
+            <i class="fas fa-search-location fa-lg"></i> ค้นหาเตียง
+          </button></a
+        >
+      </p>
+      <p class="text-center">
+        <a href="/beds"
+          ><button class="btn col-12 col-lg-4 btn-success">
+            <i class="fas fa-clipboard-list fa-lg"></i> การจองเตียง
+          </button></a
+        >
+      </p>
     </div>
-
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import moment from 'moment';
+import moment from "moment";
 import CovidChart from "./Charts/covidChart.vue";
 
 export default {
@@ -79,8 +92,7 @@ export default {
   },
   methods: {
     GetcovidData() {
-      let apiCovid19Today =
-        "https://corona.lmao.ninja/v2/countries/TH";
+      let apiCovid19Today = "https://corona.lmao.ninja/v2/countries/TH";
       axios
         .get(apiCovid19Today)
         .then((res) => {
@@ -91,11 +103,21 @@ export default {
         });
     },
     convertToThaiDate(rawDate) {
-      moment.locale('th');
-      return moment(rawDate).format(`Do MMMM YYYY | HH:mm น.`)
+      moment.locale("th");
+      return moment(rawDate).format(`Do MMMM YYYY | HH:mm น.`);
+    },
+    authentication() {
+      let info = JSON.parse(localStorage.getItem("info"));
+      if (info != null) {
+        this.$root.info = info;
+        this.$root.loggedIn = true;
+      } else {
+        this.loggedIn = false;
+      }
     },
   },
   created() {
+    this.authentication();
     this.GetcovidData();
   },
 };

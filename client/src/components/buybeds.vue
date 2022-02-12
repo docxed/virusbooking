@@ -62,7 +62,12 @@
             >
               ยกเลิก
             </button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="rent()">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              @click="rent()"
+            >
               ยืนยันจอง
             </button>
           </div>
@@ -77,9 +82,26 @@ export default {
   data() {
     return {};
   },
-  methods: { rent() {
-    console.log('do rent...')
-  } },
+  methods: {
+    rent() {
+      console.log("do rent...");
+    },
+    authentication() {
+      let info = JSON.parse(localStorage.getItem("info"));
+      if (info != null) {
+        this.$root.info = info;
+        this.$root.loggedIn = true;
+      } else {
+        this.loggedIn = false;
+        alert("โปรดลงชื่อเข้าใช้งาน");
+        this.$router.push("/login");
+      }
+    },
+  },
+
+  created() {
+    this.authentication();
+  },
 };
 </script>
 

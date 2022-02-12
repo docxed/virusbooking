@@ -53,7 +53,7 @@
         </option>
       </select>
       <label class="form-label">รหัสไปรษณีย์</label>
-          <input type="text" class="form-control mb-3" placeholder="รหัสไปรษณีย์" />
+      <input type="text" class="form-control mb-3" placeholder="รหัสไปรษณีย์" />
     </div>
 
     <p class="my-3 m-auto col-lg-8 h5">ข้อมูลผู้ใช้</p>
@@ -89,8 +89,8 @@
         readonly
       />
       <p class="text-center">
-            <button class="btn btn-primary" @click="addbeds()">เพิ่มสถานที่</button>
-        </p>
+        <button class="btn btn-primary" @click="addbeds()">เพิ่มสถานที่</button>
+      </p>
     </div>
   </div>
 </template>
@@ -100,7 +100,7 @@ import { provinceTH } from "../assets/js/province.js";
 export default {
   data() {
     return {
-      province: '',
+      province: "",
       allProvinceTH: [],
       fname: "อคิราภ์",
       lname: "สีแสนยง",
@@ -118,13 +118,25 @@ export default {
       if (this.beds < 0) this.beds = 0;
     },
     addbeds() {
-      console.log('do addbeds')
-      this.$router.push('/')
+      console.log("do addbeds");
+      this.$router.push("/");
+    },
+    authentication() {
+      let info = JSON.parse(localStorage.getItem("info"));
+      if (info != null) {
+        this.$root.info = info;
+        this.$root.loggedIn = true;
+      } else {
+        this.loggedIn = false;
+        alert("โปรดลงชื่อเข้าใช้งาน");
+        this.$router.push("/login");
+      }
     },
   },
   created() {
-      this.allProvinceTH = provinceTH
-      this.province = this.allProvinceTH[0]
+    this.authentication()
+    this.allProvinceTH = provinceTH;
+    this.province = this.allProvinceTH[0];
   },
 };
 </script>
