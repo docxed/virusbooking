@@ -1,6 +1,6 @@
 <template>
   <br /><br /><br />
-  <div>
+  <div v-if="this.user != null">
     <h3><i class="fas fa-user-circle"></i> ข้อมูลผู้ใช้</h3>
     <br />
 
@@ -109,10 +109,26 @@ export default {
       pass: "",
       repass: "",
       user: null,
+      olddatauser: null,
       showChangePass: false,
     };
   },
   methods: {
+    getUser() {
+      axios
+        .get(`http://${SERVER_IP}:${PORT}/users/${this.olddatauser._id}`)
+        .then((res) => {
+          const data = res.data;
+          if (data.status) {
+            this.user = data.info;
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     updateValidate() {
       this.update();
     },
@@ -153,7 +169,7 @@ export default {
       if (info != null) {
         this.$root.info = info;
         this.$root.loggedIn = true;
-        this.user = info;
+        this.olddatauser = info;
       } else {
         this.loggedIn = false;
         alert("โปรดลงชื่อเข้าใช้งาน");
@@ -163,6 +179,7 @@ export default {
   },
   created() {
     this.authentication();
+    this.getUser();
   },
 };
 </script>
