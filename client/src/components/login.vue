@@ -12,6 +12,9 @@
         placeholder="อีเมล"
         v-model="email"
       />
+      <span v-if="v$.email.$error" style="color: red">
+        <p>โปรดใส่ Email ให้ถูกต้อง</p>
+      </span>
       <label class="form-label">รหัสผ่าน</label>
       <input
         type="password"
@@ -19,6 +22,9 @@
         placeholder="รหัสผ่าน"
         v-model="pass"
       />
+      <span v-if="v$.pass.$error" style="color: red">
+        <p>โปรดใส่รหัสผ่านให้ถูกต้อง</p>
+      </span>
       <p class="text-center">
         <button class="btn btn-primary" @click="loginValidate()">
           ลงชื่อเข้าใช้
@@ -31,14 +37,29 @@
 <script>
 import axios from "axios";
 import { SERVER_IP, PORT } from "../assets/server/serverIP";
-
+import useValidate from "@vuelidate/core";
+import { required, email, minLength } from "@vuelidate/validators";
 export default {
   data() {
     return {
+      v$: useValidate(),
       email: "",
       pass: "",
     };
   },
+
+    validations() {
+    return {
+      email: { required, email },
+		pass: {required, minLength: minLength(5) ,containsUppercase: function(value) {
+      return /[A-Z]/.test(value)
+    },containsLowercase: function(value) {
+      return /[a-z]/.test(value)
+    },containsNumber: function(value) {
+      return /[0-9]/.test(value)
+    },}
+			}
+    },
   methods: {
     login() {
       let formData = {
@@ -62,7 +83,12 @@ export default {
         });
     },
     loginValidate() {
-      this.login();
+      this.v$.$validate() // checks all inputs
+				if (!this.v$.$error) { // if ANY fail validation
+					this.login()
+				} else {
+					alert('โปรดกรอกข้อมูลให้ถูกต้อง')
+				}
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));

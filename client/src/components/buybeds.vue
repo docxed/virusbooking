@@ -17,9 +17,9 @@
           Google Maps
         </button>
       </p>
-      <p class="h5">{{ bed.user.fname }} {{ bed.user.lname }}</p>
-      <p class="h6 text-secondary">ติดต่อ {{ bed.user.phone }}</p>
-      <p class="h6 text-secondary">LINE ID {{ bed.user.lineid }}</p>
+      <p class="h5">{{ user.fname }} {{ user.lname }}</p>
+      <p class="h6 text-secondary">ติดต่อ {{ user.phone }}</p>
+      <p class="h6 text-secondary">LINE ID {{ user.lineid }}</p>
       <p class="h6 text-secondary">
         {{
           `ที่อยู่ ${bed.hno} หมู่ที่ ${bed.no} ซอย ${bed.lane} ตำบล/แขวง ${bed.district} อำเภอ/เขต ${bed.area}, จังหวัด${bed.province}, ${bed.zipcode} `
@@ -40,6 +40,9 @@
       <div class="row">
         <div class="col">
           <input type="date" class="form-control" v-model="date" />
+          <span v-if="v$.date.$error" style="color: red">
+        <p>โปรดเลือกวันที่</p>
+      </span>
         </div>
         <div class="col">
           <button
@@ -98,14 +101,23 @@
 <script>
 import axios from "axios";
 import { SERVER_IP, PORT } from "../assets/server/serverIP";
+import useValidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 export default {
   data() {
     return {
+      v$: useValidate(),
       bed: null,
       date: "",
       user: null,
     };
   },
+  validations() {
+    return {
+      date: {required}
+		
+			}
+    },
   methods: {
     rent() {
       let formData = {
@@ -128,7 +140,13 @@ export default {
         });
     },
     rentValidate() {
-      this.rent();
+       
+				this.v$.$validate() // checks all inputs
+				if (!this.v$.$error) { // if ANY fail validation
+					this.rent()
+				} else {
+					alert('โปรดกรอกข้อมูลให้ถูกต้อง')
+				}
     },
     gmaps(url) {
       window.open("https://www.google.co.th/maps?q=" + url, "_blank");
