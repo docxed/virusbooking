@@ -70,13 +70,6 @@ router.post("/bedsdealing", async (req, res) => {
             const New_dealing = await newdealing.save();
             res.status(201).json({ status: true, message: "จองสำเร็จ" });
         }
-    } catch (err) {
-        res
-      .status(500)
-      .json({
-        status: false,
-        message: "เกิดข้อผิดพลาดกรุณาลงทะเบียนอีกครั้งภายหลัง",
-      });
     }
   } catch (err) {
     res.status(500).json({
@@ -122,7 +115,12 @@ router.get("/bedsdealingbyusers/:id", async (req, res) => {
           info: { dealingbyuser },
         });
     }
-  } catch (err) {}
+  } catch (err) {
+    res.status(500).json({
+        status: false,
+        message: "เกิดข้อผิดพลาดกรุณาลงทะเบียนอีกครั้งภายหลัง",
+      });
+  }
 });
 
 module.exports = router;

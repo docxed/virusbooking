@@ -66,26 +66,39 @@ router.get("/beds/:id", async (req, res) => {
 router.get("/bedsready", async (req, res) => {
   try {
     const bedsready = await Beds.find({ amount: { $gt: 0 } });
-    if (bedsready.length === 0) {
+    const user = await User.find();
+    const list = []
+
+    for( let i = 0; i < bedsready.length; i++){
+        let name;
+        for( let y=0; y < user.length;y++){
+            if(bedsready[i].user_id == (user[y]._id +"")){
+                name = user[y];
+            }
+        }
+        list.push({
+            _id: bedsready[i]._id,
+            amount: bedsready[i].amount,
+            hno: bedsready[i].amount,
+            no: bedsready[i].no,
+            lane: bedsready[i].lane,
+            district: bedsready[i].district,
+            area: bedsready[i].area,
+            zipcode: bedsready[i].zipcode,
+            user_id: bedsready[i].user_id,
+            user: name
+        })
+    }
+
+    if (list.length === 0) {
       res
         .status(203)
         .json({ status: false, message: "ไม่มีเตียงที่พร้อมให้บริการ!" });
     } else {
       res
         .status(203)
-        .json({ status: true, message: "การค้นหาสำเร็จ!", info: bedsready });
+        .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
     }
-
-    const num = await Beds.aggregate([
-        { $lookup:
-            {
-               from: "users",
-               localField: "user_id",
-               foreignField: "_id",
-               as: "user_id"
-            }
-        }
-    ])
     res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: num });
 
 
