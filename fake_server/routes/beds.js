@@ -69,7 +69,7 @@ router.get('/bedsready', async (req, res) => {
         if(bedsready.length === 0){
             res.status(203).json({ status: false, message: "ไม่มีเตียงที่พร้อมให้บริการ!"})
         }else{
-            res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: {bedsready}})
+            res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: bedsready})
         }
     }catch(err) {
         res

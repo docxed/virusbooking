@@ -56,7 +56,7 @@
 
     <!-- Findbeds Section -->
     <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
-    <p>จำนวนเตียงว่างทั้งหมด <span class="text-primary">0</span> เตียง</p>
+    <p>จำนวนเตียงว่างทั้งหมด <span class="text-primary">{{ bedsReady.length }}</span> เตียง</p>
     <div class="content">
       <p class="text-center">
         <a href="/findbeds"
@@ -80,6 +80,7 @@
 import axios from "axios";
 import moment from "moment";
 import CovidChart from "./Charts/covidChart.vue";
+import { SERVER_IP, PORT } from "../assets/server/serverIP";
 
 export default {
   components: {
@@ -88,9 +89,23 @@ export default {
   data() {
     return {
       covidData: null,
+      bedsReady: [],
     };
   },
   methods: {
+    getBedsReady() {
+      axios
+        .get(`http://${SERVER_IP}:${PORT}/bedsready`)
+        .then((res) => {
+          const data = res.data;
+          let amount = data.info.reduce((prev, curr) => { prev + curr.amount}, 0)
+          console.log(amount)
+          this.bedsReady = data.info;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     GetcovidData() {
       let apiCovid19Today = "https://corona.lmao.ninja/v2/countries/TH";
       axios
@@ -119,6 +134,7 @@ export default {
   created() {
     this.authentication();
     this.GetcovidData();
+    this.getBedsReady();
   },
 };
 </script>
