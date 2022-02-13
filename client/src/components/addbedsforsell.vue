@@ -131,26 +131,24 @@
       <i class="fas fa-history"></i> ประวัติการเพิ่มสถานที่
     </h3>
     <div class="content">
-      <table class="table table-striped table-hover">
+      <table class="table table-striped">
         <thead>
           <tr>
-            <td><b>วันที่สร้างข้อมูล</b></td>
-            <td><b>สถานที่</b></td>
-            <td><b>มีผู้จองแล้ว</b></td>
-            <td><b></b></td>
+            <th><b>วันที่สร้างข้อมูล</b></th>
+            <th><b>สถานที่</b></th>
+            <th><b>มีผู้จองแล้ว</b></th>
+            <th><b></b></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>First</td>
-            <td>First</td>
-            <td>Last</td>
+          <tr v-for="bed in bedsByUsers" :key="bed._id">
+            <td>{{ convertToThaiDate(bed.createdAt) }}</td>
+            <td>{{ bed.hno }} {{bed.lane}}</td>
+            <td>Demo</td>
             <td>
-              <a href=""
-                ><button class="btn btn-outline-primary btn-sm">
+              <button class="btn btn-outline-primary btn-sm" @click="editBedsPage()">
                   แก้ไขข้อมูล
-                </button></a
-              >
+                </button>
             </td>
           </tr>
         </tbody>
@@ -162,6 +160,7 @@
 <script>
 import { provinceTH } from "../assets/js/province.js";
 import axios from "axios";
+import moment from "moment";
 import { SERVER_IP, PORT } from "../assets/server/serverIP";
 
 export default {
@@ -178,16 +177,36 @@ export default {
       province: "",
       zipcode: "",
       bedsByUsers: [],
+      bedsdealings: [],
     };
   },
   methods: {
+    getBedsDealings() {
+      axios
+        .get(`http://${SERVER_IP}:${PORT}/bedsdealing`)
+        .then((res) => {
+          const data = res.data;
+          if (data.status) {
+            this.bedsdealings = data.info;
+            console.log(data)
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    editBedsPage() {
+      alert('Demo')
+    },
     getBedsByUsers() {
       axios
         .get(`http://${SERVER_IP}:${PORT}/bedsbyusers/${this.user._id}`)
         .then((res) => {
           const data = res.data;
           if (data.status) {
-            this.bedsByUsers = data.info
+            this.bedsByUsers = data.info;
           } else {
             alert(data.message);
           }
@@ -235,6 +254,10 @@ export default {
       this.beds--;
       if (this.beds < 0) this.beds = 0;
     },
+    convertToThaiDate(rawDate) {
+      moment.locale("th");
+      return moment(rawDate).format(`LL`);
+    },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));
       if (info != null) {
@@ -252,7 +275,8 @@ export default {
     this.authentication();
     this.allProvinceTH = provinceTH;
     this.province = this.allProvinceTH[0];
-    this.getBedsByUsers()
+    this.getBedsByUsers();
+    this.getBedsDealings()
   },
 };
 </script>
