@@ -51,6 +51,8 @@ router.get("/bedsbyusers/:id", async (req, res) => {
         province: beds[i].province,
         zipcode: beds[i].zipcode,
         user_id: beds[i].user_id,
+        createdAt: beds[i].createdAt,
+        updatedAt: beds[i].updatedAt,
         user: name,
       });
     }
@@ -94,6 +96,8 @@ router.get("/beds/:id", async (req, res) => {
       province: bedsid.province,
       zipcode: bedsid.zipcode,
       user_id: bedsid.user_id,
+      createdAt: bedsid.createdAt,
+      updatedAt: bedsid.updatedAt,
       user: name,
     });
 
@@ -136,6 +140,8 @@ router.get("/bedsready", async (req, res) => {
         province: bedsready[i].province,
         zipcode: bedsready[i].zipcode,
         user_id: bedsready[i].user_id,
+        createdAt: bedsready[i].createdAt,
+        updatedAt: bedsready[i].updatedAt,
         user: name,
       });
     }
