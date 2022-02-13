@@ -17,9 +17,9 @@
           Google Maps
         </button>
       </p>
-      <p class="h5">{{ user.fname }} {{ user.lname }}</p>
-      <p class="h6 text-secondary">ติดต่อ {{ user.phone }}</p>
-      <p class="h6 text-secondary">LINE ID {{ user.lineid }}</p>
+      <p class="h5">{{ bed.user.fname }} {{ bed.user.lname }}</p>
+      <p class="h6 text-secondary">ติดต่อ {{ bed.user.phone }}</p>
+      <p class="h6 text-secondary">LINE ID {{ bed.user.lineid }}</p>
       <p class="h6 text-secondary">
         {{
           `ที่อยู่ ${bed.hno} หมู่ที่ ${bed.no} ซอย ${bed.lane} ตำบล/แขวง ${bed.district} อำเภอ/เขต ${bed.area}, จังหวัด${bed.province}, ${bed.zipcode} `
