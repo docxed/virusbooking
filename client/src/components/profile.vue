@@ -87,36 +87,60 @@
         v-model="user.lineid"
       />
       <p class="text-center">
-        <button class="btn btn-info mx-1" @click="update()">บันทึก</button>
-        <a class="mx-1 link-secondary" @click="showChangePass = true"
-          >เปลี่ยนรหัสผ่าน</a
-        >
+        <button class="btn btn-info mx-1" @click="updateValidate()">บันทึก</button>
+        <a class="mx-1 link-secondary" @click="changePassPage()"
+          >เปลี่ยนรหัสผ่าน</a>
       </p>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import { SERVER_IP, PORT } from "../assets/server/serverIP";
+
 export default {
   data() {
     return {
-      email: "",
       oldpass: "",
       pass: "",
       repass: "",
-      fname: "",
-      lname: "",
-      idcard: "",
-      phone: "",
-      lineid: "",
       user: null,
       showChangePass: false,
     };
   },
   methods: {
+    updateValidate() {
+      this.update();
+    },
     update() {
-      console.log("do update");
-      this.$router.push("/");
+      let formData = {
+        fname: this.user.fname,
+        lname: this.user.lname,
+        idcard: this.user.idcard,
+        phone: this.user.phone,
+        email: this.user.email,
+        lineid: this.user.lineid,
+      };
+      axios
+        .put(`http://${SERVER_IP}:${PORT}/users/${this.user._id}`, formData)
+        .then((res) => {
+          const data = res.data;
+          if (data.status) {
+            alert(data.message);
+            this.$router.push("/profile");
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      
+    },
+    changePassPage() {
+      alert('Demo')
+      // this.showChangePass = true
     },
     changePass() {
       console.log("do changePass");

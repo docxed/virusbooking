@@ -18,7 +18,7 @@ router.post("/register", async (req, res) => {
       fname: req.body.fname,
       lname: req.body.lname,
       idcard: req.body.idcard,
-      lineid: req.body.line,
+      lineid: req.body.lineid,
       phone: req.body.phone,
     });
 
