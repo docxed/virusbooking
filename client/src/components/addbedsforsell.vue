@@ -131,7 +131,7 @@
       <i class="fas fa-history"></i> ประวัติการเพิ่มสถานที่
     </h3>
     <div class="content" v-if="showHistory">
-      <table class="table table-striped">
+      <table class="table table-striped table-responsive">
         <thead>
           <tr>
             <td><b>วันที่สร้างข้อมูล</b></td>
@@ -143,12 +143,15 @@
         <tbody>
           <tr v-for="bed in bedsByUsers" :key="bed._id">
             <td>{{ convertToThaiDate(bed.createdAt) }}</td>
-            <td>{{ bed.hno }} {{bed.lane}}</td>
+            <td>{{ bed.hno }} {{ bed.lane }}</td>
             <td>Demo</td>
             <td>
-              <button class="btn btn-outline-primary btn-sm" @click="editBedsPage()">
-                  แก้ไขข้อมูล
-                </button>
+              <button
+                class="btn btn-outline-primary btn-sm"
+                @click="editBedsPage()"
+              >
+                แก้ไขข้อมูล
+              </button>
             </td>
           </tr>
         </tbody>
@@ -201,7 +204,7 @@ export default {
         });
     },
     editBedsPage() {
-      alert('Demo')
+      alert("Demo");
     },
     getBedsByUsers() {
       axios
@@ -280,7 +283,7 @@ export default {
     this.allProvinceTH = provinceTH;
     this.province = this.allProvinceTH[0];
     this.getBedsByUsers();
-    this.getBedsDealings()
+    this.getBedsDealings();
   },
 };
 </script>

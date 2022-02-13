@@ -58,7 +58,9 @@
     <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
     <p>
       จำนวนเตียงว่างทั้งหมด
-      <span class="text-success"><b>{{ amountBedsReady.toLocaleString() }}</b></span>
+      <span class="text-success"
+        ><b>{{ amountBedsReady.toLocaleString() }}</b></span
+      >
       เตียง
     </p>
     <div class="content">

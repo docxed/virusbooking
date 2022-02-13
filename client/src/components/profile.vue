@@ -87,9 +87,12 @@
         v-model="user.lineid"
       />
       <p class="text-center">
-        <button class="btn btn-info mx-1" @click="updateValidate()">บันทึก</button>
+        <button class="btn btn-info mx-1" @click="updateValidate()">
+          บันทึก
+        </button>
         <a class="mx-1 link-secondary" @click="changePassPage()"
-          >เปลี่ยนรหัสผ่าน</a>
+          >เปลี่ยนรหัสผ่าน</a
+        >
       </p>
     </div>
   </div>
@@ -136,10 +139,9 @@ export default {
         .catch((err) => {
           console.error(err);
         });
-      
     },
     changePassPage() {
-      alert('Demo')
+      alert("Demo");
       // this.showChangePass = true
     },
     changePass() {

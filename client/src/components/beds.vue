@@ -8,7 +8,7 @@
     </h3>
 
     <div class="content" v-if="showHistory">
-      <table class="table table-striped">
+      <table class="table table-striped table-responsive">
         <thead>
           <tr>
             <td><b>วันที่จะเข้าพักอาศัย</b></td>
@@ -24,7 +24,9 @@
             <td>Demo</td>
             <td>Demo</td>
             <td>
-              <span class="badge rounded-pill bg-secondary badge-secondary">Demo</span>
+              <span class="badge rounded-pill bg-secondary badge-secondary"
+                >Demo</span
+              >
             </td>
             <td>
               <button
@@ -57,6 +59,9 @@ export default {
     };
   },
   methods: {
+    viewBedsDealingPage() {
+      alert("Demo");
+    },
     convertToThaiDate(rawDate) {
       moment.locale("th");
       return moment(rawDate).format(`LL`);
