@@ -16,14 +16,15 @@
             class="m-auto customBeds form-control mb-3 bg-white"
             v-model="beds"
           />
-          <span v-if="v$.beds.$error" style="color: red">
-        <p>โปรดใส่ จำนวนเตียง ให้ถูกต้อง</p>
-      </span>
+          
         </div>
         <div class="col-4 col-lg-5 my-auto text-start">
           <button class="btn btn-primary" @click="increaseBeds()">+</button>
         </div>
       </div>
+      <span v-if="v$.beds.$error" style="color: red">
+        <p class="text-center">โปรดใส่ จำนวนเตียง ให้ถูกต้อง</p>
+      </span>
     </div>
 
     <p class="my-3 m-auto col-lg-8 h5">ที่อยู่</p>

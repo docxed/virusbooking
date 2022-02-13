@@ -39,9 +39,9 @@
     <div class="m-auto d-flex my-3 justify-content-center">
       <div class="row">
         <div class="col">
-          <input type="date" class="form-control" v-model="date" />
-          <span v-if="v$.date.$error" style="color: red">
-        <p>โปรดเลือกวันที่</p>
+          <input type="date" @change="changeValidate()" class="form-control" v-model="date" :min="miniDate()" />
+          <span v-if="v$.checkDate.$error" style="color: red">
+        <p>โปรดเลือกวันที่ให้ถูกต้อง</p>
       </span>
         </div>
         <div class="col">
@@ -100,25 +100,32 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 import { SERVER_IP, PORT } from "../assets/server/serverIP";
 import useValidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, minValue } from "@vuelidate/validators";
+
 export default {
+
   data() {
     return {
       v$: useValidate(),
       bed: null,
-      date: "",
+      date: '',
       user: null,
+      checkDate: '',
     };
   },
+  
   validations() {
     return {
-      date: {required}
-		
+      checkDate: {required, minValue: minValue(new Date())}
 			}
     },
   methods: {
+    miniDate(){
+      return moment(new Date()).format('YYYY-MM-DD') + ''
+    },
     rent() {
       let formData = {
         date: this.date,
@@ -139,9 +146,11 @@ export default {
           console.error(err);
         });
     },
+    changeValidate() {
+      this.checkDate = new Date(this.date);
+      this.v$.$validate();
+    },
     rentValidate() {
-       
-				this.v$.$validate() // checks all inputs
 				if (!this.v$.$error) { // if ANY fail validation
 					this.rent()
 				} else {

@@ -20,7 +20,8 @@
         </thead>
         <tbody>
           <tr v-for="beddealing in bedsdealingbyusers" :key="beddealing._id">
-            <td>{{ convertToThaiDate(beddealing.date) }}</td>
+            <!-- <td>{{ convertToThaiDate(beddealing.date) }}</td> -->
+            <td>Demo Date</td>
             <td>Demo</td>
             <td>Demo</td>
             <td>

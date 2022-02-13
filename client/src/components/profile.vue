@@ -43,8 +43,11 @@
             type="text"
             class="form-control"
             placeholder="ชื่อ"
-            v-model="user.fname"
+            v-model="fname"
           />
+         <span v-if="v$.fname.$error" style="color: red">
+        <p>โปรดกรอก ชื่อจริง ให้ถูกต้อง(ไม่เกิน50ตัวอักษร)</p>
+      </span>
         </div>
         <div class="col">
           <label class="form-label">นามสกุล</label>
@@ -52,8 +55,11 @@
             type="text"
             class="form-control"
             placeholder="นามสกุล"
-            v-model="user.lname"
+            v-model="lname"
           />
+           <span v-if="v$.lname.$error" style="color: red">
+        <p>โปรดกรอก นามสกุล ให้ถูกต้อง(ไม่เกิน50ตัวอักษร)</p>
+      </span>
         </div>
       </div>
       <label class="form-label">รหัสบัตรประชาชน 13 หลัก</label>
@@ -61,7 +67,7 @@
         type="text"
         class="form-control"
         placeholder="รหัสบัตรประชาชน 13 หลัก"
-        v-model="user.idcard"
+        v-model="idcard"
         readonly
       />
       <label class="form-label">เบอร์ติดต่อ</label>
@@ -69,14 +75,17 @@
         type="text"
         class="form-control"
         placeholder="เบอร์ติดต่อ"
-        v-model="user.phone"
+        v-model="phone"
       />
+      <span v-if="v$.phone.$error" style="color: red">
+        <p>โปรดกรอก เบอร์ติดต่อ ให้ถูกต้อง(10หลัก)</p>
+      </span>
       <label class="form-label">อีเมล</label>
       <input
         type="email"
         class="form-control mb-3"
         placeholder="อีเมล"
-        v-model="user.email"
+        v-model="email"
         readonly
       />
       <label class="form-label">LINE ID</label>
@@ -84,8 +93,11 @@
         type="text"
         class="form-control mb-3"
         placeholder="LINE ID"
-        v-model="user.lineid"
+        v-model="lineid"
       />
+       <span v-if="v$.lineid.$error" style="color: red">
+        <p>โปรดกรอก LineId ไม่เกิน30ตัวอักษร</p>
+      </span>
       <p class="text-center">
         <button class="btn btn-info mx-1" @click="updateValidate()">
           บันทึก
@@ -101,18 +113,45 @@
 <script>
 import axios from "axios";
 import { SERVER_IP, PORT } from "../assets/server/serverIP";
+import useValidate from "@vuelidate/core";
+import { required, maxLength, minLength, numeric } from "@vuelidate/validators";
 
 export default {
   data() {
     return {
+      v$: useValidate(),
       oldpass: "",
       pass: "",
       repass: "",
       user: null,
       olddatauser: null,
       showChangePass: false,
+      fname: '',
+      lname: '',
+      idcard: '',
+      phone: '',
+      email: '',
+      lineid: '',
     };
   },
+
+  validations() {
+    return {
+      fname: {required,  maxLength: maxLength(50),  Thai: function(value) {
+      return /^[ก-ฮ a-z A-Z]/.test(value)
+    }, Nonum: function(value) {
+      return !/[0-9]/.test(value)
+    }},
+      lname: {required,  maxLength: maxLength(50),  Thai: function(value) {
+      return /^[ก-ฮ a-z A-Z]/.test(value)
+    }, Nonum: function(value) {
+      return !/[0-9]/.test(value)
+    }},
+      phone: {required, numeric, minLength: minLength(10), maxLength: maxLength(10)},
+      lineid: {maxLength: maxLength(30)}
+      
+			}
+    },
   methods: {
     getUser() {
       axios
@@ -121,6 +160,12 @@ export default {
           const data = res.data;
           if (data.status) {
             this.user = data.info;
+            this.fname = data.info.fname
+            this.lname = data.info.lname
+            this.idcard = data.info.idcard
+            this.phone = data.info.phone
+            this.email = data.info.email
+            this.lineid = data.info.lineid
           } else {
             alert(data.message);
           }
@@ -130,16 +175,21 @@ export default {
         });
     },
     updateValidate() {
-      this.update();
+      this.v$.$validate()
+     if (!this.v$.$error) { // if ANY fail validation
+					this.update()
+				} else {
+					alert('โปรดกรอกข้อมูลให้ถูกต้อง')
+				}
     },
     update() {
       let formData = {
-        fname: this.user.fname,
-        lname: this.user.lname,
-        idcard: this.user.idcard,
-        phone: this.user.phone,
-        email: this.user.email,
-        lineid: this.user.lineid,
+        fname: this.fname,
+        lname: this.lname,
+        idcard: this.idcard,
+        phone: this.phone,
+        email: this.email,
+        lineid: this.lineid,
       };
       axios
         .put(`http://${SERVER_IP}:${PORT}/users/${this.user._id}`, formData)
