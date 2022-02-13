@@ -133,7 +133,7 @@ export default {
         user_id: this.user._id,
       };
       axios
-        .post(`http://${SERVER_IP}:${PORT}/bedsdealing`, formData)
+        .post(`https://${SERVER_IP}:${PORT}/bedsdealing`, formData)
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -162,7 +162,7 @@ export default {
     },
     getBed() {
       axios
-        .get(`http://${SERVER_IP}:${PORT}/beds/${this.$route.params.id}`)
+        .get(`https://${SERVER_IP}:${PORT}/beds/${this.$route.params.id}`)
         .then((res) => {
           const data = res.data;
           this.bed = data.info[0];

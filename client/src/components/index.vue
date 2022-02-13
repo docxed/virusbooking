@@ -102,7 +102,7 @@ export default {
   methods: {
     getBedsReady() {
       axios
-        .get(`http://${SERVER_IP}:${PORT}/bedsready`)
+        .get(`https://${SERVER_IP}:${PORT}/bedsready`)
         .then((res) => {
           const data = res.data;
           this.amountBedsReady = data.info.reduce(function (prev, curr) {

@@ -231,7 +231,7 @@ export default {
   methods: {
     getBedsDealings() {
       axios
-        .get(`http://${SERVER_IP}:${PORT}/bedsdealing`)
+        .get(`https://${SERVER_IP}:${PORT}/bedsdealing`)
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -249,7 +249,7 @@ export default {
     },
     getBedsByUsers() {
       axios
-        .get(`http://${SERVER_IP}:${PORT}/bedsbyusers/${this.user._id}`)
+        .get(`https://${SERVER_IP}:${PORT}/bedsbyusers/${this.user._id}`)
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -284,7 +284,7 @@ export default {
         user_id: this.user._id,
       };
       axios
-        .post(`http://${SERVER_IP}:${PORT}/beds`, formData)
+        .post(`https://${SERVER_IP}:${PORT}/beds`, formData)
         .then((res) => {
           const data = res.data;
           if (data.status) {

@@ -67,7 +67,7 @@ export default {
         pass: this.pass,
       };
       axios
-        .post(`http://${SERVER_IP}:${PORT}/login`, formData)
+        .post(`https://${SERVER_IP}:${PORT}/login`, formData)
         .then((res) => {
           const data = res.data;
           if (data.status) {

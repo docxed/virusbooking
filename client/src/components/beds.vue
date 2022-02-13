@@ -69,7 +69,7 @@ export default {
     },
     getBedsDealingbyUsers() {
       axios
-        .get(`http://${SERVER_IP}:${PORT}/bedsdealingbyusers/${this.user._id}`)
+        .get(`https://${SERVER_IP}:${PORT}/bedsdealingbyusers/${this.user._id}`)
         .then((res) => {
           const data = res.data;
 

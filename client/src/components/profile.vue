@@ -155,7 +155,7 @@ export default {
   methods: {
     getUser() {
       axios
-        .get(`http://${SERVER_IP}:${PORT}/users/${this.olddatauser._id}`)
+        .get(`https://${SERVER_IP}:${PORT}/users/${this.olddatauser._id}`)
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -192,7 +192,7 @@ export default {
         lineid: this.lineid,
       };
       axios
-        .put(`http://${SERVER_IP}:${PORT}/users/${this.user._id}`, formData)
+        .put(`https://${SERVER_IP}:${PORT}/users/${this.user._id}`, formData)
         .then((res) => {
           const data = res.data;
           if (data.status) {

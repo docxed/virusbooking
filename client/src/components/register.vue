@@ -150,7 +150,7 @@ export default {
         lineid: this.lineid, // not required
       };
       axios
-        .post(`http://${SERVER_IP}:${PORT}/register`, formData)
+        .post(`https://${SERVER_IP}:${PORT}/register`, formData)
         .then((res) => {
           const data = res.data;
           if (data.status) {
