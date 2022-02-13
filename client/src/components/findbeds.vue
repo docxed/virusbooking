@@ -32,16 +32,33 @@
         <span class="text-primary">{{ beds.length.toLocaleString() }}</span>
         เตียง
       </p>
-      <div class="content col-lg-8 m-auto mb-3" v-for="bed in beds" :key="bed._id">
-        <p>สถานที่ ...</p>
+      <div
+        class="content col-lg-8 m-auto mb-3"
+        v-for="bed in beds"
+        :key="bed._id"
+      >
         <p>
           <button type="button" class="btn btn-success btn-sm">
-            พร้อมจอง <span class="badge bg-white text-dark">0</span> เตียง
+            พร้อมจอง
+            <span class="badge bg-white text-dark">{{ bed.amount }}</span> เตียง
           </button>
         </p>
-        <p class="text-end">โดย</p>
+        <div class="row my-3">
+          <div class="col-2 text-center m-auto">
+            <p class="h4"><i class="fas fa-map-marker-alt fa-lg"></i></p>
+          </div>
+          <div class="col-10">
+            <p class="h5">{{ bed.province }}</p>
+            <p class="h5">{{ bed.hno }} {{ bed.lane }}</p>
+            <p class="text-secondary">
+              {{
+                `ตำบล/แขวง ${bed.district} อำเภอ/เขต ${bed.area} ${bed.province} ประเทศไทย ${bed.zipcode} `
+              }}
+            </p>
+          </div>
+        </div>
         <p class="text-center">
-          <a href="/buybeds/1"
+          <a :href="'/buybeds/' + bed._id"
             ><button class="btn btn-primary btn-sm">ดูรายละเอียด</button></a
           >
         </p>
@@ -67,10 +84,12 @@ export default {
   },
   methods: {
     findBedsbyProvince() {
-      if (this.province == 'ทุกจังหวัด') {
-        this.beds = this.bedsReady
-      }else{
-        this.beds = this.bedsReady.filter((array) => array.province == this.province);
+      if (this.province == "ทุกจังหวัด") {
+        this.beds = this.bedsReady;
+      } else {
+        this.beds = this.bedsReady.filter(
+          (array) => array.province == this.province
+        );
       }
     },
     getBedsReady() {
@@ -82,7 +101,7 @@ export default {
             return prev + curr.amount;
           }, 0);
           this.bedsReady = data.info;
-          this.findBedsbyProvince()
+          this.findBedsbyProvince();
         })
         .catch((err) => {
           console.error(err);
