@@ -177,9 +177,25 @@ export default {
       area: "",
       province: "",
       zipcode: "",
+      bedsByUsers: [],
     };
   },
   methods: {
+    getBedsByUsers() {
+      axios
+        .get(`http://${SERVER_IP}:${PORT}/bedsbyusers/${this.user._id}`)
+        .then((res) => {
+          const data = res.data;
+          if (data.status) {
+            this.bedsByUsers = data.info
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     addbedsValidate() {
       this.addbeds();
     },
@@ -236,6 +252,7 @@ export default {
     this.authentication();
     this.allProvinceTH = provinceTH;
     this.province = this.allProvinceTH[0];
+    this.getBedsByUsers()
   },
 };
 </script>

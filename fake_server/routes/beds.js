@@ -33,7 +33,7 @@ router.get("/bedsbyusers/:id", async (req, res) => {
     } else {
       res
         .status(203)
-        .json({ status: true, message: "การค้นหาสำเร็จ!", info: { beds } });
+        .json({ status: true, message: "การค้นหาสำเร็จ!", info: beds });
     }
   } catch (err) {
     res.status(500).json({
