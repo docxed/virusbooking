@@ -63,4 +63,22 @@ router.get('/beds/:id', async (req, res) => {
     }
 });
 
+router.get('/bedsready', async (req, res) => {
+    try{
+        const bedsready = await Beds.find({amount: {$gt: 0}});
+        if(bedsready.length === 0){
+            res.status(203).json({ status: false, message: "ไม่มีเตียงที่พร้อมให้บริการ!"})
+        }else{
+            res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: {bedsready}})
+        }
+    }catch(err) {
+        res
+      .status(404)
+      .json({
+        status: false,
+        message: "ไม่มีข้อมูลหรือเกิดข้อผิดพลาดกรุณาลงทะเบียนอีกครั้งภายหลัง",
+      });
+    }
+});
+
 module.exports = router;

@@ -23,11 +23,11 @@ router.post('/bedsdealing', async (req, res) =>{
 
 router.get('/bedsdealingbybeds/:id', async (req, res) => {
     try{
-        const dealing = await Bedsdealing.find({bed_id: req.params.id})
-        if(dealing.length === 0){
+        const dealingbybed = await Bedsdealing.find({bed_id: req.params.id})
+        if(dealingbybed.length === 0){
             res.status(203).json({ status: false, message: "ไม่มีข้อมูล!"})
         }else{
-            res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: {dealing}})
+            res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: {dealingbybed}})
         }
     }catch (err) {
         res
@@ -36,6 +36,19 @@ router.get('/bedsdealingbybeds/:id', async (req, res) => {
         status: false,
         message: "เกิดข้อผิดพลาดกรุณาลงทะเบียนอีกครั้งภายหลัง",
       });
+    }
+});
+
+router.get('/bedsdealingbyusers/:id', async (req, res) => {
+    try{
+        const dealingbyuser = await Bedsdealing.find({user_id: req.params.id})
+        if(dealingbyuser.length === 0){
+            res.status(203).json({ status: false, message: "ไม่มีข้อมูล!"})
+        }else{
+            res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: {dealingbyuser}})
+        }
+    }catch (err) {
+
     }
 });
 
