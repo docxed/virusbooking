@@ -19,7 +19,6 @@ router.get("/bedsdealing/:id", async (req, res) => {
         for (let y = 0; y < userid.length; y++) {
           if (dealingall4[0].user_id == userid[y]._id + "") {
             namell4 = userid[y];
-            console.log(y);
           }
         }
         for (let z = 0; z < bedsid.length; z++) {
