@@ -29,7 +29,6 @@ const UserSchama = new mongoose.Schema({
     },
     lineid:{
         type:String,
-        required: true,
         max: 50
     },
     phone:{

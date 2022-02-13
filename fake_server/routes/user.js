@@ -60,13 +60,23 @@ router.put('/:id', async (req, res) => {
 });
 
 router.put('/changepass/:id', async (req, res) => {
-    try{
-        const user = await User.findById(req.params.id);
+    // try{
+    //     const user = await User.findById(req.params.id);
+    //     const hashedPass = CryptoJS.AES.decrypt(
+    //         user.pass,
+    //         process.env.PASS_SEC
+    //     );
+    //     const pass = hashedPass.toString(CryptoJS.enc.Utf8);
+    //     if(pass !== req.body.oldpass){
+    //         res.json({"status": true, })
+    //     }else{
 
-        res.json(user)
-    }catch (err) {
-        res.status(500).json({"message": "อัพเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่ภายหลัง"})
-    }
+    //     }
+
+    //     res.json(user)
+    // }catch (err) {
+    //     res.status(500).json({"message": "อัพเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่ภายหลัง"})
+    // }
 });
 
 module.exports = router;

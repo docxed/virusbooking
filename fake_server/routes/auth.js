@@ -44,7 +44,6 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try{
         const user = await User.findOne({email: req.body.email})
-        console.log(user)
         if(!user){
             res.status(203).json({ 'status': false, 'message': "อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง" })
         }else{
