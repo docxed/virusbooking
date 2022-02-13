@@ -1,5 +1,7 @@
 const Beds = require("../models/Beds");
+const User = require('../models/User');
 const router = require("express").Router();
+const ObjectID = require("mongodb").ObjectID;
 
 router.post("/beds", async (req, res) => {
   try {
@@ -73,6 +75,20 @@ router.get("/bedsready", async (req, res) => {
         .status(203)
         .json({ status: true, message: "การค้นหาสำเร็จ!", info: bedsready });
     }
+
+    const num = await Beds.aggregate([
+        { $lookup:
+            {
+               from: "users",
+               localField: "user_id",
+               foreignField: "_id",
+               as: "user_id"
+            }
+        }
+    ])
+    res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: num });
+
+
   } catch (err) {
     res.status(404).json({
       status: false,
