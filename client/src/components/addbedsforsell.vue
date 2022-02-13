@@ -130,7 +130,7 @@
     <h3 class="mt-5 mb-3">
       <i class="fas fa-history"></i> ประวัติการเพิ่มสถานที่
     </h3>
-    <div class="content">
+    <div class="content" v-if="showHistory">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -153,6 +153,9 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="content" v-else>
+      <p class="text-center h4">ไม่มี</p>
     </div>
   </div>
 </template>
@@ -178,6 +181,7 @@ export default {
       zipcode: "",
       bedsByUsers: [],
       bedsdealings: [],
+      showHistory: false,
     };
   },
   methods: {
@@ -188,7 +192,6 @@ export default {
           const data = res.data;
           if (data.status) {
             this.bedsdealings = data.info;
-            console.log(data)
           } else {
             alert(data.message);
           }
@@ -207,8 +210,9 @@ export default {
           const data = res.data;
           if (data.status) {
             this.bedsByUsers = data.info;
+            this.showHistory = true;
           } else {
-            alert(data.message);
+            this.showHistory = false;
           }
         })
         .catch((err) => {
