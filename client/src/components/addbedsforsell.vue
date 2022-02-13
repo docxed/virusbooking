@@ -236,8 +236,6 @@ export default {
           const data = res.data;
           if (data.status) {
             this.bedsdealings = data.info;
-          } else {
-            alert(data.message);
           }
         })
         .catch((err) => {
