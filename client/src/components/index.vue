@@ -56,7 +56,11 @@
 
     <!-- Findbeds Section -->
     <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
-    <p>จำนวนเตียงว่างทั้งหมด <span class="text-primary">{{ bedsReady.length }}</span> เตียง</p>
+    <p>
+      จำนวนเตียงว่างทั้งหมด
+      <span class="text-primary">{{ amountBedsReady.toLocaleString() }}</span>
+      เตียง
+    </p>
     <div class="content">
       <p class="text-center">
         <a href="/findbeds"
@@ -90,6 +94,7 @@ export default {
     return {
       covidData: null,
       bedsReady: [],
+      amountBedsReady: 0,
     };
   },
   methods: {
@@ -98,8 +103,9 @@ export default {
         .get(`http://${SERVER_IP}:${PORT}/bedsready`)
         .then((res) => {
           const data = res.data;
-          let amount = data.info.reduce((prev, curr) => { prev + curr.amount}, 0)
-          console.log(amount)
+          this.amountBedsReady = data.info.reduce(function (prev, curr) {
+            return prev + curr.amount;
+          }, 0);
           this.bedsReady = data.info;
         })
         .catch((err) => {

@@ -28,21 +28,46 @@
       <div class="row g-2">
         <div class="col">
           <label class="form-label">เลขที่</label>
-          <input type="text" class="form-control mb-3" placeholder="เลขที่" v-model="hno" />
+          <input
+            type="text"
+            class="form-control mb-3"
+            placeholder="เลขที่"
+            v-model="hno"
+          />
         </div>
         <div class="col">
           <label class="form-label">หมู่ที่</label>
-          <input type="text" class="form-control mb-3" placeholder="หมู่ที่" v-model="no" />
+          <input
+            type="text"
+            class="form-control mb-3"
+            placeholder="หมู่ที่"
+            v-model="no"
+          />
         </div>
         <div class="col">
           <label class="form-label">ซอย</label>
-          <input type="text" class="form-control mb-3" placeholder="ซอย" v-model="lane" />
+          <input
+            type="text"
+            class="form-control mb-3"
+            placeholder="ซอย"
+            v-model="lane"
+          />
         </div>
       </div>
       <label class="form-label">ตำบล/แขวง</label>
-      <input type="text" class="form-control mb-3" placeholder="ตำบล/แขวง" v-model="district" />
+      <input
+        type="text"
+        class="form-control mb-3"
+        placeholder="ตำบล/แขวง"
+        v-model="district"
+      />
       <label class="form-label">อำเภอ/เขต</label>
-      <input type="text" class="form-control mb-3" placeholder="อำเภอ/เขต" v-model="area" />
+      <input
+        type="text"
+        class="form-control mb-3"
+        placeholder="อำเภอ/เขต"
+        v-model="area"
+      />
       <label class="form-label">จังหวัด</label>
       <select class="form-select mb-3" v-model="province">
         <option
@@ -54,7 +79,12 @@
         </option>
       </select>
       <label class="form-label">รหัสไปรษณีย์</label>
-      <input type="text" class="form-control mb-3" placeholder="รหัสไปรษณีย์" v-model="zipcode" />
+      <input
+        type="text"
+        class="form-control mb-3"
+        placeholder="รหัสไปรษณีย์"
+        v-model="zipcode"
+      />
     </div>
 
     <p class="my-3 m-auto col-lg-8 h5">ข้อมูลผู้ใช้</p>
@@ -90,7 +120,9 @@
         readonly
       />
       <p class="text-center">
-        <button class="btn btn-primary" @click="addbeds()">เพิ่มสถานที่</button>
+        <button class="btn btn-primary" @click="addbedsValidate()">
+          เพิ่มสถานที่
+        </button>
       </p>
     </div>
 
@@ -129,11 +161,14 @@
 
 <script>
 import { provinceTH } from "../assets/js/province.js";
+import axios from "axios";
+import { SERVER_IP, PORT } from "../assets/server/serverIP";
+
 export default {
   data() {
     return {
       allProvinceTH: [],
-      user: "",
+      user: null,
       beds: 0,
       hno: "",
       no: "",
@@ -142,10 +177,40 @@ export default {
       area: "",
       province: "",
       zipcode: "",
-      user_id: "",
     };
   },
   methods: {
+    addbedsValidate() {
+      this.addbeds();
+    },
+    addbeds() {
+      let formData = {
+        amount: this.beds,
+        hno: this.hno,
+        no: this.no,
+        lane: this.lane,
+        district: this.district,
+        area: this.area,
+        province: this.province,
+        zipcode: this.zipcode,
+        user_id: this.user._id,
+      };
+      axios
+        .post(`http://${SERVER_IP}:${PORT}/beds`, formData)
+        .then((res) => {
+          const data = res.data;
+          if (data.status) {
+            alert(data.message);
+            this.$router.push("/addbedsforsell");
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      this.$router.push("/addbedsforsell");
+    },
     increaseBeds() {
       this.beds++;
       if (this.beds > 9999) this.beds = 9999;
@@ -153,10 +218,6 @@ export default {
     decreaseBeds() {
       this.beds--;
       if (this.beds < 0) this.beds = 0;
-    },
-    addbeds() {
-      console.log("do addbeds");
-      this.$router.push("/");
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));

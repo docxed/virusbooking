@@ -1,26 +1,23 @@
 <template>
   <br /><br /><br />
   <div>
-
     <!-- FindBeds Section -->
     <h3 class="my-3"><i class="fas fa-search"></i> ค้นหาเตียง</h3>
     <div class="row g-2">
-      <div class="col-lg-4 col-3">
-      </div>
+      <div class="col-lg-4 col-3"></div>
       <div class="col-lg-4 col-6">
         <select class="form-select" v-model="province">
           <option
             v-for="(province, index) in allProvinceTH"
             :key="index"
             :value="province"
-            selected
           >
             {{ province }}
           </option>
         </select>
       </div>
       <div class="col-lg-4 col-3">
-        <button class="btn btn-info" @click="find()">
+        <button class="btn btn-info" @click="findBedsbyProvince()">
           <i class="fas fa-search"></i>
         </button>
       </div>
@@ -31,9 +28,11 @@
     <!-- Result Section -->
     <div>
       <p class="col-lg-8 m-auto my-3">
-        ค้นพบ <span class="text-primary">{{ beds.length }}</span> เตียง
+        ค้นพบ
+        <span class="text-primary">{{ beds.length.toLocaleString() }}</span>
+        เตียง
       </p>
-      <div class="content col-lg-8 m-auto">
+      <div class="content col-lg-8 m-auto mb-3" v-for="bed in beds" :key="bed._id">
         <p>สถานที่ ...</p>
         <p>
           <button type="button" class="btn btn-success btn-sm">
@@ -52,7 +51,9 @@
 </template>
 
 <script>
+import axios from "axios";
 import { provinceTH } from "../assets/js/province.js";
+import { SERVER_IP, PORT } from "../assets/server/serverIP";
 
 export default {
   data() {
@@ -60,11 +61,32 @@ export default {
       allProvinceTH: [],
       province: "",
       beds: [],
+      bedsReady: [],
+      amountBedsReady: 0,
     };
   },
   methods: {
-    find() {
-      console.log("do find");
+    findBedsbyProvince() {
+      if (this.province == 'ทุกจังหวัด') {
+        this.beds = this.bedsReady
+      }else{
+        this.beds = this.bedsReady.filter((array) => array.province == this.province);
+      }
+    },
+    getBedsReady() {
+      axios
+        .get(`http://${SERVER_IP}:${PORT}/bedsready`)
+        .then((res) => {
+          const data = res.data;
+          this.amountBedsReady = data.info.reduce(function (prev, curr) {
+            return prev + curr.amount;
+          }, 0);
+          this.bedsReady = data.info;
+          this.findBedsbyProvince()
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));
@@ -80,6 +102,7 @@ export default {
     this.authentication();
     this.allProvinceTH = ["ทุกจังหวัด", ...provinceTH];
     this.province = this.allProvinceTH[0];
+    this.getBedsReady();
   },
 };
 </script>
