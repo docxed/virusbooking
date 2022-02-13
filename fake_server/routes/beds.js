@@ -51,7 +51,7 @@ router.get("/beds/:id", async (req, res) => {
     } else {
       res
         .status(203)
-        .json({ status: true, message: "การค้นหาสำเร็จ!", info: bedsid });
+        .json({ status: true, message: "การค้นหาสำเร็จ!", info: [bedsid] });
     }
   } catch (err) {
     res.status(404).json({

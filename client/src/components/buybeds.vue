@@ -1,22 +1,21 @@
 <template>
   <br /><br /><br />
   <div>
-
     <!-- Deatil Section -->
-    <h3>รายละเอียดเลือกจอง {{ $route.params.id }}</h3>
+    <h3>รายละเอียดเลือกจอง</h3>
     <br />
     <div class="content m-auto col-lg-8">
-      <p class="text-center">
-        <button type="button" class="btn btn-success">
-          พร้อมจอง <span class="badge bg-white text-dark">0</span> เตียง
-        </button>
-      </p>
       <h5>ที่อยู่</h5>
       <p>...</p>
       <h5>ข้อมูลติดต่อ</h5>
       <p>ชื่อ</p>
       <p>เบอร์ติดต่อ</p>
       <p>LINE ID</p>
+      <p class="text-center">
+        <button type="button" class="btn btn-success">
+          พร้อมจอง <span class="badge bg-white text-dark">0</span> เตียง
+        </button>
+      </p>
     </div>
 
     <!-- BuyForm Section -->
@@ -82,11 +81,26 @@
 </template>
 
 <script>
+import axios from "axios";
+import { SERVER_IP, PORT } from "../assets/server/serverIP";
 export default {
   data() {
-    return {};
+    return {
+      bed: null,
+    };
   },
   methods: {
+    getBed() {
+      axios
+        .get(`http://${SERVER_IP}:${PORT}/beds/${this.$route.params.id}`)
+        .then((res) => {
+          const data = res.data;
+          this.bed = data.info[0];
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     rent() {
       console.log("do rent...");
     },
@@ -105,6 +119,7 @@ export default {
 
   created() {
     this.authentication();
+    this.getBed();
   },
 };
 </script>
