@@ -4,8 +4,10 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRoute = require('./routes/user');
 const authRoute = require('./routes/auth');
+var cors = require('cors');
 
 dotenv.config();
+app.use(cors())
 
 mongoose
     .connect(process.env.MONGO_URL)
