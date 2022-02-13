@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-
-
 const BedsdealingSchema = new mongoose.Schema({
     date: {
         type:Date,

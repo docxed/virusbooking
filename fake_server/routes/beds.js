@@ -91,16 +91,10 @@ router.get("/bedsready", async (req, res) => {
     }
 
     if (list.length === 0) {
-      res
-        .status(203)
-        .json({ status: false, message: "ไม่มีเตียงที่พร้อมให้บริการ!" });
+      res.status(203).json({ status: false, message: "ไม่มีเตียงที่พร้อมให้บริการ!" });
     } else {
-      res
-        .status(203)
-        .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
+      res.status(200).json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
     }
-    res.status(203).json({ status: true, message: "การค้นหาสำเร็จ!", info: num });
-
 
   } catch (err) {
     res.status(404).json({
