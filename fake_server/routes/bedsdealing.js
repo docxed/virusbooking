@@ -81,7 +81,7 @@ router.get("/bedsdealing", async (req, res) => {
 router.post("/bedsdealing", async (req, res) => {
   try {
     const newdealing = await new Bedsdealing({
-      date: new Date(),
+      date: new Date(req.body.date),
       bed_id: req.body.bed_id,
       user_id: req.body.user_id,
     });
