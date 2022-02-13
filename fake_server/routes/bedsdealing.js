@@ -1,37 +1,36 @@
-const Bedsdealing = require('../models/Bedsdealing');
-const User = require('../models/User');
-const Beds = require('../models/Beds');
+const Bedsdealing = require("../models/Bedsdealing");
+const User = require("../models/User");
+const Beds = require("../models/Beds");
 const router = require("express").Router();
-var mongoose = require('mongoose');
-const dotenv = require('dotenv');
+var mongoose = require("mongoose");
+const dotenv = require("dotenv");
 dotenv.config();
 
-router.get('/bedsdealing', async (req, res) => {
-    try {
-        const dealingall3 = await Bedsdealing.find();
-        const user = await User.find(); 
-        const list = []
+router.get("/bedsdealing", async (req, res) => {
+  try {
+    const dealingall3 = await Bedsdealing.find();
+    const user = await User.find();
+    const list = [];
 
-        for( let i = 0; i < dealingall3.length; i++){
-            let name;
-            for( let y=0; y < user.length;y++){
-                if(dealingall3[i].user_id == (user[y]._id +"")){
-                    name = user[y];
-                }
-            }
-            list.push({
-                _id: dealingall3[i]._id,
-                bed_id: dealingall3[i].bed_id,
-                user_id: dealingall3[i].user_id,
-                user: name
-            })
+    for (let i = 0; i < dealingall3.length; i++) {
+      let name;
+      for (let y = 0; y < user.length; y++) {
+        if (dealingall3[i].user_id == user[y]._id + "") {
+          name = user[y];
         }
-        
-
-        res.status(200).json({ status: true, message: "การค้นหาสำเร็จ!", 'info':  list});
-    } catch (err) {
-        
+      }
+      list.push({
+        _id: dealingall3[i]._id,
+        bed_id: dealingall3[i].bed_id,
+        user_id: dealingall3[i].user_id,
+        user: name,
+      });
     }
+
+    res
+      .status(200)
+      .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
+  } catch (err) {}
 });
 
 router.post("/bedsdealing", async (req, res) => {
@@ -57,19 +56,25 @@ router.post("/bedsdealing", async (req, res) => {
         { new: true }
       );
 
-        if(oldBeds.amount === 0){
-            res.status(201).json({ status: false, message: "ไม่สามารถจองได้ เนื่องจากเตียงหมด" });
-        }else{
-            const update_Beds = await Beds.findByIdAndUpdate(req.body.bed_id,
-                {
-                    $set: {amount: oldBeds.amount - 1},
-                },
-                    { new: true }
-                );
-    
-            const New_dealing = await newdealing.save();
-            res.status(201).json({ status: true, message: "จองสำเร็จ" });
-        }
+      if (oldBeds.amount === 0) {
+        res
+          .status(201)
+          .json({
+            status: false,
+            message: "ไม่สามารถจองได้ เนื่องจากเตียงหมด",
+          });
+      } else {
+        const update_Beds = await Beds.findByIdAndUpdate(
+          req.body.bed_id,
+          {
+            $set: { amount: oldBeds.amount - 1 },
+          },
+          { new: true }
+        );
+
+        const New_dealing = await newdealing.save();
+        res.status(201).json({ status: true, message: "จองสำเร็จ" });
+      }
     }
   } catch (err) {
     res.status(500).json({
@@ -85,13 +90,11 @@ router.get("/bedsdealingbybeds/:id", async (req, res) => {
     if (dealingbybed.length === 0) {
       res.status(203).json({ status: false, message: "ไม่มีข้อมูล!" });
     } else {
-      res
-        .status(203)
-        .json({
-          status: true,
-          message: "การค้นหาสำเร็จ!",
-          info: { dealingbybed },
-        });
+      res.status(203).json({
+        status: true,
+        message: "การค้นหาสำเร็จ!",
+        info: { dealingbybed },
+      });
     }
   } catch (err) {
     res.status(500).json({
@@ -107,13 +110,11 @@ router.get("/bedsdealingbyusers/:id", async (req, res) => {
     if (dealingbyuser.length === 0) {
       res.status(203).json({ status: false, message: "ไม่มีข้อมูล!" });
     } else {
-      res
-        .status(203)
-        .json({
-          status: true,
-          message: "การค้นหาสำเร็จ!",
-          info: { dealingbyuser },
-        });
+      res.status(203).json({
+        status: true,
+        message: "การค้นหาสำเร็จ!",
+        info: { dealingbyuser },
+      });
     }
   } catch (err) {
     res.status(500).json({
