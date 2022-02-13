@@ -134,10 +134,10 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th><b>วันที่สร้างข้อมูล</b></th>
-            <th><b>สถานที่</b></th>
-            <th><b>มีผู้จองแล้ว</b></th>
-            <th><b></b></th>
+            <td><b>วันที่สร้างข้อมูล</b></td>
+            <td><b>สถานที่</b></td>
+            <td><b>มีผู้จองแล้ว</b></td>
+            <td><b></b></td>
           </tr>
         </thead>
         <tbody>
@@ -155,7 +155,7 @@
       </table>
     </div>
     <div class="content" v-else>
-      <p class="text-center h4">ไม่มี</p>
+      <p class="text-center fs-4">ยังไม่มีการเพิ่มสถานที่</p>
     </div>
   </div>
 </template>

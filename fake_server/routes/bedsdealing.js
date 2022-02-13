@@ -113,7 +113,7 @@ router.get("/bedsdealingbyusers/:id", async (req, res) => {
       res.status(203).json({
         status: true,
         message: "การค้นหาสำเร็จ!",
-        info: { dealingbyuser },
+        info: dealingbyuser ,
       });
     }
   } catch (err) {

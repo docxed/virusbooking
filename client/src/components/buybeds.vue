@@ -17,7 +17,7 @@
           Google Maps
         </button>
       </p>
-      <p class="h5">อคิราภ์ สีแสนยง</p>
+      <p class="h5">Firstname1 Lastname1</p>
       <p class="h6 text-secondary">ติดต่อ 0882923741</p>
       <p class="h6 text-secondary">LINE ID ajayzz</p>
       <p class="h6 text-secondary">
@@ -27,7 +27,8 @@
       </p>
       <p class="text-center">
         <button type="button" class="btn btn-success mt-3">
-          พร้อมจอง <span class="badge bg-white text-dark">0</span> เตียง
+          พร้อมจอง
+          <span class="badge bg-white text-dark">{{ bed.amount }}</span> เตียง
         </button>
       </p>
     </div>
@@ -38,7 +39,7 @@
     <div class="m-auto d-flex my-3 justify-content-center">
       <div class="row">
         <div class="col">
-          <input type="date" class="form-control" />
+          <input type="date" class="form-control" v-model="date" />
         </div>
         <div class="col">
           <button
@@ -83,7 +84,7 @@
               type="button"
               class="btn btn-primary"
               data-bs-dismiss="modal"
-              @click="rent()"
+              @click="rentValidate()"
             >
               ยืนยันจอง
             </button>
@@ -101,9 +102,34 @@ export default {
   data() {
     return {
       bed: null,
+      date: "",
+      user: null,
     };
   },
   methods: {
+    rent() {
+      let formData = {
+        date: this.date,
+        bed_id: this.$route.params.id,
+        user_id: this.user._id,
+      };
+      axios
+        .post(`http://${SERVER_IP}:${PORT}/bedsdealing`, formData)
+        .then((res) => {
+          const data = res.data;
+          if (data.status) {
+            this.$router.push("/beds");
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    rentValidate() {
+      this.rent();
+    },
     gmaps(url) {
       window.open("https://www.google.co.th/maps?q=" + url, "_blank");
     },
@@ -118,14 +144,12 @@ export default {
           console.error(err);
         });
     },
-    rent() {
-      console.log("do rent...");
-    },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));
       if (info != null) {
         this.$root.info = info;
         this.$root.loggedIn = true;
+        this.user = info;
       } else {
         this.loggedIn = false;
         alert("โปรดลงชื่อเข้าใช้งาน");
