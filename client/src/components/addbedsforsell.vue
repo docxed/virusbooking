@@ -114,7 +114,7 @@
             <td>First</td>
             <td>Last</td>
             <td>
-              <a href="/editbedsforsell/1"
+              <a href=""
                 ><button class="btn btn-outline-primary btn-sm">
                   แก้ไขข้อมูล
                 </button></a

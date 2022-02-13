@@ -1,6 +1,7 @@
 <template>
   <br /><br /><br />
   <div>
+    <!-- Login Section -->
     <h3>ลงชื่อเข้าใช้งาน</h3>
     <br />
     <div class="content m-auto col-lg-8">
@@ -19,7 +20,9 @@
         v-model="pass"
       />
       <p class="text-center">
-        <button class="btn btn-primary" @click="login()">ลงชื่อเข้าใช้</button>
+        <button class="btn btn-primary" @click="loginValidate()">
+          ลงชื่อเข้าใช้
+        </button>
       </p>
     </div>
   </div>
@@ -47,7 +50,7 @@ export default {
         .then((res) => {
           const data = res.data;
           if (data.status) {
-            this.$root.login(data)
+            this.$root.login(data);
             this.$router.push("/");
           } else {
             this.pass = "";
@@ -57,6 +60,9 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+    loginValidate() {
+      this.login();
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));
@@ -70,8 +76,8 @@ export default {
     },
   },
   created() {
-    this.authentication()
-  }
+    this.authentication();
+  },
 };
 </script>
 

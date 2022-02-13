@@ -60,7 +60,9 @@
         v-model="repass"
       />
       <p class="text-center">
-        <button class="btn btn-success" @click="register()">ลงทะเบียน</button>
+        <button class="btn btn-success" @click="registerValidate()">
+          ลงทะเบียน
+        </button>
       </p>
     </div>
   </div>
@@ -109,6 +111,9 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+    registerValidate() {
+      this.register();
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));

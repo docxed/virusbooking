@@ -1,6 +1,8 @@
 <template>
   <br /><br /><br />
   <div>
+
+    <!-- FindBeds Section -->
     <h3 class="my-3"><i class="fas fa-search"></i> ค้นหาเตียง</h3>
     <div class="row g-2">
       <div class="col">
@@ -26,6 +28,7 @@
 
     <br />
 
+    <!-- Result Section -->
     <div>
       <p class="col-lg-8 m-auto my-3">
         ค้นพบ <span class="text-primary">{{ beds.length }}</span> เตียง

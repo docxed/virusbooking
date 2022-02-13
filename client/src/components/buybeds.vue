@@ -1,6 +1,8 @@
 <template>
   <br /><br /><br />
   <div>
+
+    <!-- Deatil Section -->
     <h3>รายละเอียดเลือกจอง {{ $route.params.id }}</h3>
     <br />
     <div class="content m-auto col-lg-8">
@@ -16,6 +18,8 @@
       <p>เบอร์ติดต่อ</p>
       <p>LINE ID</p>
     </div>
+
+    <!-- BuyForm Section -->
     <hr class="col-lg-8 m-auto my-5" />
     <p class="text-center h5">วันที่จะเข้าพักอาศัย</p>
     <div class="m-auto d-flex my-3 justify-content-center">

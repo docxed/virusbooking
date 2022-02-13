@@ -3,6 +3,8 @@
   <div>
     <h3><i class="fas fa-user-circle"></i> ข้อมูลผู้ใช้</h3>
     <br />
+
+    <!-- ChangePass Section -->
     <div class="content m-auto col-lg-8" v-if="showChangePass">
       <label class="form-label">รหัสผ่านเดิม</label>
       <input
@@ -31,6 +33,8 @@
         </button>
       </p>
     </div>
+
+    <!-- ChangeInfo Section -->
     <div class="content m-auto col-lg-8" v-else>
       <div class="row mb-3 g-2">
         <div class="col">
