@@ -5,9 +5,9 @@
     <!-- FindBeds Section -->
     <h3 class="my-3"><i class="fas fa-search"></i> ค้นหาเตียง</h3>
     <div class="row g-2">
-      <div class="col">
+      <div class="col-lg-4 col-3">
       </div>
-      <div class="col">
+      <div class="col-lg-4 col-6">
         <select class="form-select" v-model="province">
           <option
             v-for="(province, index) in allProvinceTH"
@@ -19,7 +19,7 @@
           </option>
         </select>
       </div>
-      <div class="col">
+      <div class="col-lg-4 col-3">
         <button class="btn btn-info" @click="find()">
           <i class="fas fa-search"></i>
         </button>
