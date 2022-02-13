@@ -30,12 +30,37 @@ router.post("/beds", async (req, res) => {
 router.get("/bedsbyusers/:id", async (req, res) => {
   try {
     const beds = await Beds.find({ user_id: req.params.id });
-    if (beds.length === 0) {
+    const userby = await User.find();
+    var list = [];
+
+    for( let i = 0; i < beds.length; i++){
+        let name;
+        for( let y=0; y < userby.length;y++){
+            if(beds[i].user_id == (userby[y]._id +"")){
+                name = userby[y];
+            }
+        }
+        list.push({
+            _id: beds[i]._id,
+            amount: beds[i].amount,
+            hno: beds[i].hno,
+            no: beds[i].no,
+            lane: beds[i].lane,
+            district: beds[i].district,
+            area: beds[i].area,
+            province: beds[i].province,
+            zipcode: beds[i].zipcode,
+            user_id: beds[i].user_id,
+            user: name
+        })
+    }
+    
+    if (list.length === 0) {
       res.status(203).json({ status: false, message: "ไม่มีข้อมูล!" });
     } else {
       res
         .status(203)
-        .json({ status: true, message: "การค้นหาสำเร็จ!", info: beds });
+        .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
     }
   } catch (err) {
     res.status(500).json({
@@ -48,12 +73,36 @@ router.get("/bedsbyusers/:id", async (req, res) => {
 router.get("/beds/:id", async (req, res) => {
   try {
     const bedsid = await Beds.findById(req.params.id);
-    if (bedsid.length === 0) {
+    const userid = await User.find();
+    var list = [];
+
+    let name;
+
+    for( let i = 0; i < userid.length; i++){
+        if(bedsid.user_id == (userid[i]._id+"")){
+            name = userid[i];
+        }
+    }
+    list.push({
+        _id: bedsid._id,
+        amount: bedsid.amount,
+        hno: bedsid.hno,
+        no: bedsid.no,
+        lane: bedsid.lane,
+        district: bedsid.district,
+        area: bedsid.area,
+        province: bedsid.province,
+        zipcode: bedsid.zipcode,
+        user_id: bedsid.user_id,
+        user: name
+    })
+
+    if (list.length == 0) {
       res.status(203).json({ status: false, message: "ไม่มีข้อมูล!" });
     } else {
       res
         .status(203)
-        .json({ status: true, message: "การค้นหาสำเร็จ!", info: [bedsid] });
+        .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
     }
   } catch (err) {
     res.status(404).json({
@@ -79,11 +128,12 @@ router.get("/bedsready", async (req, res) => {
         list.push({
             _id: bedsready[i]._id,
             amount: bedsready[i].amount,
-            hno: bedsready[i].amount,
+            hno: bedsready[i].hno,
             no: bedsready[i].no,
             lane: bedsready[i].lane,
             district: bedsready[i].district,
             area: bedsready[i].area,
+            province: bedsready[i].province,
             zipcode: bedsready[i].zipcode,
             user_id: bedsready[i].user_id,
             user: name
