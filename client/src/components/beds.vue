@@ -49,7 +49,7 @@
 <script>
 import axios from "axios";
 import moment from "moment";
-import { SERVER_IP, PORT } from "../assets/server/serverIP";
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
 export default {
   data() {
     return {
@@ -68,13 +68,17 @@ export default {
     },
     getBedsDealingbyUsers() {
       axios
+<<<<<<< Updated upstream
         .get(`http://${SERVER_IP}:${PORT}/bedsdealingbyusers/${this.user._id}`)
+=======
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsdealingbyusers/${this.user._id}`)
+>>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
-
           if (data.status) {
             this.bedsdealingbyusers = data.info;
             this.showHistory = true;
+            console.log(data.info)
           } else {
             this.showHistory = false;
           }

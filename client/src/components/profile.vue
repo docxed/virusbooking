@@ -28,7 +28,7 @@
         v-model="repass"
       />
       <p class="text-center">
-        <button class="btn btn-warning" @click="changePass()">
+        <button class="btn btn-warning" @click="changePassValidate()">
           เปลี่ยนรหัสผ่าน
         </button>
       </p>
@@ -45,6 +45,12 @@
             placeholder="ชื่อ"
             v-model="user.fname"
           />
+<<<<<<< Updated upstream
+=======
+          <span v-if="v$.fname.$error" style="color: red">
+            <p>โปรดกรอก ชื่อจริง ให้ถูกต้อง (ไม่เกิน 50 ตัวอักษร)</p>
+          </span>
+>>>>>>> Stashed changes
         </div>
         <div class="col">
           <label class="form-label">นามสกุล</label>
@@ -54,6 +60,12 @@
             placeholder="นามสกุล"
             v-model="user.lname"
           />
+<<<<<<< Updated upstream
+=======
+          <span v-if="v$.lname.$error" style="color: red">
+            <p>โปรดกรอก นามสกุล ให้ถูกต้อง (ไม่เกิน 50 ตัวอักษร)</p>
+          </span>
+>>>>>>> Stashed changes
         </div>
       </div>
       <label class="form-label">รหัสบัตรประชาชน 13 หลัก</label>
@@ -71,6 +83,12 @@
         placeholder="เบอร์ติดต่อ"
         v-model="user.phone"
       />
+<<<<<<< Updated upstream
+=======
+      <span v-if="v$.phone.$error" style="color: red">
+        <p>โปรดกรอก เบอร์ติดต่อ ให้ถูกต้อง (ไม่เกิน 10 หลัก)</p>
+      </span>
+>>>>>>> Stashed changes
       <label class="form-label">อีเมล</label>
       <input
         type="email"
@@ -86,6 +104,12 @@
         placeholder="LINE ID"
         v-model="user.lineid"
       />
+<<<<<<< Updated upstream
+=======
+      <span v-if="v$.lineid.$error" style="color: red">
+        <p>โปรดกรอก LINE ID (ไม่เกิน 30 ตัวอักษร)</p>
+      </span>
+>>>>>>> Stashed changes
       <p class="text-center">
         <button class="btn btn-info mx-1" @click="updateValidate()">
           บันทึก
@@ -100,27 +124,125 @@
 
 <script>
 import axios from "axios";
+<<<<<<< Updated upstream
 import { SERVER_IP, PORT } from "../assets/server/serverIP";
+=======
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
+import useValidate from "@vuelidate/core";
+import { required, maxLength, minLength, numeric } from "@vuelidate/validators";
+>>>>>>> Stashed changes
 
 export default {
   data() {
     return {
+<<<<<<< Updated upstream
+=======
+      vp$: useValidate(),
+      v$: useValidate(),
+>>>>>>> Stashed changes
       oldpass: "",
       pass: "",
       repass: "",
       user: null,
       olddatauser: null,
       showChangePass: false,
+<<<<<<< Updated upstream
     };
   },
+=======
+      fname: "",
+      lname: "",
+      idcard: "",
+      phone: "",
+      email: "",
+      lineid: "",
+    };
+  },
+
+  validations() {
+    return {
+      fname: {
+        required,
+        maxLength: maxLength(50),
+        Thai: function (value) {
+          return /^[ก-ฮ a-z A-Z]/.test(value);
+        },
+        Nonum: function (value) {
+          return !/[0-9]/.test(value);
+        },
+      },
+      lname: {
+        required,
+        maxLength: maxLength(50),
+        Thai: function (value) {
+          return /^[ก-ฮ a-z A-Z]/.test(value);
+        },
+        Nonum: function (value) {
+          return !/[0-9]/.test(value);
+        },
+      },
+      phone: {
+        required,
+        numeric,
+        minLength: minLength(10),
+        maxLength: maxLength(10),
+      },
+      lineid: { maxLength: maxLength(30) },
+    };
+  },
+>>>>>>> Stashed changes
   methods: {
+    changePass() {
+      let formData = {
+        oldpass: this.oldpass,
+        pass: this.pass,
+      };
+      axios
+        .put(
+          `${PROTOCOl}://${SERVER_IP}:${PORT}/user/changepass/${this.olddatauser._id}`,
+          formData
+        )
+        .then((res) => {
+          const data = res.data;
+          if (data.status) {
+            alert(data.message);
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    changePassValidate() {
+      this.v$.$validatePass();
+      if (!this.v$.$error) {
+        // if ANY fail validation
+        this.changePass();
+      } else {
+        alert("โปรดกรอกข้อมูลให้ถูกต้อง");
+      }
+    },
     getUser() {
       axios
+<<<<<<< Updated upstream
         .get(`http://${SERVER_IP}:${PORT}/users/${this.olddatauser._id}`)
+=======
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/users/${this.olddatauser._id}`)
+>>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           if (data.status) {
             this.user = data.info;
+<<<<<<< Updated upstream
+=======
+            this.fname = data.info.fname;
+            this.lname = data.info.lname;
+            this.idcard = data.info.idcard;
+            this.phone = data.info.phone;
+            this.email = data.info.email;
+            this.lineid = data.info.lineid;
+>>>>>>> Stashed changes
           } else {
             alert(data.message);
           }
@@ -130,7 +252,17 @@ export default {
         });
     },
     updateValidate() {
+<<<<<<< Updated upstream
       this.update();
+=======
+      this.v$.$validate();
+      if (!this.v$.$error) {
+        // if ANY fail validation
+        this.update();
+      } else {
+        alert("โปรดกรอกข้อมูลให้ถูกต้อง");
+      }
+>>>>>>> Stashed changes
     },
     update() {
       let formData = {
@@ -157,12 +289,7 @@ export default {
         });
     },
     changePassPage() {
-      alert("Demo");
-      // this.showChangePass = true
-    },
-    changePass() {
-      console.log("do changePass");
-      this.$router.push("/");
+      this.showChangePass = true;
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));

@@ -39,7 +39,20 @@
     <div class="m-auto d-flex my-3 justify-content-center">
       <div class="row">
         <div class="col">
+<<<<<<< Updated upstream
           <input type="date" class="form-control" v-model="date" />
+=======
+          <input
+            type="date"
+            @change="changeValidate()"
+            class="form-control"
+            v-model="date"
+            :min="miniDate()"
+          />
+          <span v-if="v$.checkDate.$error" style="color: red">
+            <p>โปรดเลือกวันที่ให้ถูกต้อง</p>
+          </span>
+>>>>>>> Stashed changes
         </div>
         <div class="col">
           <button
@@ -97,16 +110,43 @@
 
 <script>
 import axios from "axios";
+<<<<<<< Updated upstream
 import { SERVER_IP, PORT } from "../assets/server/serverIP";
+=======
+import moment from "moment";
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
+import useValidate from "@vuelidate/core";
+import { required, minValue } from "@vuelidate/validators";
+
+>>>>>>> Stashed changes
 export default {
   data() {
     return {
       bed: null,
       date: "",
       user: null,
+<<<<<<< Updated upstream
     };
   },
   methods: {
+=======
+      checkDate: "",
+    };
+  },
+
+  validations() {
+    return {
+      checkDate: {
+        required,
+        minValue: minValue(this.calDates("decrease", new Date(), 1)),
+      },
+    };
+  },
+  methods: {
+    miniDate() {
+      return moment(new Date()).format("YYYY-MM-DD") + "";
+    },
+>>>>>>> Stashed changes
     rent() {
       let formData = {
         date: this.date,
@@ -114,7 +154,11 @@ export default {
         user_id: this.user._id,
       };
       axios
+<<<<<<< Updated upstream
         .post(`http://${SERVER_IP}:${PORT}/bedsdealing`, formData)
+=======
+        .post(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsdealing`, formData)
+>>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -127,15 +171,36 @@ export default {
           console.error(err);
         });
     },
+<<<<<<< Updated upstream
     rentValidate() {
       this.rent();
+=======
+    changeValidate() {
+      this.checkDate = new Date(this.date);
+      console.log("inp value:", moment(this.checkDate).format("L"));
+      this.v$.$validate();
+    },
+    rentValidate() {
+      this.checkDate = new Date(this.date);
+      this.v$.$validate();
+      if (!this.v$.$error) {
+        // if ANY fail validation
+        this.rent();
+      } else {
+        alert("โปรดกรอกข้อมูลให้ถูกต้อง");
+      }
+>>>>>>> Stashed changes
     },
     gmaps(url) {
       window.open("https://www.google.co.th/maps?q=" + url, "_blank");
     },
     getBed() {
       axios
+<<<<<<< Updated upstream
         .get(`http://${SERVER_IP}:${PORT}/beds/${this.$route.params.id}`)
+=======
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/beds/${this.$route.params.id}`)
+>>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           this.bed = data.info[0];
@@ -143,6 +208,13 @@ export default {
         .catch((err) => {
           console.error(err);
         });
+    },
+    calDates(type, date, shift) { // type=(increase, decrease), date=Obj(date), shift=int(Day)
+      if (type == "increase") {
+        return date.setDate(date.getDate() + shift);
+      } else if (type == "decrease") {
+        return date.setDate(date.getDate() - shift);
+      }
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));

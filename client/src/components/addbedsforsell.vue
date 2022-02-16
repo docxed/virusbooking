@@ -167,8 +167,14 @@
 import { provinceTH } from "../assets/js/province.js";
 import axios from "axios";
 import moment from "moment";
+<<<<<<< Updated upstream
 import { SERVER_IP, PORT } from "../assets/server/serverIP";
 
+=======
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
+import useValidate from "@vuelidate/core";
+import { required, between, maxLength, numeric, minLength } from "@vuelidate/validators";
+>>>>>>> Stashed changes
 export default {
   data() {
     return {
@@ -190,7 +196,11 @@ export default {
   methods: {
     getBedsDealings() {
       axios
+<<<<<<< Updated upstream
         .get(`http://${SERVER_IP}:${PORT}/bedsdealing`)
+=======
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsdealing`)
+>>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -208,7 +218,11 @@ export default {
     },
     getBedsByUsers() {
       axios
+<<<<<<< Updated upstream
         .get(`http://${SERVER_IP}:${PORT}/bedsbyusers/${this.user._id}`)
+=======
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsbyusers/${this.user._id}`)
+>>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -238,7 +252,11 @@ export default {
         user_id: this.user._id,
       };
       axios
+<<<<<<< Updated upstream
         .post(`http://${SERVER_IP}:${PORT}/beds`, formData)
+=======
+        .post(`${PROTOCOl}://${SERVER_IP}:${PORT}/beds`, formData)
+>>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           if (data.status) {
