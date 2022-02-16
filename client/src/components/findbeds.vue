@@ -94,11 +94,7 @@ export default {
     },
     getBedsReady() {
       axios
-<<<<<<< Updated upstream
-        .get(`http://${SERVER_IP}:${PORT}/bedsready`)
-=======
         .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsready`)
->>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           this.amountBedsReady = data.info.reduce(function (prev, curr) {

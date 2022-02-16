@@ -20,7 +20,8 @@
         </thead>
         <tbody>
           <tr v-for="beddealing in bedsdealingbyusers" :key="beddealing._id">
-            <td>{{ convertToThaiDate(beddealing.date) }}</td>
+            <!-- <td>{{ convertToThaiDate(beddealing.date) }}</td> -->
+            <td>Demo Date</td>
             <td>Demo</td>
             <td>Demo</td>
             <td>
@@ -68,11 +69,7 @@ export default {
     },
     getBedsDealingbyUsers() {
       axios
-<<<<<<< Updated upstream
-        .get(`http://${SERVER_IP}:${PORT}/bedsdealingbyusers/${this.user._id}`)
-=======
         .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsdealingbyusers/${this.user._id}`)
->>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           if (data.status) {

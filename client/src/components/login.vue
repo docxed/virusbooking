@@ -12,6 +12,9 @@
         placeholder="อีเมล"
         v-model="email"
       />
+      <span v-if="v$.email.$error" style="color: red">
+        <p>โปรดใส่ Email ให้ถูกต้อง</p>
+      </span>
       <label class="form-label">รหัสผ่าน</label>
       <input
         type="password"
@@ -19,6 +22,9 @@
         placeholder="รหัสผ่าน"
         v-model="pass"
       />
+      <span v-if="v$.pass.$error" style="color: red">
+        <p>โปรดใส่รหัสผ่านให้ถูกต้อง</p>
+      </span>
       <p class="text-center">
         <button class="btn btn-primary" @click="loginValidate()">
           ลงชื่อเข้าใช้
@@ -30,23 +36,17 @@
 
 <script>
 import axios from "axios";
-<<<<<<< Updated upstream
-import { SERVER_IP, PORT } from "../assets/server/serverIP";
-
-=======
 import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
 import useValidate from "@vuelidate/core";
 import { required, minLength } from "@vuelidate/validators";
->>>>>>> Stashed changes
 export default {
   data() {
     return {
+      v$: useValidate(),
       email: "",
       pass: "",
     };
   },
-<<<<<<< Updated upstream
-=======
 
   validations() {
     return {
@@ -54,7 +54,6 @@ export default {
       pass: { required, minLength: minLength(6) },
     };
   },
->>>>>>> Stashed changes
   methods: {
     login() {
       let formData = {
@@ -62,11 +61,7 @@ export default {
         pass: this.pass,
       };
       axios
-<<<<<<< Updated upstream
-        .post(`http://${SERVER_IP}:${PORT}/login`, formData)
-=======
         .post(`${PROTOCOl}://${SERVER_IP}:${PORT}/login`, formData)
->>>>>>> Stashed changes
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -82,9 +77,6 @@ export default {
         });
     },
     loginValidate() {
-<<<<<<< Updated upstream
-      this.login();
-=======
       this.v$.$validate(); // checks all inputs
       if (!this.v$.$error) {
         // if ANY fail validation
@@ -92,7 +84,6 @@ export default {
       } else {
         alert("โปรดกรอกข้อมูลให้ถูกต้อง");
       }
->>>>>>> Stashed changes
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));
