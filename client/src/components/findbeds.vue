@@ -70,7 +70,7 @@
 <script>
 import axios from "axios";
 import { provinceTH } from "../assets/js/province.js";
-import { SERVER_IP, PORT } from "../assets/server/serverIP";
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
 
 export default {
   data() {
@@ -94,7 +94,7 @@ export default {
     },
     getBedsReady() {
       axios
-        .get(`https://${SERVER_IP}:${PORT}/bedsready`)
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsready`)
         .then((res) => {
           const data = res.data;
           this.amountBedsReady = data.info.reduce(function (prev, curr) {

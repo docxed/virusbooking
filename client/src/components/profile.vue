@@ -28,7 +28,7 @@
         v-model="repass"
       />
       <p class="text-center">
-        <button class="btn btn-warning" @click="changePass()">
+        <button class="btn btn-warning" @click="changePassValidate()">
           เปลี่ยนรหัสผ่าน
         </button>
       </p>
@@ -45,9 +45,9 @@
             placeholder="ชื่อ"
             v-model="fname"
           />
-         <span v-if="v$.fname.$error" style="color: red">
-        <p>โปรดกรอก ชื่อจริง ให้ถูกต้อง(ไม่เกิน50ตัวอักษร)</p>
-      </span>
+          <span v-if="v$.fname.$error" style="color: red">
+            <p>โปรดกรอก ชื่อจริง ให้ถูกต้อง (ไม่เกิน 50 ตัวอักษร)</p>
+          </span>
         </div>
         <div class="col">
           <label class="form-label">นามสกุล</label>
@@ -57,9 +57,9 @@
             placeholder="นามสกุล"
             v-model="lname"
           />
-           <span v-if="v$.lname.$error" style="color: red">
-        <p>โปรดกรอก นามสกุล ให้ถูกต้อง(ไม่เกิน50ตัวอักษร)</p>
-      </span>
+          <span v-if="v$.lname.$error" style="color: red">
+            <p>โปรดกรอก นามสกุล ให้ถูกต้อง (ไม่เกิน 50 ตัวอักษร)</p>
+          </span>
         </div>
       </div>
       <label class="form-label">รหัสบัตรประชาชน 13 หลัก</label>
@@ -78,7 +78,7 @@
         v-model="phone"
       />
       <span v-if="v$.phone.$error" style="color: red">
-        <p>โปรดกรอก เบอร์ติดต่อ ให้ถูกต้อง(10หลัก)</p>
+        <p>โปรดกรอก เบอร์ติดต่อ ให้ถูกต้อง (ไม่เกิน 10 หลัก)</p>
       </span>
       <label class="form-label">อีเมล</label>
       <input
@@ -95,8 +95,8 @@
         placeholder="LINE ID"
         v-model="lineid"
       />
-       <span v-if="v$.lineid.$error" style="color: red">
-        <p>โปรดกรอก LineId ไม่เกิน30ตัวอักษร</p>
+      <span v-if="v$.lineid.$error" style="color: red">
+        <p>โปรดกรอก LINE ID (ไม่เกิน 30 ตัวอักษร)</p>
       </span>
       <p class="text-center">
         <button class="btn btn-info mx-1" @click="updateValidate()">
@@ -112,13 +112,14 @@
 
 <script>
 import axios from "axios";
-import { SERVER_IP, PORT } from "../assets/server/serverIP";
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
 import useValidate from "@vuelidate/core";
 import { required, maxLength, minLength, numeric } from "@vuelidate/validators";
 
 export default {
   data() {
     return {
+      vp$: useValidate(),
       v$: useValidate(),
       oldpass: "",
       pass: "",
@@ -126,46 +127,91 @@ export default {
       user: null,
       olddatauser: null,
       showChangePass: false,
-      fname: '',
-      lname: '',
-      idcard: '',
-      phone: '',
-      email: '',
-      lineid: '',
+      fname: "",
+      lname: "",
+      idcard: "",
+      phone: "",
+      email: "",
+      lineid: "",
     };
   },
 
   validations() {
     return {
-      fname: {required,  maxLength: maxLength(50),  Thai: function(value) {
-      return /^[ก-ฮ a-z A-Z]/.test(value)
-    }, Nonum: function(value) {
-      return !/[0-9]/.test(value)
-    }},
-      lname: {required,  maxLength: maxLength(50),  Thai: function(value) {
-      return /^[ก-ฮ a-z A-Z]/.test(value)
-    }, Nonum: function(value) {
-      return !/[0-9]/.test(value)
-    }},
-      phone: {required, numeric, minLength: minLength(10), maxLength: maxLength(10)},
-      lineid: {maxLength: maxLength(30)}
-      
-			}
-    },
+      fname: {
+        required,
+        maxLength: maxLength(50),
+        Thai: function (value) {
+          return /^[ก-ฮ a-z A-Z]/.test(value);
+        },
+        Nonum: function (value) {
+          return !/[0-9]/.test(value);
+        },
+      },
+      lname: {
+        required,
+        maxLength: maxLength(50),
+        Thai: function (value) {
+          return /^[ก-ฮ a-z A-Z]/.test(value);
+        },
+        Nonum: function (value) {
+          return !/[0-9]/.test(value);
+        },
+      },
+      phone: {
+        required,
+        numeric,
+        minLength: minLength(10),
+        maxLength: maxLength(10),
+      },
+      lineid: { maxLength: maxLength(30) },
+    };
+  },
   methods: {
+    changePass() {
+      let formData = {
+        oldpass: this.oldpass,
+        pass: this.pass,
+      };
+      axios
+        .put(
+          `${PROTOCOl}://${SERVER_IP}:${PORT}/user/changepass/${this.olddatauser._id}`,
+          formData
+        )
+        .then((res) => {
+          const data = res.data;
+          if (data.status) {
+            alert(data.message);
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    changePassValidate() {
+      this.v$.$validatePass();
+      if (!this.v$.$error) {
+        // if ANY fail validation
+        this.changePass();
+      } else {
+        alert("โปรดกรอกข้อมูลให้ถูกต้อง");
+      }
+    },
     getUser() {
       axios
-        .get(`https://${SERVER_IP}:${PORT}/users/${this.olddatauser._id}`)
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/users/${this.olddatauser._id}`)
         .then((res) => {
           const data = res.data;
           if (data.status) {
             this.user = data.info;
-            this.fname = data.info.fname
-            this.lname = data.info.lname
-            this.idcard = data.info.idcard
-            this.phone = data.info.phone
-            this.email = data.info.email
-            this.lineid = data.info.lineid
+            this.fname = data.info.fname;
+            this.lname = data.info.lname;
+            this.idcard = data.info.idcard;
+            this.phone = data.info.phone;
+            this.email = data.info.email;
+            this.lineid = data.info.lineid;
           } else {
             alert(data.message);
           }
@@ -175,12 +221,13 @@ export default {
         });
     },
     updateValidate() {
-      this.v$.$validate()
-     if (!this.v$.$error) { // if ANY fail validation
-					this.update()
-				} else {
-					alert('โปรดกรอกข้อมูลให้ถูกต้อง')
-				}
+      this.v$.$validate();
+      if (!this.v$.$error) {
+        // if ANY fail validation
+        this.update();
+      } else {
+        alert("โปรดกรอกข้อมูลให้ถูกต้อง");
+      }
     },
     update() {
       let formData = {
@@ -207,12 +254,7 @@ export default {
         });
     },
     changePassPage() {
-      alert("Demo");
-      // this.showChangePass = true
-    },
-    changePass() {
-      console.log("do changePass");
-      this.$router.push("/");
+      this.showChangePass = true;
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));

@@ -1,2 +1,3 @@
-export const SERVER_IP = "bestbeds-demo.herokuapp.com";
-export const PORT = "443";
+export const PROTOCOl = "http";
+export const SERVER_IP = "127.0.0.1";
+export const PORT = "8888";

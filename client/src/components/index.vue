@@ -86,7 +86,7 @@
 import axios from "axios";
 import moment from "moment";
 import CovidChart from "./Charts/covidChart.vue";
-import { SERVER_IP, PORT } from "../assets/server/serverIP";
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
 
 export default {
   components: {
@@ -102,7 +102,7 @@ export default {
   methods: {
     getBedsReady() {
       axios
-        .get(`https://${SERVER_IP}:${PORT}/bedsready`)
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsready`)
         .then((res) => {
           const data = res.data;
           this.amountBedsReady = data.info.reduce(function (prev, curr) {

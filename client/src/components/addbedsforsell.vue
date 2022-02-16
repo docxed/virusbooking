@@ -192,7 +192,7 @@
 import { provinceTH } from "../assets/js/province.js";
 import axios from "axios";
 import moment from "moment";
-import { SERVER_IP, PORT } from "../assets/server/serverIP";
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
 import useValidate from "@vuelidate/core";
 import { required, between, maxLength, numeric, minLength } from "@vuelidate/validators";
 export default {
@@ -231,7 +231,7 @@ export default {
   methods: {
     getBedsDealings() {
       axios
-        .get(`https://${SERVER_IP}:${PORT}/bedsdealing`)
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsdealing`)
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -247,7 +247,7 @@ export default {
     },
     getBedsByUsers() {
       axios
-        .get(`https://${SERVER_IP}:${PORT}/bedsbyusers/${this.user._id}`)
+        .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/bedsbyusers/${this.user._id}`)
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -282,7 +282,7 @@ export default {
         user_id: this.user._id,
       };
       axios
-        .post(`https://${SERVER_IP}:${PORT}/beds`, formData)
+        .post(`${PROTOCOl}://${SERVER_IP}:${PORT}/beds`, formData)
         .then((res) => {
           const data = res.data;
           if (data.status) {

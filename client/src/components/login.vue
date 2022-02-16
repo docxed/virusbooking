@@ -36,9 +36,9 @@
 
 <script>
 import axios from "axios";
-import { SERVER_IP, PORT } from "../assets/server/serverIP";
+import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
 import useValidate from "@vuelidate/core";
-import { required, email, minLength } from "@vuelidate/validators";
+import { required, minLength } from "@vuelidate/validators";
 export default {
   data() {
     return {
@@ -48,18 +48,12 @@ export default {
     };
   },
 
-    validations() {
+  validations() {
     return {
-      email: { required, email },
-		pass: {required, minLength: minLength(5) ,containsUppercase: function(value) {
-      return /[A-Z]/.test(value)
-    },containsLowercase: function(value) {
-      return /[a-z]/.test(value)
-    },containsNumber: function(value) {
-      return /[0-9]/.test(value)
-    },}
-			}
-    },
+      email: { required },
+      pass: { required, minLength: minLength(6) },
+    };
+  },
   methods: {
     login() {
       let formData = {
@@ -67,7 +61,7 @@ export default {
         pass: this.pass,
       };
       axios
-        .post(`https://${SERVER_IP}:${PORT}/login`, formData)
+        .post(`${PROTOCOl}://${SERVER_IP}:${PORT}/login`, formData)
         .then((res) => {
           const data = res.data;
           if (data.status) {
@@ -83,12 +77,13 @@ export default {
         });
     },
     loginValidate() {
-      this.v$.$validate() // checks all inputs
-				if (!this.v$.$error) { // if ANY fail validation
-					this.login()
-				} else {
-					alert('โปรดกรอกข้อมูลให้ถูกต้อง')
-				}
+      this.v$.$validate(); // checks all inputs
+      if (!this.v$.$error) {
+        // if ANY fail validation
+        this.login();
+      } else {
+        alert("โปรดกรอกข้อมูลให้ถูกต้อง");
+      }
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));
