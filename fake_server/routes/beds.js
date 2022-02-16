@@ -1,7 +1,6 @@
 const Beds = require("../models/Beds");
 const User = require("../models/User");
 const router = require("express").Router();
-const ObjectID = require("mongodb").ObjectID;
 
 router.post("/beds", async (req, res) => {
   try {
@@ -51,6 +50,8 @@ router.get("/bedsbyusers/:id", async (req, res) => {
         province: beds[i].province,
         zipcode: beds[i].zipcode,
         user_id: beds[i].user_id,
+        createdAt: beds[i].createdAt,
+        updatedAt: beds[i].updatedAt,
         user: name,
       });
     }
@@ -70,6 +71,7 @@ router.get("/bedsbyusers/:id", async (req, res) => {
   }
 });
 
+/// added
 router.get("/beds/:id", async (req, res) => {
   try {
     const bedsid = await Beds.findById(req.params.id);
@@ -94,6 +96,8 @@ router.get("/beds/:id", async (req, res) => {
       province: bedsid.province,
       zipcode: bedsid.zipcode,
       user_id: bedsid.user_id,
+      createdAt: bedsid.createdAt,
+      updatedAt: bedsid.updatedAt,
       user: name,
     });
 
@@ -112,6 +116,7 @@ router.get("/beds/:id", async (req, res) => {
   }
 });
 
+/// added
 router.get("/bedsready", async (req, res) => {
   try {
     const bedsready = await Beds.find({ amount: { $gt: 0 } });
@@ -136,6 +141,8 @@ router.get("/bedsready", async (req, res) => {
         province: bedsready[i].province,
         zipcode: bedsready[i].zipcode,
         user_id: bedsready[i].user_id,
+        createdAt: bedsready[i].createdAt,
+        updatedAt: bedsready[i].updatedAt,
         user: name,
       });
     }

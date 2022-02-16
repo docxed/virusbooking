@@ -6,6 +6,7 @@ var mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
+// added
 router.get("/bedsdealing/:id", async (req, res) => {
   try {
     const dealingall4 = await Bedsdealing.find({ _id: req.params.id });
@@ -30,6 +31,7 @@ router.get("/bedsdealing/:id", async (req, res) => {
       _id: dealingall4[0]._id,
       bed_id: dealingall4[0].bed_id,
       user_id: dealingall4[0].user_id,
+      date:  dealingall4[0].date,
       user: namell4,
       bed: bedsinfo,
     });
@@ -61,20 +63,27 @@ router.get("/bedsdealing", async (req, res) => {
         _id: dealingall3[i]._id,
         bed_id: dealingall3[i].bed_id,
         user_id: dealingall3[i].user_id,
+        date: dealingall3[i].date,
         user: name,
       });
     }
 
-    res
-      .status(200)
-      .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
+    if(list.length === 0){
+      res.status(203).json({ status: false, message: "ไม่มีข้อมูล!" });
+    }else {
+      res
+        .status(200)
+        .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
+    }
+    
   } catch (err) {}
 });
 
+/// added
 router.post("/bedsdealing", async (req, res) => {
   try {
     const newdealing = await new Bedsdealing({
-      date: new Date(),
+      date: new Date(req.body.date),
       bed_id: req.body.bed_id,
       user_id: req.body.user_id,
     });
@@ -137,6 +146,7 @@ router.get("/bedsdealingbybeds/:id", async (req, res) => {
         _id: dealingbybed[i]._id,
         bed_id: dealingbybed[i].bed_id,
         user_id: dealingbybed[i].user_id,
+        date: dealingbybed[i].date,
         user: name,
       });
     }
@@ -175,6 +185,7 @@ router.get("/bedsdealingbyusers/:id", async (req, res) => {
         _id: dealingbyuser[i]._id,
         bed_id: dealingbyuser[i].bed_id,
         user_id: dealingbyuser[i].user_id,
+        date: dealingbyuser[i].date,
         user: name,
       });
     }

@@ -37,16 +37,7 @@ const UserSchama = new mongoose.Schema(
       required: true,
       min: 10,
       max: 10,
-    },
-    booking: {
-      type: Array,
-      local: {
-        type: String,
-      },
-      date: {
-        type: Date,
-      },
-    },
+    }
   },
   {
     timestamps: true,
