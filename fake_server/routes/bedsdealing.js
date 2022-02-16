@@ -6,6 +6,7 @@ var mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
+// added
 router.get("/bedsdealing/:id", async (req, res) => {
   try {
     const dealingall4 = await Bedsdealing.find({ _id: req.params.id });
@@ -67,7 +68,7 @@ router.get("/bedsdealing", async (req, res) => {
       });
     }
 
-    if(list.length){
+    if(list.length === 0){
       res.status(203).json({ status: false, message: "ไม่มีข้อมูล!" });
     }else {
       res
@@ -78,6 +79,7 @@ router.get("/bedsdealing", async (req, res) => {
   } catch (err) {}
 });
 
+/// added
 router.post("/bedsdealing", async (req, res) => {
   try {
     const newdealing = await new Bedsdealing({
