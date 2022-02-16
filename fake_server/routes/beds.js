@@ -1,7 +1,9 @@
 const Beds = require("../models/Beds");
 const User = require("../models/User");
+const Bedsdealing = require("../models/Bedsdealing");
 const router = require("express").Router();
 
+//added
 router.post("/beds", async (req, res) => {
   try {
     const newBed = await new Beds({
@@ -30,13 +32,19 @@ router.get("/bedsbyusers/:id", async (req, res) => {
   try {
     const beds = await Beds.find({ user_id: req.params.id });
     const userby = await User.find();
+    const dealing = await Bedsdealing.find();
     var list = [];
-
     for (let i = 0; i < beds.length; i++) {
       let name;
+      let datadeal = [];
       for (let y = 0; y < userby.length; y++) {
         if (beds[i].user_id == userby[y]._id + "") {
           name = userby[y];
+        }
+      }
+      for (let z = 0; z < dealing.length; z++){
+        if (beds[i]._id == dealing[z].bed_id){
+          datadeal.push(dealing[z]);
         }
       }
       list.push({
@@ -53,6 +61,7 @@ router.get("/bedsbyusers/:id", async (req, res) => {
         createdAt: beds[i].createdAt,
         updatedAt: beds[i].updatedAt,
         user: name,
+        bedsdealing: datadeal
       });
     }
 
@@ -61,7 +70,7 @@ router.get("/bedsbyusers/:id", async (req, res) => {
     } else {
       res
         .status(203)
-        .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
+        .json({ status: true, message: "การค้นหาสำเร็จ!", info: {bed: list} });
     }
   } catch (err) {
     res.status(500).json({
