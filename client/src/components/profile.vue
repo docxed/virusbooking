@@ -119,7 +119,6 @@ import { required, maxLength, minLength, numeric } from "@vuelidate/validators";
 export default {
   data() {
     return {
-      vp$: useValidate(),
       v$: useValidate(),
       oldpass: "",
       pass: "",
@@ -135,7 +134,6 @@ export default {
       lineid: "",
     };
   },
-
   validations() {
     return {
       fname: {
