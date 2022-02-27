@@ -16,7 +16,6 @@
             class="m-auto customBeds form-control mb-3 bg-white"
             v-model="beds"
           />
-          
         </div>
         <div class="col-4 col-lg-5 my-auto text-start">
           <button class="btn btn-primary" @click="increaseBeds()">+</button>
@@ -39,8 +38,8 @@
             v-model="hno"
           />
           <span v-if="v$.hno.$error" style="color: red">
-        <p>โปรดใส่เลขที่(ไม่เกิน30ตัว)</p>
-      </span>
+            <p>โปรดใส่เลขที่(ไม่เกิน30ตัว)</p>
+          </span>
         </div>
         <div class="col">
           <label class="form-label">หมู่ที่</label>
@@ -50,9 +49,9 @@
             placeholder="หมู่ที่"
             v-model="no"
           />
-           <span v-if="v$.no.$error" style="color: red">
-        <p>โปรดใส่หมู่ที่(ไม่เกิน30ตัว)</p>
-      </span>
+          <span v-if="v$.no.$error" style="color: red">
+            <p>โปรดใส่หมู่ที่(ไม่เกิน30ตัว)</p>
+          </span>
         </div>
         <div class="col">
           <label class="form-label">ซอย</label>
@@ -63,8 +62,8 @@
             v-model="lane"
           />
           <span v-if="v$.lane.$error" style="color: red">
-        <p>โปรดใส่ซอยหรือชื่อซอย(ไม่เกิน50ตัว)</p>
-      </span>
+            <p>โปรดใส่ซอยหรือชื่อซอย(ไม่เกิน50ตัว)</p>
+          </span>
         </div>
       </div>
       <label class="form-label">ตำบล/แขวง</label>
@@ -107,7 +106,7 @@
         placeholder="รหัสไปรษณีย์"
         v-model="zipcode"
       />
-       <span v-if="v$.zipcode.$error" style="color: red">
+      <span v-if="v$.zipcode.$error" style="color: red">
         <p>โปรดใส่รหัสไปรษณีย์ให้ถูกต้อง(ไม่เกิน5ตัว)</p>
       </span>
     </div>
@@ -194,7 +193,13 @@ import axios from "axios";
 import moment from "moment";
 import { PROTOCOl, SERVER_IP, PORT } from "../assets/server/serverIP";
 import useValidate from "@vuelidate/core";
-import { required, between, maxLength, numeric, minLength } from "@vuelidate/validators";
+import {
+  required,
+  between,
+  maxLength,
+  numeric,
+  minLength,
+} from "@vuelidate/validators";
 export default {
   data() {
     return {
@@ -215,19 +220,23 @@ export default {
     };
   },
 
-    validations() {
+  validations() {
     return {
       beds: { required, between: between(1, 9999) },
-      province: {required, maxLength: maxLength(50)},
-      hno: {required, maxLength: maxLength(30), numeric},
-      no: {required, maxLength: maxLength(30), numeric},
-      lane: {required, maxLength: maxLength(50)},
-      district: {required, maxLength: maxLength(50)},
-      area: {required, maxLength: maxLength(50)},
-      zipcode: {required, maxLength: maxLength(5), minLength: minLength(5), numeric}
-		
-			}
-    },
+      province: { required, maxLength: maxLength(50) },
+      hno: { required, maxLength: maxLength(30) },
+      no: { required, maxLength: maxLength(30) },
+      lane: { required, maxLength: maxLength(50) },
+      district: { required, maxLength: maxLength(50) },
+      area: { required, maxLength: maxLength(50) },
+      zipcode: {
+        required,
+        maxLength: maxLength(5),
+        minLength: minLength(5),
+        numeric,
+      },
+    };
+  },
   methods: {
     getBedsDealings() {
       axios
@@ -262,12 +271,13 @@ export default {
         });
     },
     addbedsValidate() {
-      this.v$.$validate() // checks all inputs
-				if (!this.v$.$error) { // if ANY fail validation
-					this.addbeds()
-				} else {
-					alert('โปรดกรอกข้อมูลให้ถูกต้อง')
-				}
+      this.v$.$validate(); // checks all inputs
+      if (!this.v$.$error) {
+        // if ANY fail validation
+        this.addbeds();
+      } else {
+        alert("โปรดกรอกข้อมูลให้ถูกต้อง");
+      }
     },
     addbeds() {
       let formData = {

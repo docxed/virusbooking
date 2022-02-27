@@ -8,6 +8,7 @@ import Findbeds from "@/components/findbeds.vue";
 import Buybeds from "@/components/buybeds.vue";
 import Beds from "@/components/beds.vue";
 import Bedsdetail from "@/components/bedsdetail.vue";
+import Changepass from "@/components/changepass.vue";
 
 const routes = [
   {
@@ -54,6 +55,11 @@ const routes = [
     path: "/bedsdetail/:id",
     name: "bedsdetail",
     component: Bedsdetail,
+  },
+  {
+    path: "/changepass",
+    name: "changepass",
+    component: Changepass,
   },
 ];
 

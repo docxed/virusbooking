@@ -189,6 +189,7 @@ export default {
         .then((res) => {
           const data = res.data;
           if (data.status) {
+            alert(data.message);
             this.$router.push("/login");
           } else {
             this.pass = "";

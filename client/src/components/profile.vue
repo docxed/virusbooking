@@ -4,38 +4,8 @@
     <h3><i class="fas fa-user-circle"></i> ข้อมูลผู้ใช้</h3>
     <br />
 
-    <!-- ChangePass Section -->
-    <div class="content m-auto col-lg-8" v-if="showChangePass">
-      <label class="form-label">รหัสผ่านเดิม</label>
-      <input
-        type="password"
-        class="form-control mb-3"
-        placeholder="รหัสผ่านเดิม"
-        v-model="oldpass"
-      />
-      <label class="form-label">รหัสผ่านใหม่</label>
-      <input
-        type="password"
-        class="form-control mb-3"
-        placeholder="รหัสผ่านใหม่"
-        v-model="pass"
-      />
-      <label class="form-label">ยืนยันรหัสผ่านใหม่</label>
-      <input
-        type="password"
-        class="form-control mb-3"
-        placeholder="ยืนยันรหัสผ่านใหม่"
-        v-model="repass"
-      />
-      <p class="text-center">
-        <button class="btn btn-warning" @click="changePassValidate()">
-          เปลี่ยนรหัสผ่าน
-        </button>
-      </p>
-    </div>
-
     <!-- ChangeInfo Section -->
-    <div class="content m-auto col-lg-8" v-else>
+    <div class="content m-auto col-lg-8">
       <div class="row mb-3 g-2">
         <div class="col">
           <label class="form-label">ชื่อ</label>
@@ -102,7 +72,7 @@
         <button class="btn btn-info mx-1" @click="updateValidate()">
           บันทึก
         </button>
-        <a class="mx-1 link-secondary" @click="changePassPage()"
+        <a class="mx-1 link-secondary" href="/changepass"
           >เปลี่ยนรหัสผ่าน</a
         >
       </p>
@@ -166,37 +136,6 @@ export default {
     };
   },
   methods: {
-    changePass() {
-      let formData = {
-        oldpass: this.oldpass,
-        pass: this.pass,
-      };
-      axios
-        .put(
-          `${PROTOCOl}://${SERVER_IP}:${PORT}/user/changepass/${this.olddatauser._id}`,
-          formData
-        )
-        .then((res) => {
-          const data = res.data;
-          if (data.status) {
-            alert(data.message);
-          } else {
-            alert(data.message);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    changePassValidate() {
-      this.v$.$validatePass();
-      if (!this.v$.$error) {
-        // if ANY fail validation
-        this.changePass();
-      } else {
-        alert("โปรดกรอกข้อมูลให้ถูกต้อง");
-      }
-    },
     getUser() {
       axios
         .get(`${PROTOCOl}://${SERVER_IP}:${PORT}/users/${this.olddatauser._id}`)
@@ -250,9 +189,6 @@ export default {
         .catch((err) => {
           console.error(err);
         });
-    },
-    changePassPage() {
-      this.showChangePass = true;
     },
     authentication() {
       let info = JSON.parse(localStorage.getItem("info"));

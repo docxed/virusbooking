@@ -134,6 +134,7 @@ export default {
       this.$router.push("/");
     },
     logout() {
+      alert("ลงชื่อออก")
       localStorage.removeItem("info");
       this.loggedIn = false;
       this.info = null;

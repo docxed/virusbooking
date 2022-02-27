@@ -98,7 +98,7 @@ export default {
     },
   },
   created() {
-    this.authentication(false);
+    this.authentication();
     this.getBedsDealingbyUsers();
   },
 };
