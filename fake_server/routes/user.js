@@ -1,6 +1,9 @@
 const { findById } = require("../models/User");
 const User = require("../models/User");
 const { verifyTsoken, verifyTokenAndAuthorization } = require("./verifyToken");
+const CryptoJS = require("crypto-js");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const router = require("express").Router();
 
@@ -27,6 +30,7 @@ const router = require("express").Router();
 //   }
 // });
 
+// added
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -47,6 +51,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//added
 router.put("/:id", async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -67,22 +72,26 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+//added
 router.put("/changepass/:id", async (req, res) => {
-  // try{
-  //     const user = await User.findById(req.params.id);
-  //     const hashedPass = CryptoJS.AES.decrypt(
-  //         user.pass,
-  //         process.env.PASS_SEC
-  //     );
-  //     const pass = hashedPass.toString(CryptoJS.enc.Utf8);
-  //     if(pass !== req.body.oldpass){
-  //         res.json({"status": true, })
-  //     }else{
-  //     }
-  //     res.json(user)
-  // }catch (err) {
-  //     res.status(500).json({"message": "อัพเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่ภายหลัง"})
-  // }
+  try{
+      const user = await User.findById(req.params.id);
+      const hashedPass = await CryptoJS.AES.decrypt(
+          user.pass,
+          process.env.PASS_SEC
+      );
+      const pass = await hashedPass.toString(CryptoJS.enc.Utf8);
+      if(pass == req.body.oldpass){
+          const new_pass = await CryptoJS.AES.encrypt(req.body.pass, process.env.PASS_SEC).toString();
+          const new_user = await User.findByIdAndUpdate(req.params.id , {pass: new_pass});
+
+          res.json({"status":true, "message": "เปลี่ยนรหัสผ่านสำเร็จ"})
+      }else{
+        res.json({"status": false, "message": "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"})
+      }
+  }catch (err) {
+      res.status(500).json({"message": "อัพเดทข้อมูลไม่สำเร็จ กรุณาลองใหม่ภายหลัง"})
+  }
 });
 
 module.exports = router;

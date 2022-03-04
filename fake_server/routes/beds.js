@@ -28,6 +28,7 @@ router.post("/beds", async (req, res) => {
   }
 });
 
+//added
 router.get("/bedsbyusers/:id", async (req, res) => {
   try {
     const beds = await Beds.find({ user_id: req.params.id });
@@ -114,7 +115,7 @@ router.get("/beds/:id", async (req, res) => {
       res.status(203).json({ status: false, message: "ไม่มีข้อมูล!" });
     } else {
       res
-        .status(203)
+        .status(200)
         .json({ status: true, message: "การค้นหาสำเร็จ!", info: list });
     }
   } catch (err) {

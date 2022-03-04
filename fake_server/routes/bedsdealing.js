@@ -46,6 +46,7 @@ router.get("/bedsdealing/:id", async (req, res) => {
   } catch (err) {}
 });
 
+//added
 router.get("/bedsdealing", async (req, res) => {
   try {
     const dealingall3 = await Bedsdealing.find();
@@ -102,24 +103,8 @@ router.post("/bedsdealing", async (req, res) => {
         },
         { new: true }
       );
-
-      if (oldBeds.amount === 0) {
-        res.status(201).json({
-          status: false,
-          message: "ไม่สามารถจองได้ เนื่องจากเตียงหมด",
-        });
-      } else {
-        const update_Beds = await Beds.findByIdAndUpdate(
-          req.body.bed_id,
-          {
-            $set: { amount: oldBeds.amount - 1 },
-          },
-          { new: true }
-        );
-
-        const New_dealing = await newdealing.save();
-        res.status(201).json({ status: true, message: "จองสำเร็จ" });
-      }
+      const New_dealing = await newdealing.save();
+      res.status(200).json({ status: true, message: "จองสำเร็จ" });
     }
   } catch (err) {
     res.status(500).json({
@@ -129,6 +114,7 @@ router.post("/bedsdealing", async (req, res) => {
   }
 });
 
+//added
 router.get("/bedsdealingbybeds/:id", async (req, res) => {
   try {
     const dealingbybed = await Bedsdealing.find({ bed_id: req.params.id });
@@ -168,6 +154,7 @@ router.get("/bedsdealingbybeds/:id", async (req, res) => {
   }
 });
 
+// added
 router.get("/bedsdealingbyusers/:id", async (req, res) => {
   try {
     const dealingbyuser = await Bedsdealing.find({ user_id: req.params.id });

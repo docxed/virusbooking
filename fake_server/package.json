@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "build": "backpack build",
+    "dev": "backpack",
+    "start": "node ./build/main.js",
+    "test": "yarn build && mocha ./test --exit"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "backpack-core": "^0.8.4",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.0",
@@ -17,5 +20,10 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.1",
     "nodemon": "^2.0.15"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.2.1"
   }
 }
