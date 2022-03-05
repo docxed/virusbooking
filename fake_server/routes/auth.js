@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const CryptoJS = require("crypto-js");
-const jwt = require("jsonwebtoken");
+
 
 // REGISTER
 router.post("/register", async (req, res) => {
@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
     if (user) {
       res
         .status(203)
-        .json({ status: false, message: "อีเมลนี้เคยมีถูกใช้ซ้ำ" });
+        .json({ status: false, message: "อีเมลนี้มีในระบบอยู่แล้ว" });
     } else if (idCard) {
       res
         .status(203)
@@ -33,7 +33,7 @@ router.post("/register", async (req, res) => {
     } else {
       // save user and respond
       const New_User = await newUser.save();
-      res.status(201).json({ status: true, message: "ลงทะเบียนสำเร็จ!" });
+      res.status(200).json({ status: true, message: "ลงทะเบียนสำเร็จ!" });
     }
   } catch (err) {
     res.status(500).json({
@@ -51,7 +51,7 @@ router.post("/login", async (req, res) => {
         .status(203)
         .json({
           status: false,
-          message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+          message: "อีเมลไม่มีอยู่ในระบบ กรุณาลองใหม่อีกครั้ง",
         });
     } else {
       const hashedPass = CryptoJS.AES.decrypt(user.pass, process.env.PASS_SEC);
@@ -62,14 +62,9 @@ router.post("/login", async (req, res) => {
           .status(203)
           .json({
             status: false,
-            message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
+            message: "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
           });
       } else {
-        // const accessToken = jwt.sign({
-        //     id: user._id,
-        // }, process.env.JWT_SEC,
-        // {expiresIn: "3d"}
-        // );
 
         const { pass, ...others } = user._doc;
         res
@@ -79,7 +74,6 @@ router.post("/login", async (req, res) => {
             message: "เข้าสู่ระบบสำเร็จ",
             info: { ...others },
           });
-        // res.status(200).json({"status": true, "message": "เข้าสู่ระบบสำเร็จ", "info": {...others, accessToken}});
       }
     }
   } catch (err) {

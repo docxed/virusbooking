@@ -7,7 +7,8 @@
     "build": "backpack build",
     "dev": "backpack",
     "start": "node ./build/main.js",
-    "test": "yarn build && mocha ./test --exit"
+    "test": "yarn build && nyc mocha ./test --exit",
+    "test auth": "yarn build && mocha ./test/test_Auth --exit"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +20,8 @@
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "nyc": "^15.1.0"
   },
   "devDependencies": {
     "chai": "^4.3.6",

@@ -1,34 +1,10 @@
 const { findById } = require("../models/User");
 const User = require("../models/User");
-const { verifyTsoken, verifyTokenAndAuthorization } = require("./verifyToken");
 const CryptoJS = require("crypto-js");
 const dotenv = require('dotenv');
 dotenv.config();
 
 const router = require("express").Router();
-
-//UPDATE
-// router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
-//   if (req.body.pass) {
-//     req.body.pass = CryptoJS.AES.encrypt(
-//       req.body.pass,
-//       process.env.PASS_SEC
-//     ).toString();
-//   }
-
-//   try {
-//     const updatedUser = await User.findByIdAndUpdate(
-//       req.params.id,
-//       {
-//         $set: req.body,
-//       },
-//       { new: true }
-//     );
-//     res.status(200).json({"status": true, "message": "You are authenticated!"});
-//   } catch (err) {
-//       res.status(500).json({"message": "Error!!" + err})
-//   }
-// });
 
 // added
 router.get("/:id", async (req, res) => {
