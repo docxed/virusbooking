@@ -1090,6 +1090,20 @@
  เพื่อทำการยืนยันการจองเตียงอยู่จริง <b>(Success)</b>
  </p>
  </li>
+
+ <p align="center">
+ <img
+ src="https://github.com/Po-Pon/SW-Development-Tool-And-Environments-Group1/blob/main/Tasks/Task5/a1.png?raw=true"
+ alt=""
+ />
+ </p>
+ <p align="center">
+ <img
+ src="https://github.com/Po-Pon/SW-Development-Tool-And-Environments-Group1/blob/main/Tasks/Task5/a2.png?raw=true"
+ alt=""
+ />
+ </p>
+
  </ul>
  </li>
  </ol>
@@ -1189,3 +1203,4 @@
  <td></td>
  </tr>
  </table>
+
