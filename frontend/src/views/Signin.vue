@@ -14,10 +14,11 @@
             placeholder="อีเมล"
             maxlength="50"
             name="email"
+            required
             aria-describedby="email"
           />
           <div v-if="v$.signin.email.$error" class="my-2 text-danger">
-            โปรดป้อนอีเมลให้ถูกต้อง!
+            โปรดป้อนอีเมลให้ถูกต้อง
           </div>
         </div>
 
@@ -30,9 +31,10 @@
             placeholder="รหัสผ่าน"
             maxlength="18"
             name="password"
+            required
           />
           <div v-if="v$.signin.password.$error" class="my-2 text-danger">
-            โปรดป้อนรหัสผ่านให้ถูกต้อง!
+            โปรดป้อนรหัสผ่านให้ถูกต้อง (5 - 18 ตัวอักษร)
           </div>
         </div>
         <div class="mb-3 text-center">
@@ -50,7 +52,7 @@
 </template>
 <script>
 import useVuelidate from "@vuelidate/core";
-import { required, email } from "@vuelidate/validators";
+import { required, email, minLength, maxLength } from "@vuelidate/validators";
 
 export default {
   data() {
@@ -66,7 +68,11 @@ export default {
     return {
       signin: {
         email: { required, email },
-        password: { required },
+        password: {
+          required,
+          minLength: minLength(5),
+          maxLength: maxLength(18),
+        },
       },
     };
   },
@@ -76,7 +82,7 @@ export default {
     },
     validateSignin() {
       this.v$.$validate();
-      if (!this.$v.$error) {
+      if (!this.v$.$error) {
         this.submitSignin();
       }
     },
