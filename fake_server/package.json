@@ -7,8 +7,7 @@
     "build": "backpack build",
     "dev": "backpack",
     "start": "node ./build/main.js",
-    "test": "yarn build && nyc mocha ./test --exit",
-    "test auth": "yarn build && mocha ./test/test_Auth --exit"
+    "test": "yarn build && nyc mocha ./test --exit"
   },
   "author": "",
   "license": "ISC",
