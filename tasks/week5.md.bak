@@ -1198,6 +1198,7 @@
  </p>
  <h1>Line change and Number commit of Group</h1>
  <b>wiki</b>
+ <br>
  <table>
  <tr align="center">
  <td><b>Student No.</b></td>
@@ -1244,6 +1245,7 @@
  </table>
  <br /><br />
  <b>code</b>
+ <br>
  <table>
  <tr align="center">
  <td><b>Student No.</b></td>

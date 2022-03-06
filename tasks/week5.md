@@ -1197,7 +1197,7 @@
  />
  </p>
  <h1>Line change and Number commit of Group</h1>
- <b>wiki</b>
+ <p><b>wiki</b></p>
  <br>
  <table>
  <tr align="center">
@@ -1244,7 +1244,7 @@
  </tr>
  </table>
  <br /><br />
- <b>code</b>
+ <p><b>code</b></p>
  <br>
  <table>
  <tr align="center">
