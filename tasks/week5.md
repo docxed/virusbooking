@@ -1,13 +1,13 @@
 
- - [Test Stratergies]()
- - [Test result]()
+ - [Test Strategies]()
+ - [Test Result]()
  - [Code/test coverage]()
  - [Test Stratergies]()
  - [Line change and Number commit of Group]()
 
  <hr />
 
- <h1>Test Stratergies</h1>
+ <h1>Test Strategies</h1>
  <p>
  ในการทดสอบระบบการค้นหาและจองเตียง จะมีการแบ่งรูปแบบของการทดสอบออกเป็น 3
  ส่วน ดังนี้
