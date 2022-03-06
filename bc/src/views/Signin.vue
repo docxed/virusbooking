@@ -9,14 +9,14 @@
           <label class="form-label" for="email">อีเมล</label>
           <input
             type="email"
-            v-model="signin.email"
+            v-model="email"
             class="form-control"
             placeholder="อีเมล"
             maxlength="50"
             name="email"
             aria-describedby="email"
           />
-          <div v-if="v$.signin.email.$error" class="my-2 text-danger">
+          <div v-if="v$.email.$error" class="my-1 text-danger">
             โปรดป้อนอีเมลให้ถูกต้อง!
           </div>
         </div>
@@ -25,13 +25,13 @@
           <label class="form-label" for="password">รหัสผ่าน</label>
           <input
             type="password"
-            v-model="signin.password"
+            v-model="password"
             class="form-control"
             placeholder="รหัสผ่าน"
             maxlength="18"
             name="password"
           />
-          <div v-if="v$.signin.password.$error" class="my-2 text-danger">
+          <div v-if="v$.password.$error" class="my-1 text-danger">
             โปรดป้อนรหัสผ่านให้ถูกต้อง!
           </div>
         </div>
@@ -55,19 +55,15 @@ import { required, email } from "@vuelidate/validators";
 export default {
   data() {
     return {
-      v$: useVuelidate(),
-      signin: {
-        email: "",
-        password: "",
-      },
+        v$: useValidate(),
+      email: '',
+      password: '',
     };
   },
   validations() {
     return {
-      signin: {
-        email: { required, email },
-        password: { required },
-      },
+      email: { required, email },
+      password: { required },
     };
   },
   methods: {
