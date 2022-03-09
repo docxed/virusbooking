@@ -12,8 +12,9 @@
               type="text"
               v-model="signup.fname"
               class="form-control"
+              :class="{ 'is-invalid': v$.signup.fname.$error }"
               placeholder="ชื่อ"
-              maxlength="50"
+              maxlength="100"
               required
               name="fname"
               aria-describedby="fname"
@@ -28,8 +29,9 @@
               type="text"
               v-model="signup.lname"
               class="form-control"
+              :class="{ 'is-invalid': v$.signup.lname.$error }"
               placeholder="นามสกุล"
-              maxlength="50"
+              maxlength="100"
               required
               name="lname"
               aria-describedby="lname"
@@ -45,6 +47,7 @@
             type="text"
             v-model="signup.idcard"
             class="form-control"
+            :class="{ 'is-invalid': v$.signup.idcard.$error }"
             placeholder="รหัสบัตรประชาชน"
             maxlength="13"
             required
@@ -61,6 +64,7 @@
             type="text"
             v-model="signup.phone"
             class="form-control"
+            :class="{ 'is-invalid': v$.signup.phone.$error }"
             placeholder="เบอร์ติดต่อ"
             maxlength="10"
             required
@@ -77,8 +81,9 @@
             type="email"
             v-model="signup.email"
             class="form-control"
+            :class="{ 'is-invalid': v$.signup.email.$error }"
             placeholder="อีเมล"
-            maxlength="50"
+            maxlength="100"
             required
             name="email"
             aria-describedby="email"
@@ -88,18 +93,35 @@
           </div>
         </div>
         <div class="mb-3">
+          <label class="form-label" for="lineid">LINE ID</label>
+          <input
+            type="text"
+            v-model="signup.lineid"
+            class="form-control"
+            :class="{ 'is-invalid': v$.signup.lineid.$error }"
+            placeholder="LINE ID"
+            maxlength="100"
+            name="lineid"
+            aria-describedby="lineid"
+          />
+          <div v-if="v$.signup.email.$error" class="my-2 text-danger">
+            โปรดป้อน LINE ID ให้ถูกต้อง
+          </div>
+        </div>
+        <div class="mb-3">
           <label class="form-label" for="password">รหัสผ่าน</label>
           <input
             type="password"
             v-model="signup.password"
             class="form-control"
+            :class="{ 'is-invalid': v$.signup.password.$error }"
             placeholder="รหัสผ่าน"
             maxlength="18"
             required
             name="password"
           />
           <div v-if="v$.signup.password.$error" class="my-2 text-danger">
-            โปรดป้อนรหัสผ่านให้ถูกต้อง (5 - 18 ตัวอักษร)
+            โปรดป้อนรหัสผ่านให้ถูกต้อง (5 - 20 ตัวอักษร)
           </div>
         </div>
         <div class="mb-3">
@@ -108,6 +130,7 @@
             type="password"
             v-model="signup.c_password"
             class="form-control"
+            :class="{ 'is-invalid': v$.signup.c_password.$error }"
             placeholder="ยืนยันรหัสผ่าน"
             maxlength="18"
             required
@@ -131,6 +154,8 @@
   </div>
 </template>
 <script>
+import Swal from "sweetalert2";
+import axios from "axios";
 import useVuelidate from "@vuelidate/core";
 import {
   required,
@@ -151,6 +176,7 @@ export default {
         idcard: "",
         phone: "",
         email: "",
+        lineid: "",
         password: "",
         c_password: "",
       },
@@ -159,8 +185,8 @@ export default {
   validations() {
     return {
       signup: {
-        fname: { required, maxLength: maxLength(50) },
-        lname: { required, maxLength: maxLength(50) },
+        fname: { required, maxLength: maxLength(100) },
+        lname: { required, maxLength: maxLength(100) },
         idcard: {
           required,
           minLength: minLength(13),
@@ -173,11 +199,14 @@ export default {
           maxLength: maxLength(10),
           numeric,
         },
-        email: { required, maxLength: maxLength(50), email },
+        email: { required, maxLength: maxLength(100), email },
         password: {
           required,
           minLength: minLength(5),
-          maxLength: maxLength(18),
+          maxLength: maxLength(20),
+        },
+        lineid: {
+          maxLength: maxLength(100),
         },
         c_password: {
           required,
@@ -188,7 +217,34 @@ export default {
   },
   methods: {
     submitSignup() {
-      console.log("Congratularion");
+      axios
+        .post(`http://localhost:3001/users/signup`, this.signup)
+        .then((res) => {
+          if (res.data.status) {
+            Swal.fire({
+              title: "สำเร็จ",
+              text: res.data.message,
+              icon: "success",
+              timer: 3000,
+              showConfirmButton: false,
+            }).then(() => {
+              this.$router.push("/signin");
+            });
+          } else {
+            Swal.fire({
+              title: "ไม่สำเร็จ",
+              text: res.data.message,
+              icon: "error",
+              timer: 3000,
+              showConfirmButton: false,
+            });
+            this.signup.password = "";
+            this.signup.c_password = "";
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     validateSignup() {
       this.v$.$validate();

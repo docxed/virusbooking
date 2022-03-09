@@ -29,6 +29,7 @@
             type="password"
             v-model="signin.password"
             class="form-control"
+            :class="{ 'is-invalid': v$.signin.password.$error }"
             placeholder="รหัสผ่าน"
             maxlength="18"
             name="password"
@@ -52,6 +53,8 @@
   </div>
 </template>
 <script>
+import Swal from "sweetalert2";
+import axios from "axios";
 import useVuelidate from "@vuelidate/core";
 import { required, email, minLength, maxLength } from "@vuelidate/validators";
 
@@ -79,7 +82,27 @@ export default {
   },
   methods: {
     submitSignin() {
-      console.log("Congratulations");
+      axios
+        .post(`http://localhost:3001/users/signin`, this.signin)
+        .then((res) => {
+          if (res.data.status) {
+            localStorage.setItem("token", res.data.token);
+            this.$emit("auth-change");
+            this.$router.push("/");
+          } else {
+            Swal.fire({
+              title: "ไม่สำเร็จ",
+              text: res.data.message,
+              icon: "error",
+              timer: 3000,
+              showConfirmButton: false,
+            });
+            this.signin.password = "";
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     validateSignin() {
       this.v$.$validate();

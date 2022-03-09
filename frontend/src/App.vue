@@ -47,7 +47,7 @@
             ></button>
           </div>
           <div class="offcanvas-body">
-            <div class="row text-center">
+            <div class="row text-center" v-if="!user">
               <router-link class="nav-link col me-auto" to="/signup">
                 <span class="badge bg-success">ลงทะเบียนเข้าใช้งาน</span>
               </router-link>
@@ -65,7 +65,7 @@
                 >
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/">
+                <router-link class="nav-link" to="/findbeds">
                   <span class="text-center">
                     <i class="fas fa-procedures" style="width: 5vh"></i>
                   </span>
@@ -73,7 +73,7 @@
                 >
               </li>
               <li class="nav-item">
-                <router-link class="nav-link" to="/"
+                <router-link class="nav-link" to="/beds"
                   ><span class="text-center">
                     <i class="fas fa-clipboard-list" style="width: 5vh"></i>
                   </span>
@@ -81,6 +81,43 @@
                   การจองเตียง</router-link
                 >
               </li>
+              <template v-if="user">
+                <div class="dropdown-divider"></div>
+                <li class="nav-item">
+                  <router-link class="nav-link text-dark" to="">
+                    {{ user.firstname }} {{ user.lastname }}</router-link
+                  >
+                </li>
+                <li class="nav-item">
+                  <router-link class="nav-link" to="/profile"
+                    ><span class="text-center">
+                      <i class="fa-solid fa-gear" style="width: 5vh"></i>
+                    </span>
+
+                    ข้อมูลส่วนตัว</router-link
+                  >
+                </li>
+                <li class="nav-item">
+                  <router-link class="nav-link" to="/addbedsforsell"
+                    ><span class="text-center">
+                      <i class="fa-solid fa-plus" style="width: 5vh"></i>
+                    </span>
+
+                    ฉันต้องการลงเตียง</router-link
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" @click="logout()">
+                    <span class="text-center text-danger">
+                      <i
+                        class="fa-solid fa-right-from-bracket"
+                        style="width: 5vh"
+                      ></i>
+                    </span>
+                    <span class="text-danger">ออกจากระบบ</span>
+                  </a>
+                </li>
+              </template>
             </ul>
           </div>
         </div>
@@ -90,15 +127,43 @@
     <!-- Router views -->
     <br /><br />
     <div class="container mt-5">
-      <router-view></router-view>
+      <router-view
+        :key="$route.fullPath"
+        @auth-change="onAuthChange()"
+        :user="user"
+      ></router-view>
     </div>
   </div>
 </template>
 <script>
+import axios from "./plugins/axios";
+
 export default {
   data() {
-    return {};
+    return { user: null };
   },
-  methods: {},
+  methods: {
+    onAuthChange() {
+      const token = localStorage.getItem("token");
+      if (token) {
+        this.getUser();
+      }
+    },
+    getUser() {
+      axios.get("/users/me").then((res) => {
+        this.user = res.data;
+      });
+    },
+    logout() {
+      axios.post("/users/logout").then(() => {
+        localStorage.removeItem("token");
+        this.user = null;
+        this.$router.push("/signin");
+      });
+    },
+  },
+  created() {
+    this.onAuthChange();
+  },
 };
 </script>
