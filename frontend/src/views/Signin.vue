@@ -11,6 +11,7 @@
             type="email"
             v-model="signin.email"
             class="form-control"
+            :class="{ 'is-invalid': v$.signin.email.$error }"
             placeholder="อีเมล"
             maxlength="50"
             name="email"
