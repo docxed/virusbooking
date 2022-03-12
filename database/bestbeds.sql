@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 10, 2022 at 04:58 AM
+-- Generation Time: Mar 12, 2022 at 05:08 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -65,7 +65,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `idcard`, `phone`, `email`, `lineid`, `password`, `role`, `timestamp`) VALUES
-(1, 'อคิราภ์', 'สีแสนยง', '1100501552879', '0882923741', 'akira.ajeyb@gmail.com', 'ajayxxx', '$2a$05$OElGarb5cNlf3Csrfx.XbO0sfhkmNuTUB0zfndW5oHWrtUAmx60ri', 'user', '2022-03-09 17:32:12'),
+(1, 'อคิราภ์', 'สีแสนยง', '1100501552879', '0882923741', 'akira.ajeyb@gmail.com', '', '$2a$05$OElGarb5cNlf3Csrfx.XbO0sfhkmNuTUB0zfndW5oHWrtUAmx60ri', 'user', '2022-03-09 17:32:12'),
 (2, 'กฤตนัย', 'ครองสิงห์', '1234568970123', '0882925468', 'test@gmail.com', 'testxxx', '$2a$05$KXNJo8w9VXsirKqqWCX/AeTHwmnT0OsNeca8xKDmEVryeJDejhd.a', 'user', '2022-03-09 18:56:03');
 
 --
@@ -76,7 +76,8 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `idcard`, `phone`, `email`, 
 -- Indexes for table `tokens`
 --
 ALTER TABLE `tokens`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -99,6 +100,16 @@ ALTER TABLE `tokens`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `tokens`
+--
+ALTER TABLE `tokens`
+  ADD CONSTRAINT `tokens_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
