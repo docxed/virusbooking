@@ -154,7 +154,7 @@ export default {
               timer: 3000,
               showConfirmButton: false,
             }).then(() => {
-              this.$router.push("/")
+              this.$router.push("/bedsmanage")
             })
           } else {
             Swal.fire({
