@@ -9,9 +9,9 @@ export default {
     user: { type: Object },
   },
   data() {
-    return {};
+    return {}
   },
   methods: {},
   created() {},
-};
+}
 </script>

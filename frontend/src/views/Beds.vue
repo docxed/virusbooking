@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>การจองเตียง</h2>
+    <h2></h2>
   </div>
 </template>
 <script>
@@ -9,9 +9,9 @@ export default {
     user: { type: Object },
   },
   data() {
-    return {};
+    return {}
   },
   methods: {},
   created() {},
-};
+}
 </script>

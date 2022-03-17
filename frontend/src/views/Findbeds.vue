@@ -101,11 +101,11 @@ export default {
     user: { type: Object },
   },
   data() {
-    return {};
+    return {}
   },
   methods: {},
   created() {},
-};
+}
 </script>
 <style scoped>
 .button1:hover {

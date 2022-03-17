@@ -1,5 +1,5 @@
-import { createWebHistory, createRouter } from "vue-router";
-import Swal from "sweetalert2";
+import { createWebHistory, createRouter } from "vue-router"
+import Swal from "sweetalert2"
 
 const routes = [
   {
@@ -42,30 +42,48 @@ const routes = [
     meta: { login: true },
     component: () => import("../views/Addbedsforsell.vue"),
   },
-];
+  {
+    path: "/bedsmanage",
+    name: "Bedsmanage",
+    meta: { login: true },
+    component: () => import("../views/Bedsmanage.vue"),
+  },
+  {
+    path: "/bededit/:id",
+    name: "Bededit",
+    meta: { login: true },
+    component: () => import("../views/Bededit.vue"),
+  },
+  {
+    path: "/bededitaddress/:id",
+    name: "Bededitaddress",
+    meta: { login: true },
+    component: () => import("../views/Bededitaddress.vue"),
+  },
+]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
+})
 
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = !!localStorage.getItem("token");
+  const isLoggedIn = !!localStorage.getItem("token")
 
   if (to.meta.login && !isLoggedIn) {
     Swal.fire({
       title: "โปรดลงชื่อเข้าสู่ระบบ",
       icon: "warning",
       showConfirmButton: true,
-    });
-    next({ path: "/signin" });
-    return;
+    })
+    next({ path: "/signin" })
+    return
   }
   if (to.meta.guess && isLoggedIn) {
-    next({ path: "/" });
-    return;
+    next({ path: "/" })
+    return
   }
-  next();
-});
+  next()
+})
 
-export default router;
+export default router

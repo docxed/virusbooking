@@ -154,9 +154,9 @@
   </div>
 </template>
 <script>
-import Swal from "sweetalert2";
-import axios from "axios";
-import useVuelidate from "@vuelidate/core";
+import Swal from "sweetalert2"
+import axios from "axios"
+import useVuelidate from "@vuelidate/core"
 import {
   required,
   email,
@@ -164,7 +164,7 @@ import {
   maxLength,
   numeric,
   sameAs,
-} from "@vuelidate/validators";
+} from "@vuelidate/validators"
 
 export default {
   data() {
@@ -180,7 +180,7 @@ export default {
         password: "",
         c_password: "",
       },
-    };
+    }
   },
   validations() {
     return {
@@ -213,7 +213,7 @@ export default {
           sameAs: sameAs(this.signup.password),
         },
       },
-    };
+    }
   },
   methods: {
     submitSignup() {
@@ -228,8 +228,8 @@ export default {
               timer: 3000,
               showConfirmButton: false,
             }).then(() => {
-              this.$router.push("/signin");
-            });
+              this.$router.push("/signin")
+            })
           } else {
             Swal.fire({
               title: "ไม่สำเร็จ",
@@ -237,21 +237,21 @@ export default {
               icon: "error",
               timer: 3000,
               showConfirmButton: false,
-            });
-            this.signup.password = "";
-            this.signup.c_password = "";
+            })
+            this.signup.password = ""
+            this.signup.c_password = ""
           }
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     validateSignup() {
-      this.v$.$validate();
+      this.v$.$validate()
       if (!this.v$.$error) {
-        this.submitSignup();
+        this.submitSignup()
       }
     },
   },
-};
+}
 </script>
