@@ -13,6 +13,8 @@ export default {
   },
   methods: {},
   created() {},
+<<<<<<< Updated upstream
+=======
 }
 </script>
 <style scoped>
@@ -31,5 +33,6 @@ export default {
   background-color: white;
   color: black;
   border: 1px solid DodgerBlue;
+>>>>>>> Stashed changes
 }
 </script>
