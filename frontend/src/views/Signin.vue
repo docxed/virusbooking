@@ -53,10 +53,10 @@
   </div>
 </template>
 <script>
-import Swal from "sweetalert2";
-import axios from "axios";
-import useVuelidate from "@vuelidate/core";
-import { required, email, minLength, maxLength } from "@vuelidate/validators";
+import Swal from "sweetalert2"
+import axios from "axios"
+import useVuelidate from "@vuelidate/core"
+import { required, email, minLength, maxLength } from "@vuelidate/validators"
 
 export default {
   data() {
@@ -66,7 +66,7 @@ export default {
         email: "",
         password: "",
       },
-    };
+    }
   },
   validations() {
     return {
@@ -78,7 +78,7 @@ export default {
           maxLength: maxLength(18),
         },
       },
-    };
+    }
   },
   methods: {
     submitSignin() {
@@ -86,9 +86,9 @@ export default {
         .post(`http://localhost:3001/users/signin`, this.signin)
         .then((res) => {
           if (res.data.status) {
-            localStorage.setItem("token", res.data.token);
-            this.$emit("auth-change");
-            this.$router.push("/");
+            localStorage.setItem("token", res.data.token)
+            this.$emit("auth-change")
+            this.$router.push("/")
           } else {
             Swal.fire({
               title: "ไม่สำเร็จ",
@@ -96,20 +96,20 @@ export default {
               icon: "error",
               timer: 3000,
               showConfirmButton: false,
-            });
-            this.signin.password = "";
+            })
+            this.signin.password = ""
           }
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     validateSignin() {
-      this.v$.$validate();
+      this.v$.$validate()
       if (!this.v$.$error) {
-        this.submitSignin();
+        this.submitSignin()
       }
     },
   },
-};
+}
 </script>

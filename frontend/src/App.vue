@@ -98,7 +98,7 @@
                   >
                 </li>
                 <li class="nav-item">
-                  <router-link class="nav-link" to="/addbedsforsell"
+                  <router-link class="nav-link" to="/bedsmanage"
                     ><span class="text-center">
                       <i class="fa-solid fa-plus" style="width: 5vh"></i>
                     </span>
@@ -136,34 +136,34 @@
   </div>
 </template>
 <script>
-import axios from "./plugins/axios";
+import axios_mod from "./plugins/axios"
 
 export default {
   data() {
-    return { user: null };
+    return { user: null }
   },
   methods: {
     onAuthChange() {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token")
       if (token) {
-        this.getUser();
+        this.getUser()
       }
     },
     getUser() {
-      axios.get("/users/me").then((res) => {
-        this.user = res.data;
-      });
+      axios_mod.get("/users/me").then((res) => {
+        this.user = res.data
+      })
     },
     logout() {
-      axios.post("/users/logout").then(() => {
-        localStorage.removeItem("token");
-        this.user = null;
-        this.$router.push("/signin");
-      });
+      axios_mod.post("/users/logout").then(() => {
+        localStorage.removeItem("token")
+        this.user = null
+        this.$router.push("/signin")
+      })
     },
   },
   created() {
-    this.onAuthChange();
+    this.onAuthChange()
   },
-};
+}
 </script>
