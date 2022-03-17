@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 12, 2022 at 05:08 AM
+-- Generation Time: Mar 17, 2022 at 03:27 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -24,6 +24,31 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `beds`
+--
+
+CREATE TABLE `beds` (
+  `id` int(11) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `address` text NOT NULL,
+  `lat` varchar(255) NOT NULL,
+  `lng` varchar(255) NOT NULL,
+  `state` tinyint(1) NOT NULL DEFAULT 1,
+  `user_id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `beds`
+--
+
+INSERT INTO `beds` (`id`, `amount`, `address`, `lat`, `lng`, `state`, `user_id`, `timestamp`) VALUES
+(1, 500, 'ถ. พหลโยธิน แขวง ถนนพญาไท เขตราชเทวี กรุงเทพมหานคร 10400', '13.7649084', '100.5382846', 0, 1, '2022-03-16 20:35:45'),
+(2, 115, '1 ซอย ฉลองกรุง 1 แขวง ลาดกระบัง เขตลาดกระบัง กรุงเทพมหานคร 10520', '13.7298889', '100.7782323', 1, 1, '2022-03-16 20:36:16');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tokens`
 --
 
@@ -39,7 +64,7 @@ CREATE TABLE `tokens` (
 --
 
 INSERT INTO `tokens` (`id`, `token`, `user_id`, `timestamp`) VALUES
-(30, 'eyJhbGciOiJIUzI1NiJ9.YWtpcmEuYWpleWJAZ21haWwuY29t.kxTIv8VmRb0vWkXW8cHsXrTprG1pm8OYQqrpBZ4DsEc', 1, '2022-03-09 19:28:29');
+(34, 'eyJhbGciOiJIUzI1NiJ9.YWtpcmEuYWpleWJAZ21haWwuY29t.kxTIv8VmRb0vWkXW8cHsXrTprG1pm8OYQqrpBZ4DsEc', 1, '2022-03-16 18:57:15');
 
 -- --------------------------------------------------------
 
@@ -73,6 +98,13 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `idcard`, `phone`, `email`, 
 --
 
 --
+-- Indexes for table `beds`
+--
+ALTER TABLE `beds`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `tokens`
 --
 ALTER TABLE `tokens`
@@ -90,10 +122,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `beds`
+--
+ALTER TABLE `beds`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `tokens`
 --
 ALTER TABLE `tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -104,6 +142,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `beds`
+--
+ALTER TABLE `beds`
+  ADD CONSTRAINT `beds_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `tokens`
