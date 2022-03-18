@@ -75,7 +75,9 @@
           </div>
           <!-- three -->
           <div class="mb-2 text-center">
-            <button class="btn btn-success">ดูรายละเอียด</button>
+            <router-link :to="{ path: '/bed/' + bed.id }">
+              <button class="btn btn-success">ดูรายละเอียด</button>
+            </router-link>
           </div>
         </div>
       </div>
@@ -87,7 +89,7 @@
       </div>
     </div>
     <!-- BedsMore -->
-    <div class="my-4" v-if="bedsMore.length > 0">
+    <div class="my-4" v-if="bedsMore.length > 0 && beds.length > 0">
       <h3>สถานที่เพิ่มเติม</h3>
       <br />
       <div class="row">
@@ -126,7 +128,9 @@
             </div>
             <!-- three -->
             <div class="mb-2 text-center">
-              <button class="btn btn-success">ดูรายละเอียด</button>
+              <router-link :to="{ path: '/bed/' + bed.id }">
+                <button class="btn btn-success">ดูรายละเอียด</button>
+              </router-link>
             </div>
           </div>
         </div>
@@ -149,6 +153,7 @@ export default {
       currAddress: "",
       sr: "",
       delaySearch: null,
+      delayClear: null,
       beds: [],
       currPos: {
         lat: 0,
@@ -165,13 +170,13 @@ export default {
     getDistanceFromLatLonInKm(lat1, lng1, lat2, lng2) {
       let R = 6371 // รัศมีของโลกกม.
       let dLat = this.deg2rad(lat2 - lat1) // ดีกรี -> เรเดียน
-      let dLon = this.deg2rad(lng2 - lng1)
+      let dLng = this.deg2rad(lng2 - lng1)
       let a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(this.deg2rad(lat1)) *
           Math.cos(this.deg2rad(lat2)) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2)
+          Math.sin(dLng / 2) *
+          Math.sin(dLng / 2)
       let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
       let d = R * c // ระยะทางกม.
       return d
@@ -190,7 +195,6 @@ export default {
       return _.orderBy(raw, ["distance"], ["asc"])
     },
     getBedsByAvailable() {
-      this.beds = []
       axios_mod
         .get(`/beds/available`)
         .then((res) => {
@@ -203,7 +207,6 @@ export default {
         })
     },
     getBedsBySearch() {
-      this.bedsMore = []
       axios_mod
         .get(`/beds/search`, {
           params: {
@@ -211,6 +214,7 @@ export default {
           },
         })
         .then((res) => {
+          this.bedsMore = []
           this.beds = this.convertDistance(res.data.beds)
           this.isLoading = false
         })
@@ -220,12 +224,15 @@ export default {
     },
     searching() {
       if (this.sr === "") {
-        this.getBedsByAvailable()
+        clearTimeout(this.delayClear)
+        this.delaySearch = setTimeout(() => {
+          this.getBedsByAvailable()
+        }, 300)
         return
       }
-
-      clearTimeout(this.delaySearch)
       this.isLoading = true
+      this.bedsMore = []
+      clearTimeout(this.delaySearch)
       this.delaySearch = setTimeout(() => {
         this.getBedsBySearch()
       }, 300)
