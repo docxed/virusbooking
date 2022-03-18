@@ -8,19 +8,23 @@
         <button class="btn btn-success">เพิ่มสถานที่</button>
       </router-link>
     </div>
-    <div class="content" v-if="beds">
+    <div class="content animate__animated animate__fadeIn" v-if="beds.length">
       <table class="table table-striped table-hover table-responsive">
         <thead>
           <tr>
-            <td><b>จำนวนเตียง</b></td>
+            <td class="text-center"><b>จำนวนเตียง</b></td>
             <td><b>ที่อยู่</b></td>
-            <td><b>สถานะ</b></td>
+            <td class="text-center"><b>สถานะ</b></td>
             <td colspan="2" class="text-center"><b>Actions</b></td>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(bed, index) in beds" :key="index">
-            <td>{{ bed.amount.toLocaleString() }}</td>
+            <td class="text-center">
+              <span class="badge bg-success">{{
+                bed.amount.toLocaleString()
+              }}</span>
+            </td>
             <td>{{ bed.address }}</td>
             <td>
               <div class="form-check form-switch">
@@ -44,13 +48,20 @@
               </router-link>
             </td>
             <td>
-              <button class="btn btn-danger btn-sm">ลบ</button>
+              <button class="btn btn-danger btn-sm" @click="deleteBed(bed.id)">
+                ลบ
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="content text-center" v-else>ยังไม่มีข้อมูล</div>
+    <div
+      class="content text-center fs-4 animate__animated animate__fadeIn"
+      v-else
+    >
+      ยังไม่มีข้อมูล
+    </div>
   </div>
 </template>
 <script>
@@ -63,10 +74,40 @@ export default {
   },
   data() {
     return {
-      beds: null,
+      beds: [],
     }
   },
   methods: {
+    deleteBed(id) {
+      Swal.fire({
+        title: "คุณแน่ใจใช่ไหม",
+        text: "ข้อมูลนี้จะถูกลบโดยถาวร",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ลบ",
+        cancelButtonText: "ยกเลิก",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios_mod
+            .delete(`/bed/${id}`)
+            .then((res) => {
+              if (res.data.status) {
+                Swal.fire({
+                  title: "สำเร็จ",
+                  text: res.data.message,
+                  icon: "success",
+                }).then(() => {
+                  this.getBeds()
+                })
+              }
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+      })
+    },
     updateBedState(bed) {
       axios_mod
         .put(`/bed/state/${bed.id}`, bed)

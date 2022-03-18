@@ -6,6 +6,72 @@ const { isLoggedIn } = require("../middlewares")
 
 router = express.Router()
 
+router.get("/beds/available", async (req, res, next) => {
+  const conn = await pool.getConnection()
+  await conn.beginTransaction()
+
+  try {
+    const [beds] = await conn.query(
+      "SELECT * FROM beds WHERE amount > 0 AND state = 1"
+    )
+    conn.commit()
+    res.json({
+      status: true,
+      message: "ค้นหาข้อมูลสำเร็จ",
+      beds: beds,
+    })
+  } catch (err) {
+    conn.rollback()
+    res.status(400).json(err.toString())
+  } finally {
+    conn.release()
+  }
+})
+
+router.get("/beds/search", async (req, res, next) => {
+  const conn = await pool.getConnection()
+  await conn.beginTransaction()
+
+  try {
+    const search = `%${req.query.search}%`
+    const [beds] = await conn.query(
+      "SELECT * FROM beds WHERE amount > 0 AND state = 1 AND address LIKE ?",
+      [search]
+    )
+    conn.commit()
+    res.json({
+      status: true,
+      message: "ค้นหาข้อมูลสำเร็จ",
+      beds: beds,
+    })
+  } catch (err) {
+    conn.rollback()
+    res.status(400).json(err.toString())
+  } finally {
+    conn.release()
+  }
+})
+
+router.delete("/bed/:id", isLoggedIn, async (req, res, next) => {
+  const conn = await pool.getConnection()
+  await conn.beginTransaction()
+
+  try {
+    const bed_id = req.params.id
+    await conn.query("DELETE FROM beds WHERE id = ?", [bed_id])
+    conn.commit()
+    res.json({
+      status: true,
+      message: "ลบข้อมูลแล้ว",
+    })
+  } catch (err) {
+    conn.rollback()
+    res.status(400).json(err.toString())
+  } finally {
+    conn.release()
+  }
+})
+
 const bedAddressSchema = Joi.object({
   address: Joi.string().required(),
   lat: Joi.required(),
@@ -25,7 +91,6 @@ router.put("/bed/address/:id", isLoggedIn, async (req, res, next) => {
   try {
     const { address, lat, lng } = req.body
     const bed_id = req.params.id
-
     await conn.query("UPDATE beds SET address=?, lat=?, lng=? WHERE id = ?", [
       address,
       lat,
@@ -46,7 +111,7 @@ router.put("/bed/address/:id", isLoggedIn, async (req, res, next) => {
 })
 
 const bedAmountSchema = Joi.object({
-  amount: Joi.number().required().min(1).max(9999),
+  amount: Joi.number().required().min(0).max(9999),
 })
 
 router.put("/bed/amount/:id", isLoggedIn, async (req, res, next) => {
@@ -62,7 +127,6 @@ router.put("/bed/amount/:id", isLoggedIn, async (req, res, next) => {
   try {
     const { amount } = req.body
     const bed_id = req.params.id
-
     await conn.query("UPDATE beds SET amount=? WHERE id = ?", [amount, bed_id])
     conn.commit()
     res.json({

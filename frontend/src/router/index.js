@@ -60,6 +60,24 @@ const routes = [
     meta: { login: true },
     component: () => import("../views/Bededitaddress.vue"),
   },
+  {
+    path: "/one",
+    name: "One",
+    meta: { login: true },
+    component: () => import("../views/One.vue"),
+  },
+  {
+    path: "/two",
+    name: "Two",
+    meta: { login: true },
+    component: () => import("../views/Two.vue"),
+  },
+  {
+    path: "/three",
+    name: "Three",
+    meta: { login: true },
+    component: () => import("../views/Three.vue"),
+  },
 ]
 
 const router = createRouter({

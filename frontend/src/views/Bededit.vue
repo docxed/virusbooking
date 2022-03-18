@@ -13,7 +13,7 @@
             class="form-control"
             :class="{ 'is-invalid': v$.bed.amount.$error }"
             placeholder="9999"
-            min="1"
+            min="0"
             max="9999"
             name="amount"
             aria-describedby="amount"
@@ -72,7 +72,7 @@ export default {
   validations() {
     return {
       bed: {
-        amount: { required, minValue: minValue(1), maxValue: maxValue(9999) },
+        amount: { required, minValue: minValue(0), maxValue: maxValue(9999) },
       },
     }
   },
