@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2></h2>
+    <h2>เตียง</h2>
   </div>
 </template>
 <script>

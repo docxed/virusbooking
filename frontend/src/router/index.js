@@ -31,10 +31,10 @@ const routes = [
     component: () => import("../views/Findbeds.vue"),
   },
   {
-    path: "/beds",
-    name: "Beds",
+    path: "/bed/:id",
+    name: "Bed",
     meta: { login: true },
-    component: () => import("../views/Beds.vue"),
+    component: () => import("../views/Bed.vue"),
   },
   {
     path: "/addbedsforsell",
