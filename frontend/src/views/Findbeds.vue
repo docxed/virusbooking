@@ -33,10 +33,9 @@
 
     <div class="mb-3 px-3" v-if="!isLoading">
       <b
-        >ค้นพบ <span class="text-primary">{{ beds.length }}</span> สถานที่<span
-          v-show="!sr"
-          >ใกล้เคียง</span
-        >
+        >ค้นพบ
+        <span class="text-primary">{{ beds.length.toLocaleString() }}</span>
+        สถานที่<span v-show="!sr">ใกล้เคียง</span>
       </b>
     </div>
 
@@ -57,7 +56,9 @@
           <div class="mb-3">
             <button type="button" class="btn btn-primary">
               พร้มจอง
-              <span class="badge bg-white text-dark">{{ bed.amount }}</span>
+              <span class="badge bg-white text-dark">{{
+                bed.amount.toLocaleString()
+              }}</span>
               เตียง
             </button>
           </div>
@@ -85,6 +86,52 @@
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
+    <!-- BedsMore -->
+    <div class="my-4" v-if="bedsMore.length > 0">
+      <h3>สถานที่เพิ่มเติม</h3>
+      <br />
+      <div class="row">
+        <div
+          class="col-lg-6 col-md-6 col-sm-12 mb-3"
+          v-for="(bed, index) in bedsMore"
+          :key="index"
+        >
+          <div
+            class="border p-3 px-5 m-auto h-100 animate__animated animate__fadeInUp"
+            style="border-radius: 20px"
+          >
+            <div class="text-end text-secondary h6">
+              {{ bed.distance.toFixed(1).toLocaleString() }}กม.
+            </div>
+            <!-- one -->
+            <div class="mb-3">
+              <button type="button" class="btn btn-primary">
+                พร้มจอง
+                <span class="badge bg-white text-dark">{{
+                  bed.amount.toLocaleString()
+                }}</span>
+                เตียง
+              </button>
+            </div>
+            <!-- two -->
+            <div class="row" id="two">
+              <div class="col-4 text-center p-auto">
+                <h1>
+                  <i class="fa-solid fa-map-location-dot"></i>
+                </h1>
+              </div>
+              <div class="col-8 fs-5">
+                {{ bed.address }}
+              </div>
+            </div>
+            <!-- three -->
+            <div class="mb-2 text-center">
+              <button class="btn btn-success">ดูรายละเอียด</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -92,6 +139,7 @@ const API_KEY = "AIzaSyALC4_1XPkHu7nZ82vQ0Uv1F5ZtGpJJe4M"
 import Swal from "sweetalert2"
 import axios_mod from "@/plugins/axios"
 import axios from "axios"
+const _ = require("lodash")
 export default {
   props: {
     user: { type: Object },
@@ -107,6 +155,7 @@ export default {
         lng: 0,
       },
       isLoading: false,
+      bedsMore: [],
     }
   },
   methods: {
@@ -138,20 +187,23 @@ export default {
         )
         raw[index] = { ...raw[index], distance: d }
       })
-      raw.sort((a, b) => (a.distance < b.distance ? -1 : 1))
-      this.beds = raw
+      return _.orderBy(raw, ["distance"], ["asc"])
     },
     getBedsByAvailable() {
+      this.beds = []
       axios_mod
         .get(`/beds/available`)
         .then((res) => {
-          this.convertDistance(res.data.beds)
+          let beds = this.convertDistance(res.data.beds)
+          this.beds = _.filter(beds, (bed) => bed.distance <= 70)
+          this.bedsMore = _.filter(beds, (bed) => !(bed.distance <= 70))
         })
         .catch((error) => {
           console.log(error)
         })
     },
     getBedsBySearch() {
+      this.bedsMore = []
       axios_mod
         .get(`/beds/search`, {
           params: {
@@ -159,7 +211,7 @@ export default {
           },
         })
         .then((res) => {
-          this.convertDistance(res.data.beds)
+          this.beds = this.convertDistance(res.data.beds)
           this.isLoading = false
         })
         .catch((error) => {
@@ -171,6 +223,7 @@ export default {
         this.getBedsByAvailable()
         return
       }
+
       clearTimeout(this.delaySearch)
       this.isLoading = true
       this.delaySearch = setTimeout(() => {
