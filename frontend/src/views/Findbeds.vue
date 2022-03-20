@@ -145,6 +145,7 @@ import axios_mod from "@/plugins/axios"
 import axios from "axios"
 const _ = require("lodash")
 export default {
+  name: "Findbeds",
   props: {
     user: { type: Object },
   },

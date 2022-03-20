@@ -147,9 +147,13 @@ router.get("/bed/:id", isLoggedIn, async (req, res, next) => {
 
   try {
     const bed_id = req.params.id
-    const [[bed]] = await conn.query("SELECT * FROM beds WHERE id = ?", [
-      bed_id,
-    ])
+    const [[bed]] = await conn.query(
+      `SELECT 
+      beds.id, beds.amount, beds.address, beds.lat, beds.lng, beds.state, beds.user_id, beds.timestamp, 
+      users.firstname, users.lastname, users.idcard, users.phone, users.email, users.lineid
+      FROM beds INNER JOIN users ON user_id=users.id WHERE beds.id = ?;`,
+      [bed_id]
+    )
     conn.commit()
     res.json({
       status: true,
@@ -191,9 +195,22 @@ router.get("/bedsByUser", isLoggedIn, async (req, res, next) => {
 
   try {
     const user_id = req.user.id
-    const [beds] = await conn.query("SELECT * FROM beds WHERE user_id = ?", [
-      user_id,
-    ])
+    const [beds] = await conn.query(
+      `SELECT 
+      beds.id AS 'id',
+      beds.amount,
+      beds.address,
+      beds.lat,
+      beds.lng,
+      beds.state,
+      beds.timestamp,
+      COUNT(bedsdealing.id) AS 'customer_amount'
+      FROM beds
+      LEFT JOIN bedsdealing ON beds.id = bedsdealing.bed_id
+      WHERE beds.user_id = ?
+      GROUP BY beds.id`,
+      [user_id]
+    )
     conn.commit()
     res.json({
       status: true,

@@ -62,6 +62,7 @@ import axios from "axios"
 import useVuelidate from "@vuelidate/core"
 import { required } from "@vuelidate/validators"
 export default {
+  name: "Bededitaddress",
   props: {
     user: { type: Object },
   },

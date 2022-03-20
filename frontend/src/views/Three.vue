@@ -5,6 +5,7 @@
 </template>
 <script>
 export default {
+  name: "Three",
   props: {
     user: { type: Object },
   },

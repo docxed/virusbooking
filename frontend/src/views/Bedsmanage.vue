@@ -15,7 +15,7 @@
             <td class="text-center"><b>จำนวนเตียง</b></td>
             <td><b>ที่อยู่</b></td>
             <td class="text-center"><b>สถานะ</b></td>
-            <td colspan="2" class="text-center"><b>Actions</b></td>
+            <td colspan="3" class="text-center"><b>Actions</b></td>
           </tr>
         </thead>
         <tbody>
@@ -41,6 +41,19 @@
                   <div v-else>ปิด</div>
                 </label>
               </div>
+            </td>
+            <td>
+              <router-link :to="{ path: '/customers/' + bed.id }">
+                <button class="btn btn-primary btn-sm position-relative">
+                  ผู้จอง
+                  <span
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  >
+                    {{ bed.customer_amount }}
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+                </button>
+              </router-link>
             </td>
             <td>
               <router-link :to="{ path: '/bededit/' + bed.id }">
@@ -69,6 +82,7 @@ import Swal from "sweetalert2"
 import axios_mod from "../plugins/axios"
 
 export default {
+  name: "Bedsmanage",
   props: {
     user: { type: Object },
   },

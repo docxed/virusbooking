@@ -117,6 +117,7 @@ import axios from "axios"
 import useVuelidate from "@vuelidate/core"
 import { required, minValue, maxValue } from "@vuelidate/validators"
 export default {
+  name: "Addbedsforsell",
   props: {
     user: { type: Object },
   },

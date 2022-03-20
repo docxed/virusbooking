@@ -60,6 +60,7 @@ import axios_mod from "../plugins/axios"
 import useVuelidate from "@vuelidate/core"
 import { required, minValue, maxValue } from "@vuelidate/validators"
 export default {
+  name: "Bededit",
   props: {
     user: { type: Object },
   },
