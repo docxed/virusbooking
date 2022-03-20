@@ -78,6 +78,18 @@ const routes = [
     meta: { login: true },
     component: () => import("../views/Three.vue"),
   },
+  {
+    path: "/beds",
+    name: "Beds",
+    meta: { login: true },
+    component: () => import("../views/Beds.vue"),
+  },
+  {
+    path: "/customers/:id",
+    name: "Customers",
+    meta: { login: true },
+    component: () => import("../views/Customers.vue"),
+  },
 ]
 
 const router = createRouter({

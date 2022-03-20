@@ -167,6 +167,7 @@ import {
 } from "@vuelidate/validators"
 
 export default {
+  name: "Signup",
   data() {
     return {
       v$: useVuelidate(),

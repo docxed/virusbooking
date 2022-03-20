@@ -59,6 +59,7 @@ import useVuelidate from "@vuelidate/core"
 import { required, email, minLength, maxLength } from "@vuelidate/validators"
 
 export default {
+  name: "Signin",
   data() {
     return {
       v$: useVuelidate(),
