@@ -15,7 +15,6 @@
             placeholder="อีเมล"
             maxlength="50"
             name="email"
-            required
             aria-describedby="email"
           />
           <div v-if="v$.signin.email.$error" class="my-2 text-danger">
@@ -33,7 +32,6 @@
             placeholder="รหัสผ่าน"
             maxlength="18"
             name="password"
-            required
           />
           <div v-if="v$.signin.password.$error" class="my-2 text-danger">
             โปรดป้อนรหัสผ่านให้ถูกต้อง (5 - 18 ตัวอักษร)

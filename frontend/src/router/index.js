@@ -90,6 +90,12 @@ const routes = [
     meta: { login: true },
     component: () => import("../views/Customers.vue"),
   },
+  {
+    path: "/changepassword",
+    name: "changepassword",
+    meta: { login: true },
+    component: () => import("../views/Changepassword.vue"),
+  },
 ]
 
 const router = createRouter({
