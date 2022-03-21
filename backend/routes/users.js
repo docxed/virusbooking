@@ -5,8 +5,90 @@ const Joi = require("joi")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { isLoggedIn } = require("../middlewares")
+const { raw } = require("express")
 
 router = express.Router()
+
+const changepasswordSchema = Joi.object({
+  oldpassword: Joi.string().required().min(5).max(20),
+  password: Joi.string().required().min(5).max(20),
+  c_password: Joi.string().required().valid(Joi.ref("password")),
+})
+
+router.put("/users/changepassword", isLoggedIn, async (req, res, next) => {
+  try {
+    await changepasswordSchema.validateAsync(req.body, { abortEarly: false })
+  } catch (err) {
+    return res.json({ status: false, message: err.message })
+  }
+
+  const conn = await pool.getConnection()
+  await conn.beginTransaction()
+
+  try {
+    const { oldpassword, password } = req.body
+    const user_id = req.user.id
+    const [[rawPassword]] = await conn.query(
+      "SELECT password FROM users WHERE id = ?",
+      [user_id]
+    )
+    if (!rawPassword) {
+      res.json({ status: false, message: "ไม่พบรหัสผ่านเดิม" })
+    } else if (!(await bcrypt.compare(oldpassword, rawPassword.password))) {
+      res.json({ status: false, message: "รหัสผ่านเดิมผิด" })
+    }
+    const password_encrypted = await bcrypt.hash(password, 5)
+    await conn.query("UPDATE users SET password=? WHERE id = ?", [
+      password_encrypted,
+      user_id,
+    ])
+    conn.commit()
+    res.json({ status: true, message: "เปลี่ยนรหัสผ่านสำเร็จ" })
+  } catch (err) {
+    conn.rollback()
+    res.status(400).json(err.toString())
+  } finally {
+    conn.release()
+  }
+})
+
+const profileSchema = Joi.object({
+  firstname: Joi.string().required().max(100),
+  lastname: Joi.string().required().max(100),
+  phone: Joi.string()
+    .required()
+    .min(10)
+    .max(10)
+    .pattern(/^[0-9]+$/),
+  lineid: Joi.string().max(100),
+})
+
+router.put("/users/profile", isLoggedIn, async (req, res, next) => {
+  try {
+    await profileSchema.validateAsync(req.body, { abortEarly: false })
+  } catch (err) {
+    return res.json({ status: false, message: err.message })
+  }
+
+  const conn = await pool.getConnection()
+  await conn.beginTransaction()
+
+  try {
+    const { firstname, lastname, phone, lineid } = req.body
+    const user_id = req.user.id
+    await conn.query(
+      "UPDATE users SET firstname=?, lastname=?, phone=?, lineid=? WHERE id = ?",
+      [firstname, lastname, phone, lineid, user_id]
+    )
+    conn.commit()
+    res.json({ status: true, message: "อัปเดตบัญชีสำเร็จ" })
+  } catch (err) {
+    conn.rollback()
+    res.status(400).json(err.toString())
+  } finally {
+    conn.release()
+  }
+})
 
 router.post("/users/logout", isLoggedIn, async (req, res, next) => {
   await pool.query("DELETE FROM tokens WHERE user_id = ? ", [req.user.id])

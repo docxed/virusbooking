@@ -15,7 +15,6 @@
               :class="{ 'is-invalid': v$.signup.fname.$error }"
               placeholder="ชื่อ"
               maxlength="100"
-              required
               name="fname"
               aria-describedby="fname"
             />
@@ -32,7 +31,6 @@
               :class="{ 'is-invalid': v$.signup.lname.$error }"
               placeholder="นามสกุล"
               maxlength="100"
-              required
               name="lname"
               aria-describedby="lname"
             />
@@ -50,7 +48,6 @@
             :class="{ 'is-invalid': v$.signup.idcard.$error }"
             placeholder="รหัสบัตรประชาชน"
             maxlength="13"
-            required
             name="idcard"
             aria-describedby="idcard"
           />
@@ -67,7 +64,6 @@
             :class="{ 'is-invalid': v$.signup.phone.$error }"
             placeholder="เบอร์ติดต่อ"
             maxlength="10"
-            required
             name="phone"
             aria-describedby="phone"
           />
@@ -84,7 +80,6 @@
             :class="{ 'is-invalid': v$.signup.email.$error }"
             placeholder="อีเมล"
             maxlength="100"
-            required
             name="email"
             aria-describedby="email"
           />
@@ -117,7 +112,6 @@
             :class="{ 'is-invalid': v$.signup.password.$error }"
             placeholder="รหัสผ่าน"
             maxlength="18"
-            required
             name="password"
           />
           <div v-if="v$.signup.password.$error" class="my-2 text-danger">
@@ -133,7 +127,6 @@
             :class="{ 'is-invalid': v$.signup.c_password.$error }"
             placeholder="ยืนยันรหัสผ่าน"
             maxlength="18"
-            required
             name="c_password"
           />
           <div v-if="v$.signup.c_password.$error" class="my-2 text-danger">
@@ -207,6 +200,7 @@ export default {
           maxLength: maxLength(20),
         },
         lineid: {
+          required,
           maxLength: maxLength(100),
         },
         c_password: {
