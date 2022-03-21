@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2022 at 07:47 PM
+-- Generation Time: Mar 21, 2022 at 01:36 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -43,13 +43,7 @@ CREATE TABLE `beds` (
 --
 
 INSERT INTO `beds` (`id`, `amount`, `address`, `lat`, `lng`, `state`, `user_id`, `timestamp`) VALUES
-(2, 115, '1 ซอย ฉลองกรุง 1 แขวง ลาดกระบัง เขตลาดกระบัง กรุงเทพมหานคร 10520', '13.7298889', '100.7782323', 1, 1, '2022-03-16 20:36:16'),
-(5, 1561, 'ถ. พหลโยธิน แขวง ถนนพญาไท เขตราชเทวี กรุงเทพมหานคร 10400', '13.7649084', '100.5382846', 1, 1, '2022-03-17 15:39:21'),
-(6, 19, 'ซอย สายไหม 13 แขวง สายไหม เขตสายไหม กรุงเทพมหานคร 10220', '13.9265609', '100.6419517', 1, 1, '2022-03-17 15:41:41'),
-(7, 160, 'เซียงกง เขตสัมพันธวงศ์ กรุงเทพมหานคร', '13.7372228', '100.5132788', 1, 1, '2022-03-17 15:45:24'),
-(8, 2649, '232 Moo2 Tambol ตำบล อ่าวนาง Amphur Muang กระบี่ 81000', '8.036613899999999', '98.8174305', 1, 1, '2022-03-18 03:45:54'),
-(9, 10, 'เทศบาลนครเชียงใหม่ อำเภอเมืองเชียงใหม่ เชียงใหม่', '18.7883439', '98.98530079999999', 1, 1, '2022-03-18 04:17:46'),
-(10, 1138, 'ตําบล, 1500 ถ. เอกชัย ตำบลมหาชัย อำเภอเมืองสมุทรสาคร สมุทรสาคร 74000', '13.5513195', '100.2795245', 1, 2, '2022-03-18 12:31:37');
+(11, 599, '19/49 ซอย สายไหม 15 แขวง สายไหม เขตสายไหม กรุงเทพมหานคร 10220 ประเทศไทย', '13.9276745', '100.6441675', 1, 3, '2022-03-21 12:34:24');
 
 -- --------------------------------------------------------
 
@@ -66,15 +60,6 @@ CREATE TABLE `bedsdealing` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `bedsdealing`
---
-
-INSERT INTO `bedsdealing` (`id`, `date`, `bed_id`, `user_id`, `state`, `timestamp`) VALUES
-(13, '2022-04-01', 10, 1, 0, '2022-03-20 18:25:48'),
-(16, '2022-03-20', 6, 2, 1, '2022-03-20 18:32:36'),
-(17, '2022-03-25', 5, 2, 0, '2022-03-20 18:33:10');
-
 -- --------------------------------------------------------
 
 --
@@ -87,13 +72,6 @@ CREATE TABLE `tokens` (
   `user_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `tokens`
---
-
-INSERT INTO `tokens` (`id`, `token`, `user_id`, `timestamp`) VALUES
-(58, 'eyJhbGciOiJIUzI1NiJ9.YWtpcmEuYWpleWJAZ21haWwuY29t.kxTIv8VmRb0vWkXW8cHsXrTprG1pm8OYQqrpBZ4DsEc', 1, '2022-03-20 18:39:51');
 
 -- --------------------------------------------------------
 
@@ -119,8 +97,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `idcard`, `phone`, `email`, `lineid`, `password`, `role`, `timestamp`) VALUES
-(1, 'อคิราภ์', 'สีแสนยง', '1100501552879', '0882923741', 'akira.ajeyb@gmail.com', 'sss', '$2a$05$OElGarb5cNlf3Csrfx.XbO0sfhkmNuTUB0zfndW5oHWrtUAmx60ri', 'user', '2022-03-09 17:32:12'),
-(2, 'กฤตนัย', 'ครองสิงห์', '1234568970123', '0882925468', 'test@gmail.com', 'testxxx', '$2a$05$KXNJo8w9VXsirKqqWCX/AeTHwmnT0OsNeca8xKDmEVryeJDejhd.a', 'user', '2022-03-09 18:56:03');
+(3, 'อคิราภ์', 'สีแสนยง', '1100501552879', '0882923741', 'akira.ajeyb@gmail.com', 'ajayxxx', '$2a$05$tjMXAL8OKV9RIFI6LGwKf.xp19ALxIyn.x0z2WH5/iBk69md03mMa', 'user', '2022-03-21 12:33:50');
 
 --
 -- Indexes for dumped tables
@@ -162,7 +139,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `beds`
 --
 ALTER TABLE `beds`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `bedsdealing`
@@ -174,13 +151,13 @@ ALTER TABLE `bedsdealing`
 -- AUTO_INCREMENT for table `tokens`
 --
 ALTER TABLE `tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
