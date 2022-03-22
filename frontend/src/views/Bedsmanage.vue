@@ -61,9 +61,17 @@
               </router-link>
             </td>
             <td>
-              <button class="btn btn-danger btn-sm" @click="deleteBed(bed.id)">
-                ลบ
-              </button>
+              <div v-if="bed.customer_amount > 0">
+                <button class="btn btn-danger btn-sm" disabled>ลบ</button>
+              </div>
+              <div v-else>
+                <button
+                  class="btn btn-danger btn-sm"
+                  @click="deleteBed(bed.id)"
+                >
+                  ลบ
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -113,6 +121,12 @@ export default {
                   icon: "success",
                 }).then(() => {
                   this.getBeds()
+                })
+              } else {
+                Swal.fire({
+                  title: "ไม่สำเร็จ",
+                  text: res.data.message,
+                  icon: "error",
                 })
               }
             })
