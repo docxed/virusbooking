@@ -1,5 +1,6 @@
 import axios from "axios"
 import router from "../router"
+import Nprogress from "nprogress"
 
 const instance = axios.create({
   baseURL: "http://localhost:3001",
@@ -7,6 +8,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   function (config) {
+    Nprogress.start()
     const token = localStorage.getItem("token")
     if (token) {
       config.headers["Authorization"] = token
@@ -21,9 +23,11 @@ instance.interceptors.request.use(
 // Add a response interceptor
 instance.interceptors.response.use(
   function (response) {
+    Nprogress.done()
     return response
   },
   function (error) {
+    Nprogress.done()
     console.log("intercepted 2")
     console.log(error.response)
     if (error.response.status === 401) {

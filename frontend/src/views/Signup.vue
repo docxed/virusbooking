@@ -158,7 +158,7 @@ import {
   numeric,
   sameAs,
 } from "@vuelidate/validators"
-
+import Nprogress from "nprogress"
 export default {
   name: "Signup",
   data() {
@@ -212,9 +212,11 @@ export default {
   },
   methods: {
     submitSignup() {
+      Nprogress.start()
       axios
         .post(`http://localhost:3001/users/signup`, this.signup)
         .then((res) => {
+          Nprogress.done()
           if (res.data.status) {
             Swal.fire({
               title: "สำเร็จ",

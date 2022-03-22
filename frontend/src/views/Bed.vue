@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="" v-if="user">
     <h2><i class="fa-solid fa-map-location-dot"></i> รายละเอียดเลือกจอง</h2>
     <hr />
     <div class="mb-3">

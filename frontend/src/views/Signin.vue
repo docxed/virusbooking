@@ -55,7 +55,7 @@ import Swal from "sweetalert2"
 import axios from "axios"
 import useVuelidate from "@vuelidate/core"
 import { required, email, minLength, maxLength } from "@vuelidate/validators"
-
+import Nprogress from "nprogress"
 export default {
   name: "Signin",
   data() {
@@ -81,9 +81,11 @@ export default {
   },
   methods: {
     submitSignin() {
+      Nprogress.start()
       axios
         .post(`http://localhost:3001/users/signin`, this.signin)
         .then((res) => {
+          Nprogress.done()
           if (res.data.status) {
             localStorage.setItem("token", res.data.token)
             this.$emit("auth-change")
