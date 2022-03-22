@@ -58,6 +58,16 @@ router.delete("/bed/:id", isLoggedIn, async (req, res, next) => {
 
   try {
     const bed_id = req.params.id
+    const [bedsdealing] = await conn.query(
+      "SELECT * FROM bedsdealing WHERE bed_id = ?",
+      [bed_id]
+    )
+    if (bedsdealing.length > 0) {
+      return res.json({
+        status: false,
+        message: "ไม่สามารถลบได้เนื่องจากมีผู้เข้าจองแล้ว",
+      })
+    }
     await conn.query("DELETE FROM beds WHERE id = ?", [bed_id])
     conn.commit()
     res.json({

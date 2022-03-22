@@ -26,12 +26,12 @@ router.put("/bedsdealing/customer/:id", isLoggedIn, async (req, res, next) => {
       availableDate = true
     }
     if (!bedsdealing) {
-      res.json({
+      return res.json({
         status: false,
         message: "ไม่พบข้อมูล โปรดลองอีกครั้งในภายหลัง",
       })
     } else if (availableDate) {
-      res.json({
+      return res.json({
         status: false,
         message: "ยังไม่ถึงวันเข้าพัก",
       })
@@ -165,16 +165,19 @@ router.post("/bedsdealing", isLoggedIn, async (req, res, next) => {
       [bed_id]
     )
     if (!bed) {
-      res.json({
+      return res.json({
         status: false,
         message: "ไม่พบเตียง โปรดลองอีกครั้งในภายหลัง",
       })
     } else if (!bed.amount > 0) {
-      res.json({ status: false, message: "ขออภัย ขณะนี้ไม่เหลือเตียงให้จอง" })
+      return res.json({
+        status: false,
+        message: "ขออภัย ขณะนี้ไม่เหลือเตียงให้จอง",
+      })
     } else if (!bed.state) {
       res.json({ status: false, message: "ขณะนี้ เตียงปิดการจองแล้ว" })
     } else if (bedsdealing) {
-      res.json({
+      return res.json({
         status: false,
         message: "ไม่ให้จองซ้ำ คุณจองสถานที่นี้ไปแล้ว",
       })

@@ -33,9 +33,9 @@ router.put("/users/changepassword", isLoggedIn, async (req, res, next) => {
       [user_id]
     )
     if (!rawPassword) {
-      res.json({ status: false, message: "ไม่พบรหัสผ่านเดิม" })
+      return res.json({ status: false, message: "ไม่พบรหัสผ่านเดิม" })
     } else if (!(await bcrypt.compare(oldpassword, rawPassword.password))) {
-      res.json({ status: false, message: "รหัสผ่านเดิมผิด" })
+      return res.json({ status: false, message: "รหัสผ่านเดิมผิด" })
     }
     const password_encrypted = await bcrypt.hash(password, 5)
     await conn.query("UPDATE users SET password=? WHERE id = ?", [
@@ -121,9 +121,9 @@ router.post("/users/signin", async (req, res, next) => {
       [email]
     )
     if (!user?.email) {
-      res.json({ status: false, message: "ไม่มีอีเมลนี้ในระบบ" })
+      return res.json({ status: false, message: "ไม่มีอีเมลนี้ในระบบ" })
     } else if (!(await bcrypt.compare(password, user.password))) {
-      res.json({ status: false, message: "รหัสผ่านผิด" })
+      return res.json({ status: false, message: "รหัสผ่านผิด" })
     } else {
       const [[tokens]] = await conn.query(
         "SELECT token FROM tokens WHERE user_id = ?",
