@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="text-center">สถิติผู้ติดเชื้อโควิด-19 ในไทย</h2>
+    <h2 class="text-center">สถิติผู้ติดเชื้อโควิด-19 ในไทยยยย</h2>
     <div class="text-center" v-if="covidData">
       <div class="text-secondary mb-3">
         ข้อมูลอัปเดตล่าสุด {{ convertDate(covidData.update_date) }}
