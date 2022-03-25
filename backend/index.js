@@ -23,7 +23,7 @@ app.use(bedsRouter.router)
 app.use(bedsdealingsRouter.router)
 
 const { SET_PORT } = process.env
-const port = process.env.PORT || SET_PORT
+const port = SET_PORT || 8888
 
 app.listen(port, () => {
   console.log(`Server is started and Connected to port ${port}`.rainbow)
