@@ -9,6 +9,10 @@ const { raw } = require("express")
 
 router = express.Router()
 
+router.get("/", async (req, res, next) => {
+  res.status(200).send("Hello This is Bestbeds API")
+})
+
 const changepasswordSchema = Joi.object({
   oldpassword: Joi.string().required().min(5).max(20),
   password: Joi.string().required().min(5).max(20),

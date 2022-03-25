@@ -83,7 +83,10 @@ export default {
     submitSignin() {
       Nprogress.start()
       axios
-        .post(`http://localhost:3001/users/signin`, this.signin)
+        .post(
+          `https://cryptic-thicket-17532.herokuapp.com/users/signin`,
+          this.signin
+        )
         .then((res) => {
           Nprogress.done()
           if (res.data.status) {

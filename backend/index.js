@@ -22,7 +22,7 @@ app.use(userRouter.router)
 app.use(bedsRouter.router)
 app.use(bedsdealingsRouter.router)
 
-const port = 3001 || process.env
+const port = process.env.PORT || 3001
 
 app.listen(port, () => {
   console.log(`Server is started and Connected to port ${port}`.rainbow)
