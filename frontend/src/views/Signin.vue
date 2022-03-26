@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>ลงชื่อเข้าเข้าใช้งาน</h2>
+    <h2>ลงชื่อเข้าใช้งาน</h2>
     <hr />
     <br />
     <div class="col-lg-7 mx-auto mb-5 content">
