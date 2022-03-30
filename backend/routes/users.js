@@ -7,226 +7,24 @@ const jwt = require("jsonwebtoken")
 const { isLoggedIn } = require("../middlewares")
 const { raw } = require("express")
 
+const { changepassword, updateProfile, logout, getProfile, signin, signup } = require('../controllers/user.controller')
+
 router = express.Router()
 
 router.get("/", async (req, res, next) => {
   res.status(200).send("Hello This is Bestbeds API")
 })
 
-const changepasswordSchema = Joi.object({
-  oldpassword: Joi.string().required().min(5).max(20),
-  password: Joi.string().required().min(5).max(20),
-  c_password: Joi.string().required().valid(Joi.ref("password")),
-})
+router.put("/users/changepassword", isLoggedIn, changepassword)
 
-router.put("/users/changepassword", isLoggedIn, async (req, res, next) => {
-  try {
-    await changepasswordSchema.validateAsync(req.body, { abortEarly: false })
-  } catch (err) {
-    return res.json({ status: false, message: err.message })
-  }
+router.put("/users/profile", isLoggedIn, updateProfile)
 
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
+router.post("/users/logout", isLoggedIn, logout)
 
-  try {
-    const { oldpassword, password } = req.body
-    const user_id = req.user.id
-    const [[rawPassword]] = await conn.query(
-      "SELECT password FROM users WHERE id = ?",
-      [user_id]
-    )
-    if (!rawPassword) {
-      return res.json({ status: false, message: "ไม่พบรหัสผ่านเดิม" })
-    } else if (!(await bcrypt.compare(oldpassword, rawPassword.password))) {
-      return res.json({ status: false, message: "รหัสผ่านเดิมผิด" })
-    }
-    const password_encrypted = await bcrypt.hash(password, 5)
-    await conn.query("UPDATE users SET password=? WHERE id = ?", [
-      password_encrypted,
-      user_id,
-    ])
-    conn.commit()
-    res.json({ status: true, message: "เปลี่ยนรหัสผ่านสำเร็จ" })
-  } catch (err) {
-    conn.rollback()
-    res.status(400).json(err.toString())
-  } finally {
-    conn.release()
-  }
-})
+router.get("/users/me", isLoggedIn, getProfile)
 
-const profileSchema = Joi.object({
-  firstname: Joi.string().required().max(100),
-  lastname: Joi.string().required().max(100),
-  phone: Joi.string()
-    .required()
-    .min(10)
-    .max(10)
-    .pattern(/^[0-9]+$/),
-  lineid: Joi.string().max(100),
-})
+router.post("/users/signin", signin)
 
-router.put("/users/profile", isLoggedIn, async (req, res, next) => {
-  try {
-    await profileSchema.validateAsync(req.body, { abortEarly: false })
-  } catch (err) {
-    return res.json({ status: false, message: err.message })
-  }
-
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
-  try {
-    const { firstname, lastname, phone, lineid } = req.body
-    const user_id = req.user.id
-    await conn.query(
-      "UPDATE users SET firstname=?, lastname=?, phone=?, lineid=? WHERE id = ?",
-      [firstname, lastname, phone, lineid, user_id]
-    )
-    conn.commit()
-    res.json({ status: true, message: "อัปเดตบัญชีสำเร็จ" })
-  } catch (err) {
-    conn.rollback()
-    res.status(400).json(err.toString())
-  } finally {
-    conn.release()
-  }
-})
-
-router.post("/users/logout", isLoggedIn, async (req, res, next) => {
-  await pool.query("DELETE FROM tokens WHERE user_id = ? ", [req.user.id])
-  res.json({ status: true, message: "ลงชื่อออกสำเร็จ" })
-})
-
-router.get("/users/me", isLoggedIn, async (req, res, next) => {
-  res.json(req.user)
-})
-
-const signinSchema = Joi.object({
-  email: Joi.string().required().max(100).email(),
-  password: Joi.string().required().min(5).max(20),
-})
-
-router.post("/users/signin", async (req, res, next) => {
-  try {
-    await signinSchema.validateAsync(req.body, { abortEarly: false })
-  } catch (err) {
-    return res.json({ status: false, message: err.message })
-  }
-
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
-  try {
-    const { email, password } = req.body
-    const [[user]] = await conn.query(
-      "SELECT id, email, password FROM users WHERE email = ?",
-      [email]
-    )
-    if (!user?.email) {
-      return res.json({ status: false, message: "ไม่มีอีเมลนี้ในระบบ" })
-    } else if (!(await bcrypt.compare(password, user.password))) {
-      return res.json({ status: false, message: "รหัสผ่านผิด" })
-    } else {
-      const [[tokens]] = await conn.query(
-        "SELECT token FROM tokens WHERE user_id = ?",
-        [user.id]
-      )
-      let token = tokens?.token
-      if (!token) {
-        token = jwt.sign(user.email, process.env.TOKEN_KEY)
-        await conn.query("INSERT INTO tokens(token, user_id) VALUES (?, ?)", [
-          token,
-          user.id,
-        ])
-      }
-
-      conn.commit()
-      res.json({
-        status: true,
-        message: "ลงชื่อเข้าใช้งานสำเร็จ",
-        token: token,
-      })
-    }
-    return
-  } catch (err) {
-    conn.rollback()
-    res.status(400).json(err.toString())
-  } finally {
-    conn.release()
-  }
-})
-
-const emailValidator = async (value, helpers) => {
-  const [rows, _] = await pool.query(
-    "SELECT email FROM users WHERE email = ?",
-    [value]
-  )
-  if (rows.length > 0) {
-    const message = "อีเมลนี้ถูกใช้งานแล้ว"
-    throw new Joi.ValidationError(message, { message })
-  }
-  return value
-}
-
-const idcardValidator = async (value, helpers) => {
-  const [rows, _] = await pool.query(
-    "SELECT idcard FROM users WHERE idcard = ?",
-    [value]
-  )
-  if (rows.length > 0) {
-    const message = "รหัสบัตรประชาชนถูกใช้งานแล้ว"
-    throw new Joi.ValidationError(message, { message })
-  }
-  return value
-}
-
-const signupSchema = Joi.object({
-  fname: Joi.string().required().max(100),
-  lname: Joi.string().required().max(100),
-  idcard: Joi.string()
-    .required()
-    .min(13)
-    .max(13)
-    .pattern(/^[0-9]+$/)
-    .external(idcardValidator),
-  phone: Joi.string()
-    .required()
-    .min(10)
-    .max(10)
-    .pattern(/^[0-9]+$/),
-  email: Joi.string().required().max(100).email().external(emailValidator),
-  lineid: Joi.string().max(100),
-  password: Joi.string().required().min(5).max(20),
-  c_password: Joi.string().required().valid(Joi.ref("password")),
-})
-
-router.post("/users/signup", async (req, res, next) => {
-  try {
-    await signupSchema.validateAsync(req.body, { abortEarly: false })
-  } catch (err) {
-    return res.json({ status: false, message: err.message })
-  }
-
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
-  try {
-    const { fname, lname, idcard, phone, email, lineid, password } = req.body
-    const password_encrypted = await bcrypt.hash(password, 5)
-    await conn.query(
-      "INSERT INTO users(firstname, lastname, idcard, phone, email, lineid, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [fname, lname, idcard, phone, email, lineid, password_encrypted]
-    )
-    conn.commit()
-    res.json({ status: true, message: "ลงทะเบียนสำเร็จ" })
-  } catch (err) {
-    conn.rollback()
-    res.status(400).json(err.toString())
-  } finally {
-    conn.release()
-  }
-})
+router.post("/users/signup", signup)
 
 exports.router = router
