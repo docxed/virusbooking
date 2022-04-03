@@ -197,10 +197,10 @@
 <p><span style="font-weight: 400;">2022/04/03</span></p>
 </td>
 <td style="width: 12.2776%; text-align: center;">
-<p><span style="font-weight: 400;">10</span></p>
+<p><span style="font-weight: 400;">11</span></p>
 </td>
 <td style="width: 31.1388%; text-align: center;">
-<p><span style="font-weight: 400;">7</span></p>
+<p><span style="font-weight: 400;">8</span></p>
 </td>
 <td style="width: 28.1139%; text-align: center;">
 <p><span style="font-weight: 400;">3</span></p>
