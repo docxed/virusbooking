@@ -47,7 +47,7 @@ const changeBedsdealingState = async (req, res) => {
     res.status(400).json(err.toString())
   } finally {
     conn.release()
-  } 
+  }
 }
 
 const getBedsdealingState = async (req, res) => {
@@ -204,5 +204,5 @@ module.exports = {
   changeBedsdealingState,
   getBedsdealingState,
   getBedsdealingByUser,
-  addBedsdealing
+  addBedsdealing,
 }

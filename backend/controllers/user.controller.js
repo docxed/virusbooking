@@ -226,5 +226,5 @@ module.exports = {
   logout,
   getProfile,
   signin,
-  signup
+  signup,
 }

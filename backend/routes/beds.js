@@ -4,7 +4,17 @@ const pool = require("../config/database")
 const Joi = require("joi")
 const { isLoggedIn } = require("../middlewares")
 
-const { getBedsAvailable, getBedsSearch, deleteBed, changeBedAddress, changeAmountBed, getBedDetail, changeStateBed, getBedsByUser, addBed } = require('../controllers/beds.controller')
+const {
+  getBedsAvailable,
+  getBedsSearch,
+  deleteBed,
+  changeBedAddress,
+  changeAmountBed,
+  getBedDetail,
+  changeStateBed,
+  getBedsByUser,
+  addBed,
+} = require("../controllers/beds.controller")
 
 router = express.Router()
 

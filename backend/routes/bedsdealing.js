@@ -5,7 +5,12 @@ const Joi = require("joi")
 const { isLoggedIn } = require("../middlewares")
 const moment = require("moment")
 
-const { changeBedsdealingState, getBedsdealingState, getBedsdealingByUser, addBedsdealing} = require('../controllers/bedsdealing.controller')
+const {
+  changeBedsdealingState,
+  getBedsdealingState,
+  getBedsdealingByUser,
+  addBedsdealing,
+} = require("../controllers/bedsdealing.controller")
 
 router = express.Router()
 

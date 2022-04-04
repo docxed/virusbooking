@@ -276,5 +276,5 @@ module.exports = {
   getBedDetail,
   changeStateBed,
   getBedsByUser,
-  addBed
+  addBed,
 }

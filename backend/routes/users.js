@@ -7,7 +7,14 @@ const jwt = require("jsonwebtoken")
 const { isLoggedIn } = require("../middlewares")
 const { raw } = require("express")
 
-const { changepassword, updateProfile, logout, getProfile, signin, signup } = require('../controllers/user.controller')
+const {
+  changepassword,
+  updateProfile,
+  logout,
+  getProfile,
+  signin,
+  signup,
+} = require("../controllers/user.controller")
 
 router = express.Router()
 
