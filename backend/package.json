@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx kill-port 3001 && nodemon index.js",
-    "start": "node index.js"
+    "dev": "npx kill-port 3001 && nodemon ./src/index.js",
+    "start": "node ./src/index.js",
+    "lint": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,12 @@
     "mysql2": "^2.3.3"
   },
   "devDependencies": {
+    "backpack-core": "^0.8.4",
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.2.2",
     "nodemon": "^2.0.15",
+    "nyc": "^15.1.0",
     "prettier": "^2.6.0"
   }
 }
