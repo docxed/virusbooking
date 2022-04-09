@@ -25,6 +25,26 @@
         <span class="link-primary" v-else @click="stage = 'total'"
           >ทั้งหมด</span
         >
+        -
+        <span
+          class="badge bg-primary"
+          style="font-size: 15px"
+          v-if="stage == 'graphStats'"
+          >กราฟสถิติข้อมูล</span
+        >
+        <span class="link-primary" v-else @click="stage = 'graphStats'"
+          >กราฟสถิติข้อมูล</span
+        >
+        -
+        <span
+          class="badge bg-primary"
+          style="font-size: 15px"
+          v-if="stage == 'province'"
+          >รายงานประจำจังหวัด</span
+        >
+        <span class="link-primary" v-else @click="stage = 'province'"
+          >รายงานประจำจังหวัด</span
+        >
       </div>
       <div v-if="stage === 'daily'">
         <div class="text-center" style="font-size: 30px">ติดเชื้อรายใหม่:</div>
@@ -48,8 +68,11 @@
         >
           {{ covidData.new_recovered.toLocaleString() }}
         </div>
+        <div class="my-3">
+          <Chart></Chart>
+        </div>
       </div>
-      <div v-else>
+      <div v-else-if="stage === 'total'">
         <div class="text-center" style="font-size: 30px">ติดเชื้อสะสม:</div>
         <div
           class="text-center text-secondary mb-5 animate__animated animate__fadeIn"
@@ -74,8 +97,15 @@
           {{ covidData.total_recovered.toLocaleString() }}
         </div>
       </div>
-      <div class="text-end text-secondary">
-        ข้อมูลโดย covid19.ddc.moph.go.th
+      <div v-else-if="stage === 'graphStats'">
+        <div class="my-3">
+          <Chart2></Chart2>
+        </div>
+      </div>
+      <div v-else-if="stage === 'province'">
+        <div class="my-3">
+          <Province></Province>
+        </div>
       </div>
     </div>
     <div class="text-center" v-else>
@@ -85,6 +115,7 @@
       </div>
       <br /><br /><br />
     </div>
+    <div class="text-end text-secondary">ข้อมูลโดย covid19.ddc.moph.go.th</div>
     <h3><i class="fas fa-procedures"></i> ค้นหาเตียง</h3>
     <p>
       จำนวนเตียงว่างทั้งหมด
@@ -115,8 +146,16 @@
 import axios from "axios"
 import axios_mod from "../plugins/axios"
 import moment from "moment"
+import Chart from "@/components/Chartdaily.vue"
+import Chart2 from "@/components/Chartstats.vue"
+import Province from "@/components/Provincecovid.vue"
 export default {
   name: "Home",
+  components: {
+    Chart,
+    Chart2,
+    Province,
+  },
   props: {
     user: { type: Object },
   },

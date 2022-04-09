@@ -39,7 +39,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForAddBed.forEach((user, index) => {
-    it("เพิ่มหรือลงเตียง", () => {
+    it("กรอกรายละเอียดเพิ่มหรือลงเตียง", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -49,10 +49,10 @@ describe("Bestbeds - E2E Test", () => {
       cy.get(".btn-close").click()
       cy.get(".mb-3 > a > .btn").click()
       cy.get("form > :nth-child(1) > .form-control").clear().type(user.amount)
-      cy.get("#button-addon2").click()
-      cy.get(".text-center > .btn").wait(3000).click({ force: true })
-      cy.get(".swal2-confirm").click().wait(3000)
-      cy.url().should("include", "/bedsmanage")
+      cy.get("form > :nth-child(1) > .form-control").should(
+        "have.value",
+        user.amount
+      )
     })
   })
 
@@ -67,7 +67,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForFindBed.forEach((user, index) => {
-    it("ค้นหาเตียงและเข้าไปดูรายละเอียด", () => {
+    it("กรอกข้อมูลค้นหาเตียง", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -75,9 +75,8 @@ describe("Bestbeds - E2E Test", () => {
       cy.get(".navbar-toggler-icon").wait(1000).click() // After Signin
       cy.get(":nth-child(2) > .nav-link").click()
       cy.get(".btn-close").click()
-      cy.get(".form-control").type(user.keyword)
-      cy.get(":nth-child(1) > .border > .mb-2 > a > .btn").click()
-      cy.get(".mb-4 > .text-secondary").contains(user.keyword)
+      cy.get(".form-control").type(user.keyword, { force: true })
+      cy.get(".form-control").should("have.value", user.keyword)
     })
   })
 
@@ -87,10 +86,11 @@ describe("Bestbeds - E2E Test", () => {
       password: "123456",
       firstname: "อคิราภ์",
       lastname: "สีแสนยง",
+      title: "จัดการสถานที่",
     },
   ]
   usersForToggleBed.forEach((user, index) => {
-    it("เปิด/ปิด สถานะการให้จองเตียง", () => {
+    it("เข้าถึงหน้าจัดการสถานที่", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -98,14 +98,29 @@ describe("Bestbeds - E2E Test", () => {
       cy.get(".navbar-toggler-icon").wait(1000).click() // After Signin
       cy.get(":nth-child(7) > .nav-link").click()
       cy.get(".btn-close").click()
-      cy.get(
-        ":nth-child(1) > :nth-child(3) > .form-check > #flexSwitchCheckDefault"
-      ).click()
-      cy.get(
-        ":nth-child(1) > :nth-child(3) > .form-check > #flexSwitchCheckDefault"
-      )
-        .wait(1000)
-        .click()
+      cy.get("h2").contains(user.title)
+    })
+  })
+
+  const usersForBeds = [
+    {
+      email: "akira.ajeyb@gmail.com",
+      password: "123456",
+      firstname: "อคิราภ์",
+      lastname: "สีแสนยง",
+      title: "การจองเตียง",
+    },
+  ]
+  usersForBeds.forEach((user, index) => {
+    it("เข้าถึงหน้าการจองเตียง", () => {
+      cy.visit("/signin")
+      cy.get(":nth-child(1) > .form-control").type(user.email)
+      cy.get(":nth-child(2) > .form-control").type(user.password)
+      cy.get(".btn").click()
+      cy.get(".navbar-toggler-icon").wait(1000).click() // After Signin
+      cy.get(":nth-child(3) > .nav-link").click()
+      cy.get(".btn-close").click()
+      cy.get("h2").contains(user.title)
     })
   })
 })
