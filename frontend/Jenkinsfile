@@ -48,6 +48,7 @@ pipeline {
                     unhealthyTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0],
                     failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
                 )
+            }
         }
         stage('Create Unit Test Coverage Report') {
             steps {
