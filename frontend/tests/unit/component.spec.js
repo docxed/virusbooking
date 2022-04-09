@@ -1,9 +1,6 @@
 import { mount } from "@vue/test-utils"
 import Signin from "@/views/Signin.vue"
-import Signup from "@/views/Signup.vue"
-import Home from "@/views/Home.vue"
 import Findbeds from "@/views/Findbeds.vue"
-import Chart2 from "@/components/Chartstats.vue"
 
 describe("test that signin page have all elements that must be have.", () => {
   const forSignin = mount(Signin)

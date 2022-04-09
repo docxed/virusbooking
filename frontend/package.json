@@ -7,11 +7,13 @@
     "build": "vue-cli-service build",
     "lint": "prettier --write .",
     "cypress:open": "cypress open",
-    "e2e": "vue-cli-service test:e2e --headless",
     "test": "jest",
-    "unit": "vue-cli-service test:unit",
-    "unit:coverage": "jest --coverage",
-    "unit:watch": "jest --watch"
+    "unit:watch": "jest --watch",
+    "unit": "vue-cli-service test:unit  ./tests/unit/unit.spec.js",
+    "unit:coverage": "vue-cli-service test:unit  ./tests/unit/unit.spec.js --coverage",
+    "component": "vue-cli-service test:unit  ./tests/unit/component.spec.js",
+    "component:coverage": "vue-cli-service test:unit  ./tests/unit/component.spec.js --coverage",
+    "e2e": "vue-cli-service test:e2e --headless"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.0.0",
@@ -25,6 +27,7 @@
     "moment": "^2.29.1",
     "nprogress": "^0.2.0",
     "sweetalert2": "^11.4.4",
+    "term-to-html": "^1.2.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.13"
   },
@@ -38,6 +41,7 @@
     "babel-jest": "^27.0.6",
     "cypress": "^8.3.0",
     "jest": "^27.0.5",
+    "jest-html-reporter": "^3.4.2",
     "prettier": "^2.6.0"
   }
 }
