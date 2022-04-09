@@ -39,7 +39,7 @@
       </b>
     </div>
 
-    <div class="row" v-if="!isLoading">
+    <div class="row" v-if="!isLoading" id="test-bedplace">
       <div
         class="col-lg-6 col-md-6 col-sm-12 mb-3"
         v-for="(bed, index) in beds"
