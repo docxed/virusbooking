@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx kill-port 3001 && nodemon ./src/index.js",
-    "node": "nodemon ./src/index.js",
     "lint": "prettier --write .",
     "build": "backpack build",
     "start": "node ./build/main.js",

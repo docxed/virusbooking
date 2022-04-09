@@ -13,8 +13,8 @@ const {
   selectTokens,
   addTokens,
   checkEmail,
-  addUser,
-  
+  checkIdcard,
+  addUser
 } = require("../repository/user.repo")
 
 const changepasswordSchema = Joi.object({
@@ -150,10 +150,8 @@ const signin = async (req, res) => {
 }
 
 const emailValidator = async (value, helpers) => {
-  const [rows, _] = await pool.query(
-    "SELECT email FROM users WHERE email = ?",
-    [value]
-  )
+  const [rows, _] = await checkEmail(value);
+
   if (rows.length > 0) {
     const message = "อีเมลนี้ถูกใช้งานแล้ว"
     throw new Joi.ValidationError(message, { message })
@@ -162,7 +160,7 @@ const emailValidator = async (value, helpers) => {
 }
 
 const idcardValidator = async (value, helpers) => {
-  const [rows, _] = await checkEmail(value)
+  const [rows, _] = await checkIdcard(value);
 
   if (rows.length > 0) {
     const message = "รหัสบัตรประชาชนถูกใช้งานแล้ว"

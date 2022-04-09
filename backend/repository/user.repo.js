@@ -59,13 +59,20 @@ const checkEmail = async (email) => {
     );
 };
 
+const checkIdcard = async (idcard) => {
+    return pool.query(
+        "SELECT idcard FROM users WHERE idcard = ?",
+        [value]
+    );
+};
+
 const addUser = async (fname, lname, idcard, phone, email, lineid, password_encrypted) => {
     const conn = await pool.getConnection();
     return conn.query(
         "INSERT INTO users(firstname, lastname, idcard, phone, email, lineid, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [fname, lname, idcard, phone, email, lineid, password_encrypted]
     );
-}
+};
 
 module.exports = {
     selectPassUserById,
@@ -76,5 +83,6 @@ module.exports = {
     selectTokens,
     addTokens,
     checkEmail,
+    checkIdcard,
     addUser,
 }
