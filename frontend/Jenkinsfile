@@ -41,6 +41,14 @@ pipeline {
                 }
             }
         }
+        stage('Create Unit Coverage Report') {
+            steps {
+                clover(cloverReportDir: 'frontend/coverage', cloverReportFileName: 'clover.xml',
+                    healthyTarget: [methodCoverage: 70, conditionalCoverage: 80, statementCoverage: 80],
+                    unhealthyTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0],
+                    failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
+                )
+        }
         stage('Create Unit Test Coverage Report') {
             steps {
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend/coverage/lcov-report', reportFiles: 'index.html', reportName: 'Unit Test Coverage Report', reportTitles: 'Unit Test Coverage Report'])
