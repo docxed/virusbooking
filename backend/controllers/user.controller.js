@@ -4,6 +4,19 @@ const Joi = require("joi")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
+const { 
+  selectPassUserById, 
+  updateUserPass,
+  updateUserProfile,
+  deleteTokens,
+  selectUserByEmail,
+  selectTokens,
+  addTokens,
+  checkEmail,
+  addUser,
+  
+} = require("../repository/user.repo")
+
 const changepasswordSchema = Joi.object({
   oldpassword: Joi.string().required().min(5).max(20),
   password: Joi.string().required().min(5).max(20),
@@ -23,20 +36,16 @@ const changepassword = async (req, res) => {
   try {
     const { oldpassword, password } = req.body
     const user_id = req.user.id
-    const [[rawPassword]] = await conn.query(
-      "SELECT password FROM users WHERE id = ?",
-      [user_id]
-    )
+    const [[rawPassword]] = await selectPassUserById(user_id)
+
     if (!rawPassword) {
       return res.json({ status: false, message: "ไม่พบรหัสผ่านเดิม" })
     } else if (!(await bcrypt.compare(oldpassword, rawPassword.password))) {
       return res.json({ status: false, message: "รหัสผ่านเดิมผิด" })
     }
     const password_encrypted = await bcrypt.hash(password, 5)
-    await conn.query("UPDATE users SET password=? WHERE id = ?", [
-      password_encrypted,
-      user_id,
-    ])
+    await updateUserPass(password_encrypted, user_id);
+
     conn.commit()
     res.json({ status: true, message: "เปลี่ยนรหัสผ่านสำเร็จ" })
   } catch (err) {
@@ -71,10 +80,8 @@ const updateProfile = async (req, res) => {
   try {
     const { firstname, lastname, phone, lineid } = req.body
     const user_id = req.user.id
-    await conn.query(
-      "UPDATE users SET firstname=?, lastname=?, phone=?, lineid=? WHERE id = ?",
-      [firstname, lastname, phone, lineid, user_id]
-    )
+    await updateUserProfile(firstname, lastname, phone, lineid, user_id)
+
     conn.commit()
     res.json({ status: true, message: "อัปเดตบัญชีสำเร็จ" })
   } catch (err) {
@@ -86,7 +93,7 @@ const updateProfile = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-  await pool.query("DELETE FROM tokens WHERE user_id = ? ", [req.user.id])
+  await deleteTokens(req.user.id);
   res.json({ status: true, message: "ลงชื่อออกสำเร็จ" })
 }
 
@@ -111,26 +118,19 @@ const signin = async (req, res) => {
 
   try {
     const { email, password } = req.body
-    const [[user]] = await conn.query(
-      "SELECT id, email, password FROM users WHERE email = ?",
-      [email]
-    )
+    const [[user]] = await selectUserByEmail(email);
+
     if (!user?.email) {
       return res.json({ status: false, message: "ไม่มีอีเมลนี้ในระบบ" })
     } else if (!(await bcrypt.compare(password, user.password))) {
       return res.json({ status: false, message: "รหัสผ่านผิด" })
     } else {
-      const [[tokens]] = await conn.query(
-        "SELECT token FROM tokens WHERE user_id = ?",
-        [user.id]
-      )
+      const [[tokens]] = await selectTokens(user.id)
+
       let token = tokens?.token
       if (!token) {
         token = jwt.sign(user.email, process.env.TOKEN_KEY)
-        await conn.query("INSERT INTO tokens(token, user_id) VALUES (?, ?)", [
-          token,
-          user.id,
-        ])
+        await addTokens(token, user.id)
       }
 
       conn.commit()
@@ -162,10 +162,8 @@ const emailValidator = async (value, helpers) => {
 }
 
 const idcardValidator = async (value, helpers) => {
-  const [rows, _] = await pool.query(
-    "SELECT idcard FROM users WHERE idcard = ?",
-    [value]
-  )
+  const [rows, _] = await checkEmail(value)
+
   if (rows.length > 0) {
     const message = "รหัสบัตรประชาชนถูกใช้งานแล้ว"
     throw new Joi.ValidationError(message, { message })
@@ -206,10 +204,8 @@ const signup = async (req, res) => {
   try {
     const { fname, lname, idcard, phone, email, lineid, password } = req.body
     const password_encrypted = await bcrypt.hash(password, 5)
-    await conn.query(
-      "INSERT INTO users(firstname, lastname, idcard, phone, email, lineid, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [fname, lname, idcard, phone, email, lineid, password_encrypted]
-    )
+    await addUser(fname, lname, idcard, phone, email, lineid, password_encrypted)
+    
     conn.commit()
     res.json({ status: true, message: "ลงทะเบียนสำเร็จ" })
   } catch (err) {
