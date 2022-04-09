@@ -13,6 +13,10 @@ const {
   insertBed,
 } = require('../repository/beds.repo')
 
+const {
+  selectBedsdealingByBedId
+} = require('../repository/bedsdealing.repo')
+
 const getBedsAvailable = async (req, res) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
@@ -60,10 +64,8 @@ const deleteBed = async (req, res) => {
 
   try {
     const bed_id = req.params.id
-    const [bedsdealing] = await conn.query(
-      "SELECT * FROM bedsdealing WHERE bed_id = ?",
-      [bed_id]
-    )
+    const [bedsdealing] = await selectBedsdealingByBedId(bed_id)
+
     if (bedsdealing.length > 0) {
       return res.json({
         status: false,

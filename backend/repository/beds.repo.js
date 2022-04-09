@@ -81,6 +81,29 @@ const insertBed = async (amount, address, lat, lng, user_id) => {
   );
 };
 
+const selectBedById = async (bed_id) => {
+    const conn = await pool.getConnection();
+    return conn.query(`SELECT * FROM beds WHERE id = ?`, [
+        bed_id,
+    ]);
+};
+
+const selectBedAmount = async (bed_id) => {
+    const conn = await pool.getConnection();
+    return conn.query(
+        "SELECT id, amount, state FROM beds WHERE id = ?",
+        [bed_id]
+    );
+};
+
+const reduceBedAmount = async (amount, bed_id) => {
+    const conn = await pool.getConnection();
+    return conn.query("UPDATE beds SET amount=? WHERE id = ?", [
+        amount - 1,
+        bed_id,
+    ]);
+};
+
 module.exports = {
     selectBedsReady,
     selectBedsSearch,
@@ -91,4 +114,7 @@ module.exports = {
     updateBedsState,
     selectBedsByUser,
     insertBed,
+    selectBedById,
+    selectBedAmount,
+    reduceBedAmount
 };
