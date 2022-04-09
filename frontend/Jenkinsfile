@@ -43,7 +43,7 @@ pipeline {
         }
         stage('Create Unit Coverage Report') {
             steps {
-                clover(cloverReportDir: 'frontend/coverage', cloverReportFileName: 'clover.xml',
+                clover(cloverReportDir: './frontend/coverage', cloverReportFileName: 'clover.xml',
                     healthyTarget: [methodCoverage: 70, conditionalCoverage: 80, statementCoverage: 80],
                     unhealthyTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0],
                     failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
