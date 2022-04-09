@@ -98,7 +98,7 @@ describe("Bestbeds - E2E Test", () => {
       cy.get(".navbar-toggler-icon").wait(1000).click() // After Signin
       cy.get(":nth-child(7) > .nav-link").click()
       cy.get(".btn-close").click()
-      cy.get("h2").contains(user.title)
+      cy.get("h2").wait(1000).contains(user.title)
     })
   })
 
@@ -120,7 +120,48 @@ describe("Bestbeds - E2E Test", () => {
       cy.get(".navbar-toggler-icon").wait(1000).click() // After Signin
       cy.get(":nth-child(3) > .nav-link").click()
       cy.get(".btn-close").click()
-      cy.get("h2").contains(user.title)
+      cy.get("h2").wait(1000).contains(user.title)
+    })
+  })
+
+  const usersForProfile = [
+    {
+      email: "akira.ajeyb@gmail.com",
+      password: "123456",
+      firstname: "อคิราภ์",
+      lastname: "สีแสนยง",
+      title: "ข้อมูลผู้ใช้",
+    },
+  ]
+  usersForProfile.forEach((user, index) => {
+    it("เข้าถึงหน้าบัญชีผู้ใช้", () => {
+      cy.visit("/signin")
+      cy.get(":nth-child(1) > .form-control").type(user.email)
+      cy.get(":nth-child(2) > .form-control").type(user.password)
+      cy.get(".btn").click()
+      cy.get(".navbar-toggler-icon").wait(1000).click() // After Signin
+      cy.get(":nth-child(6) > .nav-link").click()
+      cy.get(".btn-close").click()
+      cy.get("h2").wait(1000).contains(user.title)
+    })
+  })
+
+  const usersForHome = [
+    {
+      email: "akira.ajeyb@gmail.com",
+      password: "123456",
+      firstname: "อคิราภ์",
+      lastname: "สีแสนยง",
+      title: "ค้นหาเตียง",
+    },
+  ]
+  usersForHome.forEach((user, index) => {
+    it("เข้าถึงหน้าประจำวัน", () => {
+      cy.visit("/signin")
+      cy.get(":nth-child(1) > .form-control").type(user.email)
+      cy.get(":nth-child(2) > .form-control").type(user.password)
+      cy.get(".btn").click()
+      cy.get("h3").wait(1000).contains(user.title)
     })
   })
 })
