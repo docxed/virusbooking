@@ -1,14 +1,24 @@
 const pool = require("../config/database")
 const Joi = require("joi")
 
+const { 
+  selectBedsReady, 
+  selectBedsSearch, 
+  deleteBedById, 
+  updateBedsAddress, 
+  updateBedsAmount,
+  selectBedsDetail,
+  updateBedsState,
+  selectBedsByUser,
+  insertBed,
+} = require('../repository/beds.repo')
+
 const getBedsAvailable = async (req, res) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
 
   try {
-    const [beds] = await conn.query(
-      "SELECT * FROM beds WHERE amount > 0 AND state = 1"
-    )
+    const [beds] = await selectBedsReady();
     conn.commit()
     res.json({
       status: true,
@@ -29,10 +39,7 @@ const getBedsSearch = async (req, res) => {
 
   try {
     const search = `%${req.query.search}%`
-    const [beds] = await conn.query(
-      "SELECT * FROM beds WHERE amount > 0 AND state = 1 AND address LIKE ?",
-      [search]
-    )
+    const [beds] = await selectBedsSearch(search);
     conn.commit()
     res.json({
       status: true,
@@ -63,7 +70,7 @@ const deleteBed = async (req, res) => {
         message: "ไม่สามารถลบได้เนื่องจากมีผู้เข้าจองแล้ว",
       })
     }
-    await conn.query("DELETE FROM beds WHERE id = ?", [bed_id])
+    await deleteBedById(bed_id);
     conn.commit()
     res.json({
       status: true,
@@ -96,12 +103,7 @@ const changeBedAddress = async (req, res) => {
   try {
     const { address, lat, lng } = req.body
     const bed_id = req.params.id
-    await conn.query("UPDATE beds SET address=?, lat=?, lng=? WHERE id = ?", [
-      address,
-      lat,
-      lng,
-      bed_id,
-    ])
+    await updateBedsAddress(address, lat, lng, bed_id)
     conn.commit()
     res.json({
       status: true,
@@ -132,7 +134,7 @@ const changeAmountBed = async (req, res) => {
   try {
     const { amount } = req.body
     const bed_id = req.params.id
-    await conn.query("UPDATE beds SET amount=? WHERE id = ?", [amount, bed_id])
+    await updateBedsAmount(amount, bed_id)
     conn.commit()
     res.json({
       status: true,
@@ -152,13 +154,7 @@ const getBedDetail = async (req, res) => {
 
   try {
     const bed_id = req.params.id
-    const [[bed]] = await conn.query(
-      `SELECT 
-      beds.id, beds.amount, beds.address, beds.lat, beds.lng, beds.state, beds.user_id, beds.timestamp, 
-      users.firstname, users.lastname, users.idcard, users.phone, users.email, users.lineid
-      FROM beds INNER JOIN users ON user_id=users.id WHERE beds.id = ?;`,
-      [bed_id]
-    )
+    const [[bed]] = await selectBedsDetail(bed_id)
     conn.commit()
     res.json({
       status: true,
@@ -180,7 +176,7 @@ const changeStateBed = async (req, res) => {
   try {
     let { state } = req.body
     const bed_id = req.params.id
-    await conn.query("UPDATE beds SET state=? WHERE id = ?", [state, bed_id])
+    await updateBedsState(state, bed_id)
     conn.commit()
     res.json({
       status: true,
@@ -200,22 +196,7 @@ const getBedsByUser = async (req, res) => {
 
   try {
     const user_id = req.user.id
-    const [beds] = await conn.query(
-      `SELECT 
-      beds.id AS 'id',
-      beds.amount,
-      beds.address,
-      beds.lat,
-      beds.lng,
-      beds.state,
-      beds.timestamp,
-      COUNT(bedsdealing.id) AS 'customer_amount'
-      FROM beds
-      LEFT JOIN bedsdealing ON beds.id = bedsdealing.bed_id
-      WHERE beds.user_id = ?
-      GROUP BY beds.id`,
-      [user_id]
-    )
+    const [beds] = await selectBedsByUser(user_id)
     conn.commit()
     res.json({
       status: true,
@@ -250,10 +231,7 @@ const addBed = async (req, res) => {
   try {
     const { amount, address, lat, lng } = req.body
     const user_id = req.user.id
-    await conn.query(
-      "INSERT INTO beds(amount, address, lat, lng, user_id) VALUES (?, ?, ?, ?, ?)",
-      [amount, address, lat, lng, user_id]
-    )
+    await insertBed(amount, address, lat, lng, user_id)
     conn.commit()
     res.json({
       status: true,
