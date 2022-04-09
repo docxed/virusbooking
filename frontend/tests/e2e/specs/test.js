@@ -10,7 +10,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForSignin.forEach((user, index) => {
-    it("ลงชื่อเข้าใช้งาน", () => {
+    it("signin page.", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -39,7 +39,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForAddBed.forEach((user, index) => {
-    it("กรอกรายละเอียดเพิ่มหรือลงเตียง", () => {
+    it("input data for beds reservation.", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -67,7 +67,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForFindBed.forEach((user, index) => {
-    it("กรอกข้อมูลค้นหาเตียง", () => {
+    it("input data for find bed places.", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -90,7 +90,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForToggleBed.forEach((user, index) => {
-    it("เข้าถึงหน้าจัดการสถานที่", () => {
+    it("reach bed places management page.", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -112,7 +112,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForBeds.forEach((user, index) => {
-    it("เข้าถึงหน้าการจองเตียง", () => {
+    it("reach bed reservation page.", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -134,7 +134,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForProfile.forEach((user, index) => {
-    it("เข้าถึงหน้าบัญชีผู้ใช้", () => {
+    it("reach profile page.", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
@@ -156,7 +156,7 @@ describe("Bestbeds - E2E Test", () => {
     },
   ]
   usersForHome.forEach((user, index) => {
-    it("เข้าถึงหน้าประจำวัน", () => {
+    it("reach daily COVID-19 page", () => {
       cy.visit("/signin")
       cy.get(":nth-child(1) > .form-control").type(user.email)
       cy.get(":nth-child(2) > .form-control").type(user.password)
