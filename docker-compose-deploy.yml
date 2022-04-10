@@ -1,8 +1,8 @@
 version: "3" 
 services:
-  l1:
+  frontend:
     image: docxed/frontend
     build: ./frontend
-  l2:
+  backend:
     image: docxed/backend
     build: ./backend
