@@ -4,8 +4,8 @@ const Joi = require("joi")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
-const { 
-  selectPassUserById, 
+const {
+  selectPassUserById,
   updateUserPass,
   updateUserProfile,
   deleteTokens,
@@ -14,7 +14,7 @@ const {
   addTokens,
   checkEmail,
   checkIdcard,
-  addUser
+  addUser,
 } = require("../repository/user.repo")
 
 const changepasswordSchema = Joi.object({
@@ -44,7 +44,7 @@ const changepassword = async (req, res) => {
       return res.json({ status: false, message: "รหัสผ่านเดิมผิด" })
     }
     const password_encrypted = await bcrypt.hash(password, 5)
-    await updateUserPass(password_encrypted, user_id);
+    await updateUserPass(password_encrypted, user_id)
 
     conn.commit()
     res.json({ status: true, message: "เปลี่ยนรหัสผ่านสำเร็จ" })
@@ -93,7 +93,7 @@ const updateProfile = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-  await deleteTokens(req.user.id);
+  await deleteTokens(req.user.id)
   res.json({ status: true, message: "ลงชื่อออกสำเร็จ" })
 }
 
@@ -118,7 +118,7 @@ const signin = async (req, res) => {
 
   try {
     const { email, password } = req.body
-    const [[user]] = await selectUserByEmail(email);
+    const [[user]] = await selectUserByEmail(email)
 
     if (!user?.email) {
       return res.json({ status: false, message: "ไม่มีอีเมลนี้ในระบบ" })
@@ -150,7 +150,10 @@ const signin = async (req, res) => {
 }
 
 const emailValidator = async (value, helpers) => {
-  const [rows, _] = await checkEmail(value);
+  const [rows, _] = await pool.query(
+    "SELECT email FROM users WHERE email = ?",
+    [value]
+  )
 
   if (rows.length > 0) {
     const message = "อีเมลนี้ถูกใช้งานแล้ว"
@@ -160,9 +163,8 @@ const emailValidator = async (value, helpers) => {
 }
 
 const idcardValidator = async (value, helpers) => {
-  const [rows, _] = await checkIdcard(value);
-
-  if (rows.length > 0) {
+  const response = await checkIdcard(value)
+  if (response.length > 0) {
     const message = "รหัสบัตรประชาชนถูกใช้งานแล้ว"
     throw new Joi.ValidationError(message, { message })
   }
@@ -183,7 +185,7 @@ const signupSchema = Joi.object({
     .min(10)
     .max(10)
     .pattern(/^[0-9]+$/),
-  email: Joi.string().required().max(100).email().external(emailValidator),
+  email: Joi.string().required().max(100).email(),
   lineid: Joi.string().max(100),
   password: Joi.string().required().min(5).max(20),
   c_password: Joi.string().required().valid(Joi.ref("password")),
@@ -196,21 +198,25 @@ const signup = async (req, res) => {
     return res.json({ status: false, message: err.message })
   }
 
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
   try {
     const { fname, lname, idcard, phone, email, lineid, password } = req.body
     const password_encrypted = await bcrypt.hash(password, 5)
-    await addUser(fname, lname, idcard, phone, email, lineid, password_encrypted)
-    
-    conn.commit()
-    res.json({ status: true, message: "ลงทะเบียนสำเร็จ" })
+    const response = await addUser(
+      fname,
+      lname,
+      idcard,
+      phone,
+      email,
+      lineid,
+      password_encrypted
+    )
+    if (response) {
+      res.json({ status: response.status, message: response.message })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
