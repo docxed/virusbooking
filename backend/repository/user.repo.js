@@ -56,9 +56,12 @@ const checkEmail = async (email) => {
 }
 
 const checkIdcard = async (idcard) => {
-    const [rows, _] = await pool.query("SELECT idcard FROM users WHERE idcard = ?", [idcard])
-    return rows
-}                                                                                                                                                                       
+  const [rows, _] = await pool.query(
+    "SELECT idcard FROM users WHERE idcard = ?",
+    [idcard]
+  )
+  return rows
+}
 
 const addUser = async (
   fname,
