@@ -1,16 +1,36 @@
 const pool = require("../config/database")
+const bcrypt = require('bcryptjs')
+const jwt = require("jsonwebtoken")
 
-const selectPassUserById = async (user_id) => {
+const updateUserPass = async (oldpassword, password, user_id) => {
   const conn = await pool.getConnection()
-  return conn.query("SELECT password FROM users WHERE id = ?", [user_id])
-}
+  await conn.beginTransaction()
 
-const updateUserPass = async (password_encrypted, user_id) => {
-  const conn = await pool.getConnection()
-  return conn.query("UPDATE users SET password=? WHERE id = ?", [
-    password_encrypted,
-    user_id,
-  ])
+  try {
+    const [[rawPassword]] = await conn.query("SELECT password FROM users WHERE id = ?", [user_id])
+
+    if (!rawPassword) {
+      return { status: false, message: "ไม่พบรหัสผ่านเดิม" }
+    } else if (!(await bcrypt.compare(oldpassword, rawPassword.password))) {
+      return { status: false, message: "รหัสผ่านเดิมผิด" }
+    }
+    const password_encrypted = await bcrypt.hash(password, 5)
+    await conn.query("UPDATE users SET password=? WHERE id = ?", [
+      password_encrypted,
+      user_id,
+    ])
+
+    conn.commit()
+    return { status: true, message: "เปลี่ยนรหัสผ่านสำเร็จ" }
+  } catch (err) {
+    conn.rollback()
+    return {
+      status: false,
+      message: err.toString(),
+    }
+  } finally {
+    conn.release()
+  }
 }
 
 const updateUserProfile = async (
@@ -21,38 +41,76 @@ const updateUserProfile = async (
   user_id
 ) => {
   const conn = await pool.getConnection()
-  return conn.query(
-    "UPDATE users SET firstname=?, lastname=?, phone=?, lineid=? WHERE id = ?",
-    [firstname, lastname, phone, lineid, user_id]
-  )
+  await conn.beginTransaction()
+  try {
+    await conn.query(
+      "UPDATE users SET firstname=?, lastname=?, phone=?, lineid=? WHERE id = ?",
+      [firstname, lastname, phone, lineid, user_id]
+    )
+    conn.commit()
+    return { status: true, message: "อัปเดตบัญชีสำเร็จ" }
+  } catch (err) {
+    conn.rollback()
+    return {
+      status: false,
+      message: err.toString(),
+    }
+  } finally {
+    conn.release()
+  }
 }
 
 const deleteTokens = async (user_id) => {
   await pool.query("DELETE FROM tokens WHERE user_id = ? ", [user_id])
 }
 
-const selectUserByEmail = async (email) => {
+const selectUserByEmail = async (email, password) => {
   const conn = await pool.getConnection()
-  return conn.query("SELECT id, email, password FROM users WHERE email = ?", [
-    email,
-  ])
-}
+  await conn.beginTransaction()
 
-const selectTokens = async (user_id) => {
-  const conn = await pool.getConnection()
-  return conn.query("SELECT token FROM tokens WHERE user_id = ?", [user.id])
-}
+  try {
+     const [[user]] = await conn.query("SELECT id, email, password FROM users WHERE email = ?", [
+      email
+    ])
 
-const addTokens = async (token, user_id) => {
-  const conn = await pool.getConnection()
-  return conn.query("INSERT INTO tokens(token, user_id) VALUES (?, ?)", [
-    token,
-    user_id,
-  ])
+    if (!user?.email) {
+      return { status: false, message: "ไม่มีอีเมลนี้ในระบบ" }
+    } else if (!(await bcrypt.compare(password, user.password))) {
+      return { status: false, message: "รหัสผ่านผิด" }
+    } else {
+      const [[tokens]] = await conn.query("SELECT token FROM tokens WHERE user_id = ?", [user.id])
+
+      let token = tokens?.token
+      if (!token) {
+        token = jwt.sign(user.email, process.env.TOKEN_KEY)
+        await conn.query("INSERT INTO tokens(token, user_id) VALUES (?, ?)", [
+          token,
+          user.id,
+        ])
+      }
+
+      conn.commit()
+      return {
+        status: true,
+        message: "ลงชื่อเข้าใช้งานสำเร็จ",
+        token: token,
+      }
+    }
+  } catch (err) {
+    conn.rollback()
+    // res.status(400).json(err.toString())
+    return {
+      status: false,
+      message: err.toString(),
+    }
+  } finally {
+    conn.release()
+  }
 }
 
 const checkEmail = async (email) => {
-  return pool.query("SELECT email FROM users WHERE email = ?", [email])
+  const [rows, _] = await pool.query("SELECT email FROM users WHERE email = ?", [email])
+  return rows
 }
 
 const checkIdcard = async (idcard) => {
@@ -96,13 +154,10 @@ const addUser = async (
 }
 
 module.exports = {
-  selectPassUserById,
   updateUserPass,
   updateUserProfile,
   deleteTokens,
   selectUserByEmail,
-  selectTokens,
-  addTokens,
   checkEmail,
   checkIdcard,
   addUser,

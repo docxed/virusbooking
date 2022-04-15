@@ -5,13 +5,10 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 const {
-  selectPassUserById,
   updateUserPass,
   updateUserProfile,
   deleteTokens,
   selectUserByEmail,
-  selectTokens,
-  addTokens,
   checkEmail,
   checkIdcard,
   addUser,
@@ -30,29 +27,23 @@ const changepassword = async (req, res) => {
     return res.json({ status: false, message: err.message })
   }
 
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
+  const { oldpassword, password } = req.body
+  const user_id = req.user.id
 
   try {
-    const { oldpassword, password } = req.body
-    const user_id = req.user.id
-    const [[rawPassword]] = await selectPassUserById(user_id)
+    
+    const response = await updateUserPass(oldpassword, password, user_id)
 
-    if (!rawPassword) {
-      return res.json({ status: false, message: "ไม่พบรหัสผ่านเดิม" })
-    } else if (!(await bcrypt.compare(oldpassword, rawPassword.password))) {
-      return res.json({ status: false, message: "รหัสผ่านเดิมผิด" })
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+      })
+    } else {
+      res.status(400).json(response.message)
     }
-    const password_encrypted = await bcrypt.hash(password, 5)
-    await updateUserPass(password_encrypted, user_id)
-
-    conn.commit()
-    res.json({ status: true, message: "เปลี่ยนรหัสผ่านสำเร็จ" })
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
@@ -74,21 +65,21 @@ const updateProfile = async (req, res) => {
     return res.json({ status: false, message: err.message })
   }
 
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
   try {
     const { firstname, lastname, phone, lineid } = req.body
     const user_id = req.user.id
-    await updateUserProfile(firstname, lastname, phone, lineid, user_id)
+    const response = await updateUserProfile(firstname, lastname, phone, lineid, user_id)
 
-    conn.commit()
-    res.json({ status: true, message: "อัปเดตบัญชีสำเร็จ" })
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
@@ -113,49 +104,28 @@ const signin = async (req, res) => {
     return res.json({ status: false, message: err.message })
   }
 
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
   try {
     const { email, password } = req.body
-    const [[user]] = await selectUserByEmail(email)
+    const response = await selectUserByEmail(email, password)
 
-    if (!user?.email) {
-      return res.json({ status: false, message: "ไม่มีอีเมลนี้ในระบบ" })
-    } else if (!(await bcrypt.compare(password, user.password))) {
-      return res.json({ status: false, message: "รหัสผ่านผิด" })
-    } else {
-      const [[tokens]] = await selectTokens(user.id)
-
-      let token = tokens?.token
-      if (!token) {
-        token = jwt.sign(user.email, process.env.TOKEN_KEY)
-        await addTokens(token, user.id)
-      }
-
-      conn.commit()
+    if (response) {
       res.json({
-        status: true,
-        message: "ลงชื่อเข้าใช้งานสำเร็จ",
-        token: token,
+        status: response.status,
+        message: response.message,
+        token: response.token,
       })
+    } else {
+      res.status(400).json(response.message)
     }
-    return
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
 const emailValidator = async (value, helpers) => {
-  const [rows, _] = await pool.query(
-    "SELECT email FROM users WHERE email = ?",
-    [value]
-  )
+  const response = await checkEmail(value)
 
-  if (rows.length > 0) {
+  if (response.length > 0) {
     const message = "อีเมลนี้ถูกใช้งานแล้ว"
     throw new Joi.ValidationError(message, { message })
   }
@@ -185,7 +155,7 @@ const signupSchema = Joi.object({
     .min(10)
     .max(10)
     .pattern(/^[0-9]+$/),
-  email: Joi.string().required().max(100).email(),
+  email: Joi.string().required().max(100).email().external(emailValidator),
   lineid: Joi.string().max(100),
   password: Joi.string().required().min(5).max(20),
   c_password: Joi.string().required().valid(Joi.ref("password")),
