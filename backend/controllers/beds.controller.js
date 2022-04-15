@@ -13,8 +13,6 @@ const {
   insertBed,
 } = require("../repository/beds.repo")
 
-const { selectBedsdealingByBedId } = require("../repository/bedsdealing.repo")
-
 const getBedsAvailable = async (req, res) => {
   
   try {

@@ -247,20 +247,47 @@ const insertBed = async (amount, address, lat, lng, user_id) => {
 
 const selectBedById = async (bed_id) => {
   const conn = await pool.getConnection()
-  return conn.query(`SELECT * FROM beds WHERE id = ?`, [bed_id])
+  await conn.beginTransaction()
+  try {
+    const [[bed]] = await conn.query(`SELECT * FROM beds WHERE id = ?`, [bed_id])
+    conn.commit()
+    return bed
+  } catch (err) {
+    conn.rollback()
+    return 
+  } finally {
+    conn.release()
+  }
 }
 
 const selectBedAmount = async (bed_id) => {
   const conn = await pool.getConnection()
-  return conn.query("SELECT id, amount, state FROM beds WHERE id = ?", [bed_id])
+  await conn.beginTransaction()
+  try {
+    const [[bed]] = await conn.query("SELECT id, amount, state FROM beds WHERE id = ?", [bed_id])
+    conn.commit()
+    return bed
+  } catch (err) {
+    conn.rollback()
+  } finally {
+    conn.release()
+  }
 }
 
 const reduceBedAmount = async (amount, bed_id) => {
   const conn = await pool.getConnection()
-  return conn.query("UPDATE beds SET amount=? WHERE id = ?", [
-    amount - 1,
-    bed_id,
-  ])
+  await conn.beginTransaction()
+  try {
+    await conn.query("UPDATE beds SET amount=? WHERE id = ?", [
+      amount - 1,
+      bed_id,
+    ])
+    conn.commit()
+  } catch (err) {
+    conn.rollback()
+  } finally {
+    conn.release()
+  }
 }
 
 module.exports = {
