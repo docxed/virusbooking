@@ -1,17 +1,19 @@
 const pool = require("../config/database")
 const Joi = require("joi")
 
-const { 
-  selectBedsReady, 
-  selectBedsSearch, 
-  deleteBedById, 
-  updateBedsAddress, 
+const {
+  selectBedsReady,
+  selectBedsSearch,
+  deleteBedById,
+  updateBedsAddress,
   updateBedsAmount,
   selectBedsDetail,
   updateBedsState,
   selectBedsByUser,
   insertBed,
-} = require('../repository/beds.repo')
+} = require("../repository/beds.repo")
+
+const { selectBedsdealingByBedId } = require("../repository/bedsdealing.repo")
 
 const getBedsAvailable = async (req, res) => {
   

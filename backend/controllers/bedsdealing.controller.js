@@ -8,20 +8,17 @@ const {
   customerBedsdealing,
   bedsdealingByUserId,
   selectBedsdealingBedIdByBedId,
-  insertBedsdealing
+  insertBedsdealing,
 } = require("../repository/bedsdealing.repo")
 
-const { 
-  selectBedById, 
-  selectBedAmount 
-} = require("../repository/beds.repo")
+const { selectBedById, selectBedAmount } = require("../repository/beds.repo")
 
 const changeBedsdealingState = async (req, res) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
     const bedsdealing_id = req.params.id
-    const [[bedsdealing]] = await selectBedsdealingById(bedsdealing_id);
+    const [[bedsdealing]] = await selectBedsdealingById(bedsdealing_id)
     let availableDate
     if (
       moment(new Date()).format("YYYY-MM-DD") >=
