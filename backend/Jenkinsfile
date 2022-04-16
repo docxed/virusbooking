@@ -9,7 +9,7 @@ pipeline {
 	stage('Download dependencies') {
             steps {
                 dir('backend') {
-                    sh 'yarn'
+                    sh 'yarn install'
                 }
             }
         }
