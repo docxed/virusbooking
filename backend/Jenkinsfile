@@ -27,7 +27,7 @@ pipeline {
                         script {
                             def data = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
                             writeFile(file: '.env', text: data)
-                            sh "ls -l"
+                            sh "cat .env"
                         }
                     }
                 }
