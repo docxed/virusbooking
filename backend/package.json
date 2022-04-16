@@ -9,12 +9,12 @@
     "build": "backpack build",
     "start": "node ./build/main.js",
     "test": "yarn test:unit && yarn test:component && yarn test:e2e",
-    "test:unit": "mocha --timeout 30000 ./test/unit/*.test.js --exit",
-    "test:unit:coverage": "nyc mocha --timeout 30000 ./test/unit/*.test.js --exit",
-    "test:component": "mocha --timeout 30000 ./test/component/*.test.js --exit",
-    "test:component:coverage": "nyc mocha --timeout 30000 ./test/component/*.test.js --exit",
-    "test:e2e": "mocha --timeout 30000 ./test/e2e/*.test.js --exit",
-    "test:e2e:coverage": "nyc mocha --timeout 30000 ./test/e2e/*.test.js --exit"
+    "unit": "mocha --timeout 30000 ./test/unit/*.test.js --exit",
+    "unit:coverage": "nyc mocha --timeout 30000 ./test/unit/*.test.js --exit",
+    "component": "mocha --timeout 30000 ./test/component/*.test.js --exit",
+    "component:coverage": "nyc mocha --timeout 30000 ./test/component/*.test.js --exit",
+    "e2e": "mocha --timeout 30000 ./test/e2e/*.test.js --exit",
+    "e2e:coverage": "nyc mocha --timeout 30000 ./test/e2e/*.test.js --exit"
   },
   "keywords": [],
   "author": "",
