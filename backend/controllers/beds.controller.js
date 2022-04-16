@@ -1,25 +1,32 @@
 const pool = require("../config/database")
 const Joi = require("joi")
 
-const getBedsAvailable = async (req, res) => {
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
+const {
+  selectBedsReady,
+  selectBedsSearch,
+  deleteBedById,
+  updateBedsAddress,
+  updateBedsAmount,
+  selectBedsDetail,
+  updateBedsState,
+  selectBedsByUser,
+  insertBed,
+} = require("../repository/beds.repo")
 
+const getBedsAvailable = async (req, res) => {
   try {
-    const [beds] = await conn.query(
-      "SELECT * FROM beds WHERE amount > 0 AND state = 1"
-    )
-    conn.commit()
-    res.json({
-      status: true,
-      message: "ค้นหาข้อมูลสำเร็จ",
-      beds: beds,
-    })
+    const response = await selectBedsReady()
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+        beds: response.beds,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
@@ -29,21 +36,18 @@ const getBedsSearch = async (req, res) => {
 
   try {
     const search = `%${req.query.search}%`
-    const [beds] = await conn.query(
-      "SELECT * FROM beds WHERE amount > 0 AND state = 1 AND address LIKE ?",
-      [search]
-    )
-    conn.commit()
-    res.json({
-      status: true,
-      message: "ค้นหาข้อมูลสำเร็จ",
-      beds: beds,
-    })
+    const response = await selectBedsSearch(search)
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+        beds: response.beds,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
@@ -53,27 +57,18 @@ const deleteBed = async (req, res) => {
 
   try {
     const bed_id = req.params.id
-    const [bedsdealing] = await conn.query(
-      "SELECT * FROM bedsdealing WHERE bed_id = ?",
-      [bed_id]
-    )
-    if (bedsdealing.length > 0) {
-      return res.json({
-        status: false,
-        message: "ไม่สามารถลบได้เนื่องจากมีผู้เข้าจองแล้ว",
+    const response = await deleteBedById(bed_id)
+
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
       })
+    } else {
+      res.status(400).json(response.message)
     }
-    await conn.query("DELETE FROM beds WHERE id = ?", [bed_id])
-    conn.commit()
-    res.json({
-      status: true,
-      message: "ลบข้อมูลแล้ว",
-    })
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
@@ -90,28 +85,21 @@ const changeBedAddress = async (req, res) => {
     return res.json({ status: false, message: err.message })
   }
 
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
   try {
     const { address, lat, lng } = req.body
     const bed_id = req.params.id
-    await conn.query("UPDATE beds SET address=?, lat=?, lng=? WHERE id = ?", [
-      address,
-      lat,
-      lng,
-      bed_id,
-    ])
-    conn.commit()
-    res.json({
-      status: true,
-      message: "เปลี่ยนที่อยู่สถานที่สำเร็จ",
-    })
+    const response = await updateBedsAddress(address, lat, lng, bed_id)
+
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
@@ -132,101 +120,76 @@ const changeAmountBed = async (req, res) => {
   try {
     const { amount } = req.body
     const bed_id = req.params.id
-    await conn.query("UPDATE beds SET amount=? WHERE id = ?", [amount, bed_id])
-    conn.commit()
-    res.json({
-      status: true,
-      message: "เปลี่ยนจำนวนเตียงสำเร็จ",
-    })
+    const response = await updateBedsAmount(amount, bed_id)
+
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+        bed: response.bed,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
 const getBedDetail = async (req, res) => {
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
   try {
     const bed_id = req.params.id
-    const [[bed]] = await conn.query(
-      `SELECT 
-      beds.id, beds.amount, beds.address, beds.lat, beds.lng, beds.state, beds.user_id, beds.timestamp, 
-      users.firstname, users.lastname, users.idcard, users.phone, users.email, users.lineid
-      FROM beds INNER JOIN users ON user_id=users.id WHERE beds.id = ?;`,
-      [bed_id]
-    )
-    conn.commit()
-    res.json({
-      status: true,
-      message: "เรียกข้อมูลสำเร็จ",
-      bed: bed,
-    })
+    const response = await selectBedsDetail(bed_id)
+
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+        bed: response.bed,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
 const changeStateBed = async (req, res) => {
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
   try {
     let { state } = req.body
     const bed_id = req.params.id
-    await conn.query("UPDATE beds SET state=? WHERE id = ?", [state, bed_id])
-    conn.commit()
-    res.json({
-      status: true,
-      message: "เปลี่ยนสถานะเตียงสำเร็จ",
-    })
+    const response = await updateBedsState(state, bed_id)
+
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
 const getBedsByUser = async (req, res) => {
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
   try {
     const user_id = req.user.id
-    const [beds] = await conn.query(
-      `SELECT 
-      beds.id AS 'id',
-      beds.amount,
-      beds.address,
-      beds.lat,
-      beds.lng,
-      beds.state,
-      beds.timestamp,
-      COUNT(bedsdealing.id) AS 'customer_amount'
-      FROM beds
-      LEFT JOIN bedsdealing ON beds.id = bedsdealing.bed_id
-      WHERE beds.user_id = ?
-      GROUP BY beds.id`,
-      [user_id]
-    )
-    conn.commit()
-    res.json({
-      status: true,
-      message: "เรียกข้อมูลสำเร็จ",
-      beds: beds,
-    })
+    const response = await selectBedsByUser(user_id)
+
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+        beds: response.beds,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 
@@ -244,26 +207,21 @@ const addBed = async (req, res) => {
     return res.json({ status: false, message: err.message })
   }
 
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-
   try {
     const { amount, address, lat, lng } = req.body
     const user_id = req.user.id
-    await conn.query(
-      "INSERT INTO beds(amount, address, lat, lng, user_id) VALUES (?, ?, ?, ?, ?)",
-      [amount, address, lat, lng, user_id]
-    )
-    conn.commit()
-    res.json({
-      status: true,
-      message: "เพิ่มสถานที่สำเร็จ",
-    })
+    const response = await insertBed(amount, address, lat, lng, user_id)
+
+    if (response) {
+      res.json({
+        status: response.status,
+        message: response.message,
+      })
+    } else {
+      res.status(400).json(response.message)
+    }
   } catch (err) {
-    conn.rollback()
     res.status(400).json(err.toString())
-  } finally {
-    conn.release()
   }
 }
 

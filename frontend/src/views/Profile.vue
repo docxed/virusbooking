@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loaded">
+  <div v-if="user">
     <h2>ข้อมูลผู้ใช้</h2>
     <hr />
     <br />
@@ -121,7 +121,6 @@ export default {
   data() {
     return {
       v$: useVuelidate(),
-      loaded: false,
       profile: {
         fname: "",
         lname: "",
@@ -170,7 +169,7 @@ export default {
               timer: 3000,
               showConfirmButton: false,
             }).then(() => {
-              this.$router.push("/profile")
+              this.getMe()
             })
           } else {
             Swal.fire({
@@ -192,13 +191,19 @@ export default {
       }
     },
     getMe() {
-      this.profile.fname = this.user.firstname
-      this.profile.lname = this.user.lastname
-      this.profile.idcard = this.user.idcard
-      this.profile.phone = this.user.phone
-      this.profile.email = this.user.email
-      this.profile.lineid = this.user.lineid
-      this.loaded = true
+      axios_mod
+        .get("/users/me")
+        .then((res) => {
+          this.profile.fname = res.data.firstname
+          this.profile.lname = res.data.lastname
+          this.profile.idcard = res.data.idcard
+          this.profile.phone = res.data.phone
+          this.profile.email = res.data.email
+          this.profile.lineid = res.data.lineid
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
   },
   created() {

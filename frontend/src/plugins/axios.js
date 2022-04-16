@@ -4,6 +4,8 @@ import Nprogress from "nprogress"
 
 const instance = axios.create({
   baseURL: "https://cryptic-thicket-17532.herokuapp.com",
+  // baseURL: "http://localhost:3001",
+  // baseURL: "http://159.65.12.177:6480",
 })
 
 instance.interceptors.request.use(

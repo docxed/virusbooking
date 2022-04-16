@@ -33,7 +33,7 @@
               readonly
               name="fname"
               aria-describedby="fname"
-              :value="user.firstname"
+              :value="profile.fname"
             />
           </div>
           <div class="col">
@@ -46,7 +46,7 @@
               readonly
               name="lname"
               aria-describedby="lname"
-              :value="user.lastname"
+              :value="profile.lname"
             />
           </div>
         </div>
@@ -60,7 +60,7 @@
             readonly
             name="phone"
             aria-describedby="phone"
-            :value="user.phone"
+            :value="profile.phone"
           />
         </div>
         <div class="input-group mb-3">
@@ -129,6 +129,11 @@ export default {
         address: "",
         lat: "",
         lng: "",
+      },
+      profile: {
+        fname: "",
+        lname: "",
+        phone: "",
       },
     }
   },
@@ -241,6 +246,18 @@ export default {
         map: map,
       })
     },
+    getMe() {
+      axios_mod
+        .get("/users/me")
+        .then((res) => {
+          this.profile.fname = res.data.firstname
+          this.profile.lname = res.data.lastname
+          this.profile.phone = res.data.phone
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
   },
   mounted() {
     let autocomplete = new google.maps.places.Autocomplete(
@@ -262,7 +279,9 @@ export default {
       )
     })
   },
-  created() {},
+  created() {
+    this.getMe()
+  },
 }
 </script>
 <style>

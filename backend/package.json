@@ -4,10 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx kill-port 3001 && nodemon ./src/index.js",
-    "start": "node ./src/index.js",
-    "lint": "prettier --write ."
+    "lint": "prettier --write .",
+    "build": "backpack build",
+    "start": "node ./build/main.js",
+    "test": "yarn test:unit && yarn test:component && yarn test:e2e",
+    "test:unit": "mocha --timeout 30000 ./test/unit/*.test.js --exit",
+    "test:unit:coverage": "nyc mocha --timeout 30000 ./test/unit/*.test.js --exit",
+    "test:component": "mocha --timeout 30000 ./test/component/*.test.js --exit",
+    "test:component:coverage": "nyc mocha --timeout 30000 ./test/component/*.test.js --exit",
+    "test:e2e": "mocha --timeout 30000 ./test/e2e/*.test.js --exit",
+    "test:e2e:coverage": "nyc mocha --timeout 30000 ./test/e2e/*.test.js --exit"
   },
   "keywords": [],
   "author": "",

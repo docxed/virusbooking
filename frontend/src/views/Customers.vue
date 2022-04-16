@@ -72,7 +72,7 @@
         </tbody>
       </table>
     </div>
-    <div class="my-3 h4 text-center">ยังไม่มีผู้จอง</div>
+    <div class="my-3 h4 text-center" v-else>ยังไม่มีผู้จอง</div>
   </div>
 </template>
 <script>
