@@ -1,12 +1,12 @@
 pipeline {
     agent any
-    environment{
-        TOKEN_KEY = credentials('TOKEN_KEY')
-        DB_HOST = credentials('DB_HOST')
-        DB_USER = credentials('DB_USER')
-        DB_PASSWORD = credentials('DB_PASSWORD')
-        DB_NAME = credentials('DB_NAME')
-    }
+    // environment{
+    //     TOKEN_KEY = credentials('TOKEN_KEY')
+    //     DB_HOST = credentials('DB_HOST')
+    //     DB_USER = credentials('DB_USER')
+    //     DB_PASSWORD = credentials('DB_PASSWORD')
+    //     DB_NAME = credentials('DB_NAME')
+    // }
     stages {
         stage('Pull code') {
             steps {
@@ -17,6 +17,21 @@ pipeline {
             steps {
                 dir('backend') {
                     sh 'yarn install'
+                }
+            }
+        }
+        stage('Write env') {
+            steps {
+                dir('backend') {
+                    script {
+                        def date = "TOKEN_KEY " + credentials('TOKEN_KEY') + "\n" +
+                                "DB_HOST " + credentials('DB_HOST') + "\n" +
+                                "DB_USER " + credentials('DB_USER') + "\n" +
+                                "DB_PASSWORD " + credentials('DB_PASSWORD') + "\n" +
+                                "DB_NAME " + credentials('DB_NAME') + "\n"
+                        writeFile(file: '.env', text: data)
+                        sh "ls -l"
+                    }
                 }
             }
         }
