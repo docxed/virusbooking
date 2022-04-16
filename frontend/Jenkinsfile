@@ -1,15 +1,15 @@
 pipeline {
     agent any
     stages {
-	   stage('Pull code') {
+        stage('Pull code') {
             steps {
                 checkout scm
             }
         }
-	stage('Download dependencies') {
+        stage('Download dependencies') {
             steps {
                 dir('frontend') {
-                    sh 'yarn'
+                    sh 'yarn install'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
                 }
             }
         }
-		stage('Unit Test Coverage') {
+        stage('Unit Test Coverage') {
             steps {
                 dir('frontend') {
                     sh 'yarn unit:coverage'
@@ -60,7 +60,7 @@ pipeline {
             }
         }
         stage('Build') {
-            steps { 
+            steps {
                 dir('frontend') {
                     sh "yarn build"
                 }
