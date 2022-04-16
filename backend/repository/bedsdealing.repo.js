@@ -121,13 +121,13 @@ const bedsdealingByUserId = async (user_id) => {
   }
 }
 
-const selectBedsdealingBedIdByBedId = async (bed_id) => {
+const selectBedsdealingBedIdByBedId = async (bed_id, user_id) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
     const [bedsdealing] = await conn.query(
-      "SELECT bed_id FROM bedsdealing WHERE bed_id = ?",
-      [bed_id]
+      "SELECT bed_id FROM bedsdealing WHERE bed_id = ? AND user_id = ?",
+      [bed_id, user_id]
     )
     conn.commit()
     return bedsdealing

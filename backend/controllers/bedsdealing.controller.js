@@ -116,7 +116,7 @@ const addBedsdealing = async (req, res) => {
     const user_id = req.user.id
     const bed = await selectBedAmount(bed_id)
 
-    const bedsdealing = await selectBedsdealingBedIdByBedId(bed_id)
+    const bedsdealing = await selectBedsdealingBedIdByBedId(bed_id, user_id)
 
     if (!bed) {
       return res.json({
