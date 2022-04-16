@@ -16,7 +16,7 @@ function getRandomIntInclusive(min, max) {
 }
 var list = []
 
-for (let i = 0; i < 12; i++) {
+for (let i = 0; i < 13; i++) {
   list.push(getRandomIntInclusive(1, 9))
 }
 
@@ -54,7 +54,7 @@ const data = {
   c_password: "15901590",
   fname: "user" + idc,
   lname: "user" + idc,
-  idcard: "1234567891234",
+  idcard: idc,
   lineid: "_user" + idc,
   phone: "0812345678",
 }
@@ -68,19 +68,33 @@ describe("Unit Testing user", () => {
         .get("/")
         .end((err, res) => {
           res.should.have.status(200)
-          res.body.should.have.property().eql("Hello This is Bestbeds API")
           done()
         })
     })
   })
 
-  describe("/GET /users/signup", () => {
+  describe("/POST /users/signup", () => {
     it("it should have message response", (done) => {
       chai
         .request(server)
         .post("/users/signup")
         .send(data)
         .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.eql({ status: true, message: "ลงทะเบียนสำเร็จ" })
+          done()
+        })
+    })
+  })
+
+  describe("/POST /users/signin", () => {
+    it("it should have message response", (done) => {
+      chai
+        .request(server)
+        .post("/users/signup")
+        .send(data)
+        .end((err, res) => {
+          res.should.have.status(200)
           res.body.should.eql({ status: true, message: "ลงทะเบียนสำเร็จ" })
           done()
         })
