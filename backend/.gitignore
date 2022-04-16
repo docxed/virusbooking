@@ -3,6 +3,10 @@ node_modules
 /dist
 build
 
+# test report
+unit.html
+unit-coverage.html
+
 
 # local env files
 .env.local
