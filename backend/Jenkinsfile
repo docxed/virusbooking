@@ -1,15 +1,19 @@
 pipeline {
     agent any
     environment{
-        SECRET_FILE = credentials('ttb-env')
+        TOKEN_KEY = credentials('TOKEN_KEY')
+        DB_HOST = credentials('DB_HOST')
+        DB_USER = credentials('DB_USER')
+        DB_PASSWORD = credentials('DB_PASSWORD')
+        DB_NAME = credentials('DB_NAME')
     }
     stages {
-	stage('Pull code') {
+        stage('Pull code') {
             steps {
                 checkout scm
             }
         }
-	stage('Download dependencies') {
+        stage('Download dependencies') {
             steps {
                 dir('backend') {
                     sh 'yarn install'
@@ -39,7 +43,7 @@ pipeline {
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'unit-coverage.html', reportName: 'Unit Test Coverage Report', reportTitles: 'Unit Test Coverage Report'])
             }
         }
-		// stage('Component Test') {
+        // stage('Component Test') {
         //     steps {
         //         dir('backend') {
         //             sh 'yarn test:component'
