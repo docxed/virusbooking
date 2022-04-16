@@ -27,3 +27,5 @@ const port = process.env.PORT || 3001
 app.listen(port, () => {
   console.log(`Server is started and Connected to port ${port}`.rainbow)
 })
+
+export default app
