@@ -121,7 +121,6 @@ export default {
   data() {
     return {
       v$: useVuelidate(),
-      loaded: false,
       profile: {
         fname: "",
         lname: "",
