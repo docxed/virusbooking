@@ -1,5 +1,5 @@
 const pool = require("../config/database")
-const bcrypt = require('bcryptjs')
+const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 const updateUserPass = async (oldpassword, password, user_id) => {
@@ -7,7 +7,10 @@ const updateUserPass = async (oldpassword, password, user_id) => {
   await conn.beginTransaction()
 
   try {
-    const [[rawPassword]] = await conn.query("SELECT password FROM users WHERE id = ?", [user_id])
+    const [[rawPassword]] = await conn.query(
+      "SELECT password FROM users WHERE id = ?",
+      [user_id]
+    )
 
     if (!rawPassword) {
       return { status: false, message: "ไม่พบรหัสผ่านเดิม" }
@@ -69,16 +72,20 @@ const selectUserByEmail = async (email, password) => {
   await conn.beginTransaction()
 
   try {
-     const [[user]] = await conn.query("SELECT id, email, password FROM users WHERE email = ?", [
-      email
-    ])
+    const [[user]] = await conn.query(
+      "SELECT id, email, password FROM users WHERE email = ?",
+      [email]
+    )
 
     if (!user?.email) {
       return { status: false, message: "ไม่มีอีเมลนี้ในระบบ" }
     } else if (!(await bcrypt.compare(password, user.password))) {
       return { status: false, message: "รหัสผ่านผิด" }
     } else {
-      const [[tokens]] = await conn.query("SELECT token FROM tokens WHERE user_id = ?", [user.id])
+      const [[tokens]] = await conn.query(
+        "SELECT token FROM tokens WHERE user_id = ?",
+        [user.id]
+      )
 
       let token = tokens?.token
       if (!token) {
@@ -109,7 +116,10 @@ const selectUserByEmail = async (email, password) => {
 }
 
 const checkEmail = async (email) => {
-  const [rows, _] = await pool.query("SELECT email FROM users WHERE email = ?", [email])
+  const [rows, _] = await pool.query(
+    "SELECT email FROM users WHERE email = ?",
+    [email]
+  )
   return rows
 }
 

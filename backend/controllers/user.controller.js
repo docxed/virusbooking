@@ -31,7 +31,6 @@ const changepassword = async (req, res) => {
   const user_id = req.user.id
 
   try {
-    
     const response = await updateUserPass(oldpassword, password, user_id)
 
     if (response) {
@@ -68,7 +67,13 @@ const updateProfile = async (req, res) => {
   try {
     const { firstname, lastname, phone, lineid } = req.body
     const user_id = req.user.id
-    const response = await updateUserProfile(firstname, lastname, phone, lineid, user_id)
+    const response = await updateUserProfile(
+      firstname,
+      lastname,
+      phone,
+      lineid,
+      user_id
+    )
 
     if (response) {
       res.json({

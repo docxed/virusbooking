@@ -14,14 +14,13 @@ const {
 } = require("../repository/beds.repo")
 
 const getBedsAvailable = async (req, res) => {
-  
   try {
-    const response = await selectBedsReady();
+    const response = await selectBedsReady()
     if (response) {
       res.json({
         status: response.status,
         message: response.message,
-        beds: response.beds
+        beds: response.beds,
       })
     } else {
       res.status(400).json(response.message)
@@ -37,12 +36,12 @@ const getBedsSearch = async (req, res) => {
 
   try {
     const search = `%${req.query.search}%`
-    const response = await selectBedsSearch(search);
+    const response = await selectBedsSearch(search)
     if (response) {
       res.json({
         status: response.status,
         message: response.message,
-        beds: response.beds
+        beds: response.beds,
       })
     } else {
       res.status(400).json(response.message)
@@ -90,7 +89,7 @@ const changeBedAddress = async (req, res) => {
     const { address, lat, lng } = req.body
     const bed_id = req.params.id
     const response = await updateBedsAddress(address, lat, lng, bed_id)
-  
+
     if (response) {
       res.json({
         status: response.status,
@@ -122,12 +121,12 @@ const changeAmountBed = async (req, res) => {
     const { amount } = req.body
     const bed_id = req.params.id
     const response = await updateBedsAmount(amount, bed_id)
-  
+
     if (response) {
       res.json({
         status: response.status,
         message: response.message,
-        bed: response.bed
+        bed: response.bed,
       })
     } else {
       res.status(400).json(response.message)
@@ -141,12 +140,12 @@ const getBedDetail = async (req, res) => {
   try {
     const bed_id = req.params.id
     const response = await selectBedsDetail(bed_id)
-    
+
     if (response) {
       res.json({
         status: response.status,
         message: response.message,
-        bed: response.bed
+        bed: response.bed,
       })
     } else {
       res.status(400).json(response.message)
@@ -165,7 +164,7 @@ const changeStateBed = async (req, res) => {
     if (response) {
       res.json({
         status: response.status,
-        message: response.message
+        message: response.message,
       })
     } else {
       res.status(400).json(response.message)
@@ -184,7 +183,7 @@ const getBedsByUser = async (req, res) => {
       res.json({
         status: response.status,
         message: response.message,
-        beds: response.beds
+        beds: response.beds,
       })
     } else {
       res.status(400).json(response.message)
@@ -212,11 +211,11 @@ const addBed = async (req, res) => {
     const { amount, address, lat, lng } = req.body
     const user_id = req.user.id
     const response = await insertBed(amount, address, lat, lng, user_id)
-    
+
     if (response) {
       res.json({
         status: response.status,
-        message: response.message
+        message: response.message,
       })
     } else {
       res.status(400).json(response.message)

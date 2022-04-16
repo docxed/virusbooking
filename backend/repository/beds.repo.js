@@ -55,7 +55,10 @@ const deleteBedById = async (bed_id) => {
   await conn.beginTransaction()
 
   try {
-    const [bedsdealing] = await conn.query(`SELECT * FROM bedsdealing WHERE bed_id = ?`, [bed_id])
+    const [bedsdealing] = await conn.query(
+      `SELECT * FROM bedsdealing WHERE bed_id = ?`,
+      [bed_id]
+    )
 
     if (bedsdealing.length > 0) {
       return {
@@ -224,7 +227,6 @@ const insertBed = async (amount, address, lat, lng, user_id) => {
   await conn.beginTransaction()
 
   try {
-    
     await conn.query(
       "INSERT INTO beds(amount, address, lat, lng, user_id) VALUES (?, ?, ?, ?, ?)",
       [amount, address, lat, lng, user_id]
@@ -249,12 +251,14 @@ const selectBedById = async (bed_id) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
-    const [[bed]] = await conn.query(`SELECT * FROM beds WHERE id = ?`, [bed_id])
+    const [[bed]] = await conn.query(`SELECT * FROM beds WHERE id = ?`, [
+      bed_id,
+    ])
     conn.commit()
     return bed
   } catch (err) {
     conn.rollback()
-    return 
+    return
   } finally {
     conn.release()
   }
@@ -264,7 +268,10 @@ const selectBedAmount = async (bed_id) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
-    const [[bed]] = await conn.query("SELECT id, amount, state FROM beds WHERE id = ?", [bed_id])
+    const [[bed]] = await conn.query(
+      "SELECT id, amount, state FROM beds WHERE id = ?",
+      [bed_id]
+    )
     conn.commit()
     return bed
   } catch (err) {

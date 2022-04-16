@@ -11,7 +11,11 @@ const {
   insertBedsdealing,
 } = require("../repository/bedsdealing.repo")
 
-const { selectBedById, selectBedAmount, reduceBedAmount } = require("../repository/beds.repo")
+const {
+  selectBedById,
+  selectBedAmount,
+  reduceBedAmount,
+} = require("../repository/beds.repo")
 
 const changeBedsdealingState = async (req, res) => {
   try {
@@ -65,7 +69,7 @@ const getBedsdealingState = async (req, res) => {
         status: response.status,
         message: response.message,
         bed: bed,
-        customers: response.customers
+        customers: response.customers,
       })
     } else {
       res.status(400).json(response.message)
@@ -84,7 +88,7 @@ const getBedsdealingByUser = async (req, res) => {
       res.json({
         status: response.status,
         message: response.message,
-        bedsdealing: response.bedsdealing
+        bedsdealing: response.bedsdealing,
       })
     } else {
       res.status(400).json(response.message)
