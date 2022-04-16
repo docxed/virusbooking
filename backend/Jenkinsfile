@@ -22,15 +22,14 @@ pipeline {
         }
         stage('Write env') {
             steps {
-                sh "cd backend"
-                script {
-                        def date = "TOKEN_KEY=" + credentials('TOKEN_KEY') + "\n" +
-                                "DB_HOST=" + credentials('DB_HOST') + "\n" +
-                                "DB_USER=" + credentials('DB_USER') + "\n" +
-                                "DB_PASSWORD=" + credentials('DB_PASSWORD') + "\n" +
-                                "DB_NAME=" + credentials('DB_NAME') + "\n"
-                        writeFile(file: '.env', text: data)
-                        sh "ls -l"
+                dir('backend') {
+                    withCredentials([string(credentialsId: 'TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'DB_USER', variable: 'DB_USER'), string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'DB_NAME', variable: 'DB_NAME')]) {
+                        script {
+                            def data = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
+                            writeFile(file: '.env', text: data)
+                            sh "ls -l"
+                        }
+                    }
                 }
             }
         }
