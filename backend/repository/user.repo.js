@@ -77,7 +77,7 @@ const selectUserByEmail = async (email, password) => {
       [email]
     )
 
-    if (!user?.email) {
+    if (!user) {
       return { status: false, message: "ไม่มีอีเมลนี้ในระบบ" }
     } else if (!(await bcrypt.compare(password, user.password))) {
       return { status: false, message: "รหัสผ่านผิด" }
@@ -86,8 +86,12 @@ const selectUserByEmail = async (email, password) => {
         "SELECT token FROM tokens WHERE user_id = ?",
         [user.id]
       )
-
-      let token = tokens?.token
+      let token
+      if (tokens) {
+        token = tokens.token
+      } else {
+        token = null
+      }
       if (!token) {
         token = jwt.sign(user.email, process.env.TOKEN_KEY)
         await conn.query("INSERT INTO tokens(token, user_id) VALUES (?, ?)", [
