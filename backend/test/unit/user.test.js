@@ -16,7 +16,7 @@ function getRandomIntInclusive(min, max) {
 }
 var list = []
 
-for (let i = 0; i < 13; i++) {
+for (let i = 0; i < 12; i++) {
   list.push(getRandomIntInclusive(1, 9))
 }
 
@@ -91,11 +91,14 @@ describe("Unit Testing user", () => {
     it("it should have message response", (done) => {
       chai
         .request(server)
-        .post("/users/signup")
-        .send(data)
+        .post("/users/signin")
+        .send({
+          email: data.email,
+          password: data.password
+        })
         .end((err, res) => {
           res.should.have.status(200)
-          res.body.should.eql({ status: true, message: "ลงทะเบียนสำเร็จ" })
+          res.body.should.have.have.property("message").a("string").eql("ลงชื่อเข้าใช้งานสำเร็จ")
           done()
         })
     })
