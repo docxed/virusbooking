@@ -97,7 +97,7 @@ describe("Unit Testing user", () => {
         .send({
           fname: "พลัฏฐ์",
           lname: "วงศ์สิทธิพรรุ่ง",
-          idcard: idd.substring(0, 11) + "99",
+          idcard: idd.substring(0, 11) + "95",
           phone: "0812345678",
           email: "phalat18@gmail.com",
           password: "15901590",
