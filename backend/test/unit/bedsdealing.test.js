@@ -167,7 +167,6 @@ describe("Unit Test bedsdealing ", () => {
   })
 
   describe("/GET /bedsdealingByUser", () => {
-
     it("it can get bedsdealings", (done) => {
       chai
         .request(server)
@@ -185,9 +184,8 @@ describe("Unit Test bedsdealing ", () => {
         })
     })
   })
-  
-  describe("/GET /bedsdealing/customer/:id", () => {
 
+  describe("/GET /bedsdealing/customer/:id", () => {
     it("it can get status bedsdealings", (done) => {
       chai
         .request(server)
@@ -204,26 +202,26 @@ describe("Unit Test bedsdealing ", () => {
     })
   })
 
-
-
   describe("/PUT /bedsdealing/customer/:id", () => {
-
     it("it can't change status bedsdealings", (done) => {
-        chai
-          .request(server)
-          .put("/bedsdealing/customer/" + bedsdealing_id)
-          .set("Authorization", token1)
-          .end( async (err, res) => {
-            res.body.should.have.have
-              .property("message")
-              .a("string")
-              .eql("ยังไม่ถึงวันเข้าพัก")
-            res.body.should.have.property("status").eql(false)
-            date.setDate(date.getDate() - 2)
-            await pool.query("UPDATE bedsdealing SET date = ? WHERE id = ?", [date, bedsdealing_id])
-            done()
-          })
-      })
+      chai
+        .request(server)
+        .put("/bedsdealing/customer/" + bedsdealing_id)
+        .set("Authorization", token1)
+        .end(async (err, res) => {
+          res.body.should.have.have
+            .property("message")
+            .a("string")
+            .eql("ยังไม่ถึงวันเข้าพัก")
+          res.body.should.have.property("status").eql(false)
+          date.setDate(date.getDate() - 2)
+          await pool.query("UPDATE bedsdealing SET date = ? WHERE id = ?", [
+            date,
+            bedsdealing_id,
+          ])
+          done()
+        })
+    })
 
     it("it can change status bedsdealings", (done) => {
       chai
@@ -241,7 +239,7 @@ describe("Unit Test bedsdealing ", () => {
     })
   })
 
-  after( async () => {
+  after(async () => {
     await pool.query("DELETE FROM bedsdealing WHERE id = ?", [bedsdealing_id])
   })
 })

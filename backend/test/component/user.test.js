@@ -70,14 +70,20 @@ describe("Component Testing user", () => {
   })
 
   it("it can update profile", () => {
-    return updateUserProfile("พลัฏฐ์","วงศ์สิทธิพรรุ่ง","0953901155","_po_pon",7).then((res) => {
-        expect(res.status != null).to.be.true
+    return updateUserProfile(
+      "พลัฏฐ์",
+      "วงศ์สิทธิพรรุ่ง",
+      "0953901155",
+      "_po_pon",
+      7
+    ).then((res) => {
+      expect(res.status != null).to.be.true
     })
   })
 
   it("it can change password", () => {
-    return updateUserPass("15901590","15901590",7).then((res) => {
-        expect(res.status != null).to.be.true
+    return updateUserPass("15901590", "15901590", 7).then((res) => {
+      expect(res.status != null).to.be.true
     })
   })
 

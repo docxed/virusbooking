@@ -299,7 +299,7 @@ describe("Unit Testing user", () => {
         .request(server)
         .post("/users/logout")
         .set("Authorization", token)
-        .end(async(err, res) => {
+        .end(async (err, res) => {
           res.should.have.status(200)
           res.body.should.have.have
             .property("message")

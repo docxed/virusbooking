@@ -12,14 +12,14 @@ chai.should()
 const pool = require("../../config/database")
 
 const {
-    selectBedsdealingById,
-    updateBedsdealing,
-    customerBedsdealing,
-    bedsdealingByUserId,
-    selectBedsdealingBedIdByBedId,
-    insertBedsdealing,
-    selectBedsdealingByBedId,
-  } = require("../../repository/bedsdealing.repo")
+  selectBedsdealingById,
+  updateBedsdealing,
+  customerBedsdealing,
+  bedsdealingByUserId,
+  selectBedsdealingBedIdByBedId,
+  insertBedsdealing,
+  selectBedsdealingByBedId,
+} = require("../../repository/bedsdealing.repo")
 
 var date = new Date()
 
@@ -62,9 +62,9 @@ describe("Component Testing bedsdealing", () => {
     let last2 = Object.values(last[0])
     let last3 = Object.values(last2[0])
     return updateBedsdealing(last3[0]).then((res) => {
-        expect(res).to.be.a("object")
-        expect(res.message).to.be.equal("ยืนยันผู้ใช้เข้าพักสำเร็จ")
-      })
+      expect(res).to.be.a("object")
+      expect(res.message).to.be.equal("ยืนยันผู้ใช้เข้าพักสำเร็จ")
+    })
   })
 
   it("it can get bedsdealing by id", async () => {
@@ -72,8 +72,8 @@ describe("Component Testing bedsdealing", () => {
     let last2 = Object.values(last[0])
     let last3 = Object.values(last2[0])
     return selectBedsdealingById(last3[0]).then((res) => {
-        expect(res).to.be.a("object")
-      })
+      expect(res).to.be.a("object")
+    })
   })
 
   after(async () => {
