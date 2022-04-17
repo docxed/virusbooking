@@ -81,7 +81,7 @@ pipeline {
         // }
         stage('Build & Deploy Docker') {
             steps {
-                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'EMAIL')]) {
                     script {
                         def remote = [:]
                         remote.name = NAME
@@ -90,8 +90,12 @@ pipeline {
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
                         sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
-                        sshCommand remote: remote, command: "echo TTB_TAG=2.0." + BUILD_NUMBER + " > .env"
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
+                        sshCommand remote: remote, command: "echo TTB_TAG=2.0.$BUILD_NUMBER > .env"
+                        sshCommand remote: remote, command: "docker login --username $EMAIL --password $PASSWORD"
+                        // sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
+                        // sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
+                        // sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
+
                     }
                 }
             }
