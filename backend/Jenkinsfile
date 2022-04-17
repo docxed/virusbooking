@@ -23,7 +23,7 @@ pipeline {
         stage('Write env') {
             steps {
                 dir('backend') {
-                    withCredentials([string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'T01_DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME')]) {
+                    withCredentials([string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME')]) {
                         script {
                             def data = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
                             writeFile(file: '.env', text: data)
