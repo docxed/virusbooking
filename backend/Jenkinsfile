@@ -92,10 +92,11 @@ pipeline {
                         sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
                     }
                 }
-                sh '''cd virusbooking'''
-                script {
-                    def data = "TTB_TAG=2.0.${BUILD_NUMBER}"
-                    writeFile(file: '.env', text: data)
+                dir('virusbooking') {
+                    script {
+                        def data = "TTB_TAG=2.0.${BUILD_NUMBER}"
+                        writeFile(file: '.env', text: data)
+                    }
                 }
             }
         }
