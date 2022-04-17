@@ -79,6 +79,17 @@ pipeline {
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'e2e.html', reportName: 'E2E Test Report', reportTitles: 'E2E Test Report'])
             }
         }
-
+        stage('Build & Deploy Docker') {
+            steps {
+                def remote = [:]
+                remote.name = "root"
+                remote.host = '159.223.45.216'
+                remote.user = 'root'
+                remote.password = 'xitgmLwmp12q'
+                remote.allowAnyHosts = true
+                sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
+            }
+        }
+    }
     }
 }
