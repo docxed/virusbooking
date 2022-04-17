@@ -31,8 +31,9 @@ date.setDate(date.getDate() + 1)
 
 var bedsdealing_id
 
+var bed_id2
+
 describe("e2e Test ", () => {
-  before(() => {})
   describe("เข้าสู่ระบบและทำการจองเตียงและออกจากระบบ แล้วผู้จองทำการเข้าพักสถานให้บริการเตียง", () => {
     it("ผู้ใช้เข้าสู่ระบบและเข้าไปทำการจองเตียง", (done) => {
       chai
@@ -133,6 +134,57 @@ describe("e2e Test ", () => {
 
     after(async () => {
       await pool.query("delete from bedsdealing order by id desc limit 1")
+    })
+  })
+})
+
+describe("e2e Test ", () => {
+  describe("การเพิ่มสถานที่ให้บริการเตียง", () => {
+    it("ผู้ให้บริการเตียงเพิ่มสถานที่ให้บริการเตียง", (done) => {
+      chai
+        .request(server)
+        .post("/beds")
+        .set("Authorization", token1)
+        .send({
+          amount: 200,
+          address:
+            " 102 ลาดพร้าว แขวง สะพานสอง เขตวังทองหลาง กรุงเทพมหานคร 10310 ประเทศไทย",
+          lat: "13.7884688",
+          lng: "100.608406",
+        })
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.have.property("message").eql("เพิ่มสถานที่สำเร็จ")
+          done()
+        })
+    })
+
+    after(async () => {
+      await pool.query("delete from beds order by id desc limit 1")
+    })
+  })
+})
+describe("e2e Test ", () => {
+  describe("การเพิ่มหรือลดจำนวนเตียงของสถานที่บริการเตียง", () => {
+    it("ผู้ให้บริการเตียงเพิ่มสถานที่ให้บริการเตียง", (done) => {
+      chai
+        .request(server)
+        .put("/bed/amount/" + bed_id1)
+        .set("Authorization", token1)
+        .send({
+          amount: 100,
+        })
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.have.property("status").eql(true)
+          res.body.should.have
+            .property("message")
+            .eql("เปลี่ยนจำนวนเตียงสำเร็จ")
+          done()
+        })
+    })
+
+    after(async () => {
       chai
         .request(server)
         .post("/users/logout")
