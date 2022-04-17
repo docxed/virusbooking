@@ -74,7 +74,7 @@ pipeline {
         stage('E2E Test') {
             steps {
                 dir('backend') {
-                    sh "yarn test:e2e"
+                    sh "yarn e2e"
                 }
             }
         }
