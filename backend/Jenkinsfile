@@ -92,6 +92,13 @@ pipeline {
                         sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
                         sshCommand remote: remote, command: "echo TTB_TAG=2.0." + BUILD_NUMBER + " > .env"
                         sshCommand remote: remote, command: "echo TTF_TAG=2.0." + BUILD_NUMBER + " >> .env"
+                        sshCommand remote: remote, command: "docker login --username $EMAIL --password $PASSWORD"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
+                        sshCommand remote: remote, command: "docker-compose -f docker-compose-deploy.yml down"
+                        sshCommand remote: remote, command: "docker-compose -f docker-compose-deploy.yml up -d backend"
+                        sshCommand remote: remote, command: "rm -r .env"
+                        sshCommand remote: remote, command: "rm -r virusbooking"
                     }
                 }
             }
