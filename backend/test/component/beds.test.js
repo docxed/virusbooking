@@ -46,12 +46,11 @@ describe("Component Testing beds", () => {
 
   it("it can get bed amount", () => {
     return selectBedAmount(11).then((res) => {
-        expect(res).to.be.a("object")
         expect(res.amount).to.be.equal(599)
     })
   })
 
-  it("it can get bed detail", () => {
+  it("it can get bed by id", () => {
     return selectBedById(11).then((res) => {
         expect(res).to.be.a("object")
     })
@@ -73,7 +72,7 @@ describe("Component Testing beds", () => {
   })
 
   it("it can reponse bed detail", () => {
-    return updateBedsState(1, 11).then((res) => {
+    return selectBedsDetail(11).then((res) => {
         expect(res).to.be.a("object")
         expect(res.status != null).to.be.true
         expect(res.bed != null)
@@ -89,7 +88,7 @@ describe("Component Testing beds", () => {
   })
 
   it("it can update bed address", () => {
-    return updateBedsAddress("8/1 ถ. ลาดพร้าว แขวง สะพานสอง เขตวังทองหลาง กรุงเทพมหานคร 10310 ประเทศไทย","13.7884688","100.608406",12).then((res) => {
+    return updateBedsAddress("8/1 ถ. ลาดพร้าว แขวง สะพานสอง เขตวังทองหลาง กรุงเทพมหานคร 10310 ประเทศไทย","13.7884688","100.608406",51).then((res) => {
         expect(res).to.be.a("object")
         expect(res.status != null).to.be.true
         expect(res.message).to.be.equal("เปลี่ยนที่อยู่สถานที่สำเร็จ")
@@ -113,21 +112,12 @@ describe("Component Testing beds", () => {
     })
   })
 
-  it("it can search bed", () => {
-    return selectBedsSearch("%สายไหม%").then((res) => {
+  it("it can response bed ready", () => {
+    return selectBedsReady().then((res) => {
         expect(res).to.be.a("object")
         expect(res.status != null).to.be.true
         expect(res.message).to.be.equal("ค้นหาข้อมูลสำเร็จ")
         expect(res.beds != null)
     })
-  })
-
-
-
-
-
-
-  after(async () => {
-    await pool.query("delete from beds order by id desc limit 1")
   })
 })

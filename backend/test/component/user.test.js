@@ -66,17 +66,17 @@ describe("Component Testing user", () => {
   })
 
   it("it can delete token", () => {
-    return deleteTokens(4).then((res) => {})
+    return deleteTokens(7).then((res) => {})
   })
 
   it("it can update profile", () => {
-    return updateUserProfile("พลัฏฐ์","วงศ์สิทธิพรรุ่ง","0953901155","_po_pon",4).then((res) => {
+    return updateUserProfile("พลัฏฐ์","วงศ์สิทธิพรรุ่ง","0953901155","_po_pon",7).then((res) => {
         expect(res.status != null).to.be.true
     })
   })
 
   it("it can change password", () => {
-    return updateUserPass("15901590","15901590",4).then((res) => {
+    return updateUserPass("15901590","15901590",7).then((res) => {
         expect(res.status != null).to.be.true
     })
   })
