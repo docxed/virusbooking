@@ -89,14 +89,22 @@ pipeline {
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
-                        sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
-                        sshCommand remote: remote, command: "echo TTB_TAG=2.0." + BUILD_NUMBER + " > .env"
-                        sshCommand remote: remote, command: "echo TTF_TAG=2.0." + BUILD_NUMBER + " >> .env"
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-                        sshCommand remote: remote, command: "rm -r .env"
-                        sshCommand remote: remote, command: "rm -r virusbooking"
+                        try {
+                            sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
+                            sshCommand remote: remote, command: "echo TTB_TAG=2.0." + BUILD_NUMBER + " > .env"
+                            sshCommand remote: remote, command: "echo TTF_TAG=2.0." + BUILD_NUMBER + " >> .env"
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+                            sshCommand remote: remote, command: "rm -r virusbooking"
+                            sshCommand remote: remote, command: "rm -r .env"
+                        } catch (err) {
+                            echo "Error: ${err.message}"
+                            echo "Error: ${err.stack}"
+                        } finally {
+                            sshCommand remote: remote, command: "rm -r virusbooking"
+                            sshCommand remote: remote, command: "rm -r .env"
+                        }
                     }
                 }
             }
