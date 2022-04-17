@@ -95,8 +95,7 @@ pipeline {
                 dir('virusbooking') {
                     script {
                         def data = "TTB_TAG=2.0.${BUILD_NUMBER}"
-                        writeFile(file: '.env', text: data)
-                        sh 'cat .env'
+                        writeFile(file: 'avc.txt', text: data)
                     }
                 }
             }
