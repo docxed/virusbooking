@@ -152,7 +152,7 @@ describe("Unit Test bedsdealing ", () => {
         .set("Authorization", token2)
         .send({
           date: date,
-          bed_id: bed_id1 + 1,
+          bed_id: bed_id1 + 100000000,
           user_id: user2_id,
         })
         .end((err, res) => {
@@ -180,14 +180,68 @@ describe("Unit Test bedsdealing ", () => {
             .eql("เรียกข้อมูลสำเร็จ")
           res.body.should.have.property("status").eql(true)
           res.body.should.have.property("bedsdealing").a("array")
-          bedsdealing_id = res.body.bedsdealing[0].bedsdealing_id
+          bedsdealing_id = res.body.bedsdealing[0].beddealings_id
+          done()
+        })
+    })
+  })
+  
+  describe("/GET /bedsdealing/customer/:id", () => {
+
+    it("it can get status bedsdealings", (done) => {
+      chai
+        .request(server)
+        .get("/bedsdealing/customer/" + bed_id1)
+        .set("Authorization", token2)
+        .end((err, res) => {
+          res.body.should.have.have
+            .property("message")
+            .a("string")
+            .eql("เรียกข้อมูลสำเร็จ")
+          res.body.should.have.property("status").eql(true)
+          done()
+        })
+    })
+  })
+
+
+
+  describe("/PUT /bedsdealing/customer/:id", () => {
+
+    it("it can't change status bedsdealings", (done) => {
+        chai
+          .request(server)
+          .put("/bedsdealing/customer/" + bedsdealing_id)
+          .set("Authorization", token1)
+          .end( async (err, res) => {
+            res.body.should.have.have
+              .property("message")
+              .a("string")
+              .eql("ยังไม่ถึงวันเข้าพัก")
+            res.body.should.have.property("status").eql(false)
+            date.setDate(date.getDate() - 2)
+            await pool.query("UPDATE bedsdealing SET date = ? WHERE id = ?", [date, bedsdealing_id])
+            done()
+          })
+      })
+
+    it("it can change status bedsdealings", (done) => {
+      chai
+        .request(server)
+        .put("/bedsdealing/customer/" + bedsdealing_id)
+        .set("Authorization", token1)
+        .end((err, res) => {
+          res.body.should.have.have
+            .property("message")
+            .a("string")
+            .eql("ยืนยันผู้ใช้เข้าพักสำเร็จ")
+          res.body.should.have.property("status").eql(true)
           done()
         })
     })
   })
 
   after( async () => {
-    console.log(bedsdealing_id)
     await pool.query("DELETE FROM bedsdealing WHERE id = ?", [bedsdealing_id])
   })
 })
