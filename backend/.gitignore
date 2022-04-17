@@ -2,6 +2,7 @@
 node_modules
 /dist
 build
+.nyc_output
 
 # test report
 unit.html
