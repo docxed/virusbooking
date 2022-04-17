@@ -75,4 +75,8 @@ describe("Component Testing bedsdealing", () => {
         expect(res).to.be.a("object")
       })
   })
+
+  after(async () => {
+    await pool.query("delete from bedsdealing order by id desc limit 1")
+  })
 })
