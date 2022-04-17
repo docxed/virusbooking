@@ -2,6 +2,14 @@
 node_modules
 /dist
 build
+.nyc_output
+
+# test report
+unit.html
+unit-coverage.html
+component.html
+component-coverage.html
+e2e.html
 
 
 # local env files
