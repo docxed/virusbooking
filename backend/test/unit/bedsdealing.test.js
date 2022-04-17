@@ -24,7 +24,7 @@ var token1
 var token2
 var user2_id
 
-var bed_id1
+var bed_id1 = 51
 
 var date = new Date()
 date.setDate(date.getDate() + 1)
@@ -67,7 +67,7 @@ describe("Unit Test bedsdealing ", () => {
                   user2_id = res.body.id
                   chai
                     .request(server)
-                    .put("/bed/amount/" + bed_id1)
+                    .put("/bed/amount/" + 51)
                     .set("Authorization", token1)
                     .send({
                       amount: 0,

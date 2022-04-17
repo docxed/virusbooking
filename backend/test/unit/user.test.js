@@ -152,7 +152,7 @@ describe("Unit Testing user", () => {
         .request(server)
         .post("/users/signin")
         .send({
-          email: "ponpon@gmail.com",
+          email: "ponpon333@gmail.com",
           password: data.password,
         })
         .end((err, res) => {
@@ -305,9 +305,12 @@ describe("Unit Testing user", () => {
             .property("message")
             .a("string")
             .eql("ลงชื่อออกสำเร็จ")
-          await pool.query("delete from users order by id desc limit 1")
           done()
         })
     })
+  })
+
+  after(async () => {
+    await pool.query("delete from users order by id desc limit 1")
   })
 })

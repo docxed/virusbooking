@@ -188,7 +188,7 @@ describe("Unit Testing beds", () => {
     it("it can't change bed address when address not a string", (done) => {
       chai
         .request(server)
-        .put("/bed/address/:id" + bed_id)
+        .put("/bed/address/" + bed_id)
         .set("Authorization", token)
         .send({
           address: 100,
