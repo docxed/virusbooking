@@ -1,6 +1,13 @@
-import { mount } from "@vue/test-utils"
+import { mount, shallowMount } from "@vue/test-utils"
 import Signin from "@/views/Signin.vue"
 import Findbeds from "@/views/Findbeds.vue"
+import Home from "@/views/Home.vue"
+import Chartdaily from "@/components/Chartdaily.vue"
+import Chartstats from "@/components/Chartstats.vue"
+import Bedsmanage from "@/views/Bedsmanage.vue"
+import Bededit from "@/views/Bededit.vue"
+import Bed from "@/views/Bed.vue"
+import axios from "axios"
 
 describe("test that signin page have all elements that must be have.", () => {
   const forSignin = mount(Signin)
@@ -60,5 +67,47 @@ describe("test that findbeds page have all element that must be have", () => {
     })
     forFindBeds.find("input").setValue("กรุงเทพ")
     await expect(forFindBeds.find("#test-bedplace").exists()).toBe(true)
+  })
+})
+
+describe("test that all Covid - 19 statistic components have all elements that must be have.", () => {
+  const mockDaily = []
+  jest.spyOn(axios, 'get').mockResolvedValue(mockDaily)
+  it("test that Chartdaily component have daily graph of Covid - 19 statistic", async () => {
+    const dailyChart = await mount(Chartdaily)
+    await expect(dailyChart.find("canvas").find("#myChart").exists()).toBe(true)
+  })
+  it("test that Chartstats component have all static graph of Covid - 19 statistic", async () => {
+    const allStatChart = await mount(Chartstats)
+    await expect(allStatChart.find("#myChart").exists()).toBe(true)
+    await expect(allStatChart.find("#myChart2").exists()).toBe(true)
+    await expect(allStatChart.find("#myChart3").exists()).toBe(true)
+  })
+})
+
+describe("test that Beds Manage page have all elements that must be have.", () => {
+  const myBeds = [
+    {
+      address:"108 ซอย โยธา 1 แขวง ตลาดน้อย เขตสัมพันธวงศ์ กรุงเทพมหานคร 10100",
+      amount:299,
+      customer_amount:1,
+      id:50,
+      lat:"13.7321154",
+      lng:"100.5142296",
+      state:"true",
+      timestamp:"2022-04-10T08:14:12.000Z"
+    }
+  ]
+  it("test that Beds Manage page have details blogs, edit bed page link button and add bed button.", async () => {
+    const bedsManage = await mount(Bedsmanage, {
+      data() {
+        return{
+          beds: myBeds
+        }
+      }
+    })
+    await expect(bedsManage.find('table').exists()).toBe(true)
+    await expect(bedsManage.findAll('button').at(2).element.innerHTML).toBe("แก้ไข")
+    await expect(bedsManage.findAll('button').at(0).element.innerHTML).toBe("เพิ่มสถานที่")
   })
 })
