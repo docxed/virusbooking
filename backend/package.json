@@ -13,7 +13,7 @@
     "unit:coverage": "nyc mocha --timeout 30000 ./test/unit/*.test.js --exit | term-to-html > unit-coverage.html",
     "component": "mocha --timeout 30000 ./test/component/*.test.js --exit | term-to-html > component.html",
     "component:coverage": "nyc mocha --timeout 30000 ./test/component/*.test.js --exit | term-to-html > component-coverage.html",
-    "e2e": "mocha --timeout 30000 ./test/e2e/*.test.js --exit",
+    "e2e": "mocha --timeout 30000 ./test/e2e/*.test.js --exit | term-to-html > e2e.html",
     "e2e:coverage": "nyc mocha --timeout 30000 ./test/e2e/*.test.js --exit"
   },
   "keywords": [],

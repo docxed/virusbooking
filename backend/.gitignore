@@ -9,6 +9,7 @@ unit.html
 unit-coverage.html
 component.html
 component-coverage.html
+e2e.html
 
 
 # local env files

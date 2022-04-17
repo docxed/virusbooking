@@ -76,6 +76,7 @@ pipeline {
                 dir('backend') {
                     sh "yarn e2e"
                 }
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'e2e.html', reportName: 'E2E Test Report', reportTitles: 'E2E Test Report'])
             }
         }
     }
