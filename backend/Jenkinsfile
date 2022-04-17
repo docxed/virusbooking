@@ -90,7 +90,7 @@ pipeline {
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
                         sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
-                        sh 'cd virusbooking'
+                        sh '''cd virusbooking'''
                         def data = "TTB_TAG=2.0.${BUILD_NUMBER}"
                         writeFile(file: '.env', text: data)
                     }
