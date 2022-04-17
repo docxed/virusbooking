@@ -81,14 +81,16 @@ pipeline {
         }
         stage('Build & Deploy Docker') {
             steps {
-                script {
+                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
+                    script {
                     def remote = [:]
-                    remote.name = "root"
-                    remote.host = '159.223.45.216'
-                    remote.user = 'root'
-                    remote.password = 'xitgmLwmp12q'
+                    remote.name = NAME
+                    remote.host = HOST
+                    remote.user = USER
+                    remote.password = PASSWORD
                     remote.allowAnyHosts = true
                     sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
+                    }
                 }
             }
         }
