@@ -81,7 +81,7 @@ pipeline {
         // }
         stage('Build & Deploy Docker') {
             steps {
-                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'EMAIL')]) {
+                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
                     script {
                         def remote = [:]
                         remote.name = NAME
