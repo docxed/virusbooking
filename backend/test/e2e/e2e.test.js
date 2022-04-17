@@ -22,9 +22,9 @@ var user2 = {
 
 var token1
 var token2
-var user2_id
+var user2_id = 59
 
-var bed_id1
+var bed_id1 = 51
 
 var date = new Date()
 date.setDate(date.getDate() + 1)
@@ -32,6 +32,7 @@ date.setDate(date.getDate() + 1)
 var bedsdealing_id
 
 describe("e2e Test ", () => {
+  before(() => {})
   describe("เข้าสู่ระบบและทำการจองเตียงและออกจากระบบ แล้วผู้จองทำการเข้าพักสถานให้บริการเตียง", () => {
     it("ผู้ใช้เข้าสู่ระบบและเข้าไปทำการจองเตียง", (done) => {
       chai
@@ -49,22 +50,15 @@ describe("e2e Test ", () => {
             .set("Authorization", token1)
             .end((err, res) => {
               bed_id1 = res.body.beds[0].id
-            })
-          chai
-            .request(server)
-            .post("/users/signin")
-            .send({
-              email: user2.email,
-              password: user2.password,
-            })
-            .end((err, res) => {
-              token2 = res.body.token
               chai
                 .request(server)
-                .get("/users/me")
-                .set("Authorization", token2)
+                .post("/users/signin")
+                .send({
+                  email: user2.email,
+                  password: user2.password,
+                })
                 .end((err, res) => {
-                  user2_id = res.body.id
+                  token2 = res.body.token
                   chai
                     .request(server)
                     .post("/bedsdealing")
@@ -122,7 +116,7 @@ describe("e2e Test ", () => {
         })
     })
 
-    it("เจ้าของสถานบริการกด ยืนยันผู้ใช้เข้าพักสำเร็จ", (done) => {
+    it("เจ้าของสถานที่ให้บริการกด ยืนยันผู้ใช้เข้าพักสำเร็จ", (done) => {
       chai
         .request(server)
         .put("/bedsdealing/customer/" + bedsdealing_id)
@@ -137,9 +131,9 @@ describe("e2e Test ", () => {
         })
     })
 
-    after(async ()=>{
-        await pool.query("DELETE FROM bedsdealing WHERE id = ?", [bedsdealing_id])
-        chai
+    after(async () => {
+      await pool.query("delete from bedsdealing order by id desc limit 1")
+      chai
         .request(server)
         .post("/users/logout")
         .set("Authorization", token1)
