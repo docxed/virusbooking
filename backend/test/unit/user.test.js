@@ -8,6 +8,8 @@ const server = require("../../build/main.js").default
 chai.use(chaiHttp)
 chai.should()
 
+const pool = require("../../config/database")
+
 ////// auto genate idcard
 function randomid() {
   var id12 = ""
@@ -45,7 +47,24 @@ const data = {
 }
 //////////////////////
 
+var token
+var user_id
+var user_token
+
 describe("Unit Testing user", () => {
+  before(() => {
+    chai
+      .request(server)
+      .post("/users/signin")
+      .send({
+        email: "phalat18@gmail.com",
+        password: "15901590",
+      })
+      .end((err, res) => {
+        token = res.body.token
+      })
+  })
+
   describe("/GET /", () => {
     it("it should have message response", (done) => {
       chai
@@ -70,7 +89,30 @@ describe("Unit Testing user", () => {
           done()
         })
     })
-    +
+
+    it("it should have status false and message response if email reuse", (done) => {
+      chai
+        .request(server)
+        .post("/users/signup")
+        .send({
+          fname: "พลัฏฐ์",
+          lname: "วงศ์สิทธิพรรุ่ง",
+          idcard: idd.substring(0, 11) + "99",
+          phone: "0812345678",
+          email: "phalat18@gmail.com",
+          password: "15901590",
+          c_password: "15901590",
+          lineid: "_po_pon",
+        })
+        .end((err, res) => {
+          res.body.should.eql({
+            status: false,
+            message: "อีเมลนี้ถูกใช้งานแล้ว (email)",
+          })
+          done()
+        })
+    })
+
     it("it should have status false and message response if idcard reuse", (done) => {
       chai
         .request(server)
@@ -84,38 +126,15 @@ describe("Unit Testing user", () => {
           done()
         })
     })
-
-    it("it should have status false and message response if email reuse", (done) => {
-      chai
-        .request(server)
-        .post("/users/signup")
-        .send({
-          fname: "พลัฏฐ์",
-          lname: "วงศ์สิทธิพรรุ่ง",
-          idcard: idd.substring(0, 11) + "99",
-          phone: "0812345678",
-          email: data.email,
-          password: "15901590",
-          c_password: "15901590",
-          lineid: "_po_pon",
-        })
-        .end((err, res) => {
-          res.body.should.eql({
-            status: false,
-            message: "อีเมลนี้ถูกใช้งานแล้ว (email)",
-          })
-          done()
-        })
-    })
   })
 
   describe("/POST /users/signin", () => {
-    +    it("it should have message response with token", (done) => {
+    ;+it("it should have message response with token", (done) => {
       chai
         .request(server)
         .post("/users/signin")
         .send({
-          email: data.email,
+          email: "phalat18@gmail.com",
           password: data.password,
         })
         .end((err, res) => {
@@ -174,9 +193,7 @@ describe("Unit Testing user", () => {
         })
         .end((err, res) => {
           res.body.should.have.property("status").eql(false)
-          res.body.should.have
-            .property("message")
-            .a("string")
+          res.body.should.have.property("message").a("string")
           done()
         })
     })
@@ -184,223 +201,112 @@ describe("Unit Testing user", () => {
 
   describe("/PUT /users/changepassword", () => {
     it("it should have status false and error message response if password incorrect format", (done) => {
-      let token = ""
-
       chai
         .request(server)
-        .post("/users/signin")
+        .put("/users/changepassword")
+        .set("Authorization", token)
         .send({
-          email: data.email,
-          password: data.password,
+          oldpassword: "1",
+          password: "15901590",
+          c_password: "15901590",
+        })
+        .end((err, res) => {
+          res.body.should.have.property("status").eql(false)
+          res.body.should.have.have.property("message").a("string")
+          done()
+        })
+    })
+
+    it("it should have message response", (done) => {
+      chai
+        .request(server)
+        .put("/users/changepassword")
+        .set("Authorization", token)
+        .send({
+          oldpassword: "15901590",
+          password: "15901590",
+          c_password: "15901590",
         })
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.have.have
             .property("message")
             .a("string")
-            .eql("ลงชื่อเข้าใช้งานสำเร็จ")
-          res.body.should.have.property("token")
-          token = res.body.token
-          chai
-            .request(server)
-            .put("/users/changepassword")
-            .set("Authorization", token)
-            .send({
-              oldpassword: "1",
-              password: "15901590",
-              c_password: "15901590",
-            })
-            .end((err, res) => {
-              res.body.should.have.property("status").eql(false)
-              res.body.should.have.have
-                .property("message")
-                .a("string")
-              done()
-            })
-        })
-    })
-
-    it("it should have message response", (done) => {
-      let token = ""
-
-      chai
-        .request(server)
-        .post("/users/signin")
-        .send({
-          email: data.email,
-          password: data.password
-        })
-        .end((err, res) => {
-          res.should.have.status(200)
-          +          res.body.should.have.have
-            .property("message")
-            .a("string")
-            .eql("ลงชื่อเข้าใช้งานสำเร็จ")
-          res.body.should.have.property("token")
-          token = res.body.token
-          chai
-            .request(server)
-            .put("/users/changepassword")
-            .set("Authorization", token)
-            .send({
-              oldpassword: "15901590",
-              password: "15901590",
-              c_password: "15901590",
-            })
-            .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.have.have
-                .property("message")
-                .a("string")
-                .eql("เปลี่ยนรหัสผ่านสำเร็จ")
-              done()
-            })
+            .eql("เปลี่ยนรหัสผ่านสำเร็จ")
+          done()
         })
     })
   })
 
   describe("/PUT /users/changeprofile", () => {
     it("it should have message response", (done) => {
-      let token = ""
-
       chai
         .request(server)
-        .post("/users/signin")
+        .put("/users/profile")
+        .set("Authorization", token)
         .send({
-          email: data.email,
-          password: data.password,
+          firstname: "พลัฏฐ์",
+          lastname: "วงศ์สิทธิพรรุ่ง",
+          phone: "0953901155",
+          lineid: "_pon_pon",
         })
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.have.have
             .property("message")
             .a("string")
-            .eql("ลงชื่อเข้าใช้งานสำเร็จ")
-          res.body.should.have.property("token")
-          token = res.body.token
-          chai
-            .request(server)
-            .put("/users/profile")
-            .set("Authorization", token)
-            .send({
-              firstname: "phalat",
-              lastname: "wong",
-              phone: "0953901155",
-              lineid: "_pon_pon",
-            })
-            .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.have.have
-                .property("message")
-                .a("string")
-                .eql("อัปเดตบัญชีสำเร็จ")
-              done()
-            })
+            .eql("อัปเดตบัญชีสำเร็จ")
+          done()
         })
     })
 
     it("it should have status false and error message response if profile incorrect format", (done) => {
-      let token = ""
-
       chai
         .request(server)
-        .post("/users/signin")
+        .put("/users/profile")
+        .set("Authorization", token)
         .send({
-          email: data.email,
-          password: data.password,
+          firstname: "phalat",
+          lastname: "wong",
+          phone: "09539011550",
+          lineid: "_pon_pon",
         })
         .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.have.have
-            .property("message")
-            .a("string")
-            .eql("ลงชื่อเข้าใช้งานสำเร็จ")
-          res.body.should.have.property("token")
-          token = res.body.token
-          chai
-            .request(server)
-            .put("/users/profile")
-            .set("Authorization", token)
-            .send({
-              firstname: "phalat",
-              lastname: "wong",
-              phone: "09539011550",
-              lineid: "_pon_pon",
-            })
-            .end((err, res) => {
-              res.body.should.have.property("status").eql(false)
-              res.body.should.have.have
-                .property("message")
-                .a("string")
-              done()
-            })
-        })
-    })
-  })
-
-  describe("/POST /users/logout", () => {
-    it("it should have message response", (done) => {
-      let token = ""
-
-      chai
-        .request(server)
-        .post("/users/signin")
-        .send({
-          email: data.email,
-          password: data.password,
-        })
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.have.have
-            .property("message")
-            .a("string")
-            .eql("ลงชื่อเข้าใช้งานสำเร็จ")
-          res.body.should.have.property("token")
-          token = res.body.token
-          chai
-            .request(server)
-            .post("/users/logout")
-            .set("Authorization", token)
-            .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.have.have
-                .property("message")
-                .a("string")
-                .eql("ลงชื่อออกสำเร็จ")
-              done()
-            })
+          res.body.should.have.property("status").eql(false)
+          res.body.should.have.have.property("message").a("string")
+          done()
         })
     })
   })
 
   describe("/GET /users/me", () => {
     it("it should have message response", (done) => {
-      let token = ""
-
       chai
         .request(server)
-        .post("/users/signin")
-        .send({
-          email: data.email,
-          password: data.password,
-        })
+        .get("/users/me")
+        .set("Authorization", token)
         .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.have.have.a("object")
+          done()
+        })
+    })
+  })
+
+  describe("/POST /users/logout", () => {
+    it("it should have message response", (done) => {
+      chai
+        .request(server)
+        .post("/users/logout")
+        .set("Authorization", token)
+        .end(async(err, res) => {
           res.should.have.status(200)
           res.body.should.have.have
             .property("message")
             .a("string")
-            .eql("ลงชื่อเข้าใช้งานสำเร็จ")
-          res.body.should.have.property("token")
-          token = res.body.token
-          chai
-            .request(server)
-            .get("/users/me")
-            .set("Authorization", token)
-            .end((err, res) => {
-              res.should.have.status(200)
-              res.body.should.have.have.a("object")
-              done()
-            })
+            .eql("ลงชื่อออกสำเร็จ")
+          await pool.query("delete from users order by id desc limit 1")
+          done()
         })
     })
   })
