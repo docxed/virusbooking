@@ -8,7 +8,7 @@
     "lint": "prettier --write .",
     "build": "backpack build",
     "start": "node ./build/main.js",
-    "test": "yarn test:unit && yarn test:component && yarn test:e2e",
+    "test": "yarn unit && yarn component && yarn e2e",
     "unit": "mocha --timeout 30000 ./test/unit/*.test.js --exit | term-to-html > unit.html",
     "unit:coverage": "nyc mocha --timeout 30000 ./test/unit/*.test.js --exit | term-to-html > unit-coverage.html",
     "component": "mocha --timeout 30000 ./test/component/*.test.js --exit | term-to-html > component.html",
