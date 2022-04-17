@@ -7,6 +7,8 @@ build
 # test report
 unit.html
 unit-coverage.html
+component.html
+component-coverage.html
 
 
 # local env files
