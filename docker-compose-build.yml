@@ -2,9 +2,7 @@ version: "3"
 services:
   frontend:
     image: docxed/ttf:2.0.0
-    ports:
-      - "1310:80"
+    build: ./frontend
   backend:
     image: docxed/ttb:2.0.0
-    ports:
-      - "1311:3001"
+    build: ./backend
