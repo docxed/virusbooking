@@ -90,8 +90,8 @@ pipeline {
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
                         sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
-                        sshCommand remote: remote, command: "echo TTB_TAG=2.0." + BUILD_NUMBER + " > myenv"
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend --env-file=myenv"
+                        sshCommand remote: remote, command: "echo TTB_TAG=2.0." + BUILD_NUMBER + " > .env"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
                     }
                 }
             }
