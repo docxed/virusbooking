@@ -72,7 +72,7 @@ pipeline {
                 publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'e2e.html', reportName: 'E2E Test Report', reportTitles: 'E2E Test Report'])
             }
         }
-        stage('Build & Deploy Docker') {
+        stage('Deploy') {
             steps {
                 withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
                     script {
