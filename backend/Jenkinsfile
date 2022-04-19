@@ -146,10 +146,16 @@ pipeline {
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
 
-                        sshCommand remote: remote, command: "rm -r virusbooking"
-                        sshCommand remote: remote, command: ".env"
+                        // Clear files
+                        sshRemove remote: remote, path: "virusbooking"
+                        sshRemove remote: remote, path: ".env"
                     }
                 }
+            }
+        }
+        stage('Notification') {
+            steps {
+                echo "Deploy Success"
             }
         }
     }
