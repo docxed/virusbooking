@@ -82,33 +82,34 @@ pipeline {
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
-                        try {
-                            sshCommand remote: remote, command: "git clone -b main https://github.com/docxed/virusbooking.git"
-                            
-                            // Write env
-                            def env = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
-                            writeFile(file: '.env', text: env)
-                            sshPut remote: remote, from: '.env', into: './virusbooking/backend'
-                            
-                            // Write AutoTag via BUILD NO.
-                            def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=2.0.${BUILD_NUMBER}"
-                            writeFile(file: '.env', text: tag)
-                            sshPut remote: remote, from: '.env', into: '.'
-                            
-                            // Build & Run Container
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-
-                        }  catch (err) {
-                            echo "Error: ${err.message}"
-                            echo "Error: ${err.stack}"
-                        } finally {
-
-                            // Clear files
-                            sshRemove remote: remote, path: "virusbooking"
-                            sshRemove remote: remote, path: ".env"
+                        steps {
+                        // remote
+                        sshCommand remote: remote, command: "git clone -b main https://github.com/docxed/virusbooking.git"
                         }
+                        steo {
+                        // Write env
+                        def env = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
+                        writeFile(file: '.env', text: env)
+                        sshPut remote: remote, from: '.env', into: './virusbooking/backend'
+                        }
+                        
+                        
+                        
+                        
+                        // // Write AutoTag via BUILD NO.
+                        // def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=2.0.${BUILD_NUMBER}"
+                        // writeFile(file: '.env', text: tag)
+                        // sshPut remote: remote, from: '.env', into: '.'
+                        
+                        // // Build & Run Container
+                        // sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
+                        // sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
+                        // sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+
+                        // // Clear files
+                        // sshRemove remote: remote, path: "virusbooking"
+                        // sshRemove remote: remote, path: ".env"
+                    
                     }
                 }
             }
