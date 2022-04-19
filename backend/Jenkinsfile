@@ -82,6 +82,9 @@ pipeline {
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
+                        remote.agentForwarding = true
+
+                        // Clone
                         sshCommand remote: remote, command: "git clone -b main https://github.com/docxed/virusbooking.git"
                         
                         // Write env
@@ -110,6 +113,7 @@ pipeline {
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
+                        remote.agentForwarding = true
 
                         // Login
                         sshCommand remote: remote, command: "docker login --username ${D_USER} --password ${D_PASSWORD}"
@@ -139,6 +143,7 @@ pipeline {
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
+                        remote.agentForwarding = true
 
                         // Down
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
