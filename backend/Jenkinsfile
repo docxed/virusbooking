@@ -164,8 +164,8 @@ pipeline {
                         remote.allowAnyHosts = true
                         
                         // Clear files
-                        writeFile file: 'clearfiles.sh', text: 'rm -r virusbooking && rm -r .env'
-                        sshScript remote: remote, script: "clearfiles.sh"
+                        sshRemove remote: remote, path: "virusbooking"
+                        sshRemove remote: remote, path: ".env"
                     }
                 }
             }
