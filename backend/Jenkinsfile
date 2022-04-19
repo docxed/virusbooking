@@ -95,7 +95,7 @@ pipeline {
                         sshPut remote: remote, from: '.env', into: '.'
 
                         // Build
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
                     }
                 }
             }
@@ -123,7 +123,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+        stage('Pull & Deploy') {
             steps {
                 withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
                     script {
@@ -133,6 +133,9 @@ pipeline {
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
+
+                        // Pull
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
 
                         // Down
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
