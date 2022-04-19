@@ -13,60 +13,60 @@ pipeline {
                 }
             }
         }
-        stage('Scan & auto fixed code') {
-            steps {
-                dir('frontend') {
-                    sh 'yarn lint'
-                }
-            }
-        }
-        stage('Unit Test') {
-            steps {
-                dir('frontend') {
-                    sh 'yarn unit'
-                }
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend', reportFiles: 'test-report.html', reportName: 'Unit Test Report', reportTitles: 'Unit Test Report'])
-            }
-        }
-        stage('Unit Test Coverage') {
-            steps {
-                dir('frontend') {
-                    sh 'yarn unit:coverage'
-                }
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend/coverage/lcov-report', reportFiles: 'index.html', reportName: 'Unit Test Coverage Report', reportTitles: 'Unit Test Coverage Report'])
-            }
-        }
-        stage('Component Test') {
-            steps {
-                dir('frontend') {
-                    sh "yarn component"
-                }
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend', reportFiles: 'test-report.html', reportName: 'Component Test Report', reportTitles: 'Component Test Report'])
-            }
-        }
-        stage('Component Test Coverage') {
-            steps {
-                dir('frontend') {
-                    sh 'yarn component:coverage'
-                }
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend/coverage/lcov-report', reportFiles: 'index.html', reportName: 'Component Test Coverage Report', reportTitles: 'Component Test Coverage Report'])
-            }
-        }
-        stage('E2E Test') {
-            steps {
-                dir('frontend') {
-                    sh "yarn e2e"
-                }
-                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend', reportFiles: 'e2e.html', reportName: 'E2E Test Report', reportTitles: 'E2E Test Report'])
-            }
-        }
-        stage('Build') {
-            steps {
-                dir('frontend') {
-                    sh "yarn build"
-                }
-            }
-        }
+        // stage('Scan & auto fixed code') {
+        //     steps {
+        //         dir('frontend') {
+        //             sh 'yarn lint'
+        //         }
+        //     }
+        // }
+        // stage('Unit Test') {
+        //     steps {
+        //         dir('frontend') {
+        //             sh 'yarn unit'
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend', reportFiles: 'test-report.html', reportName: 'Unit Test Report', reportTitles: 'Unit Test Report'])
+        //     }
+        // }
+        // stage('Unit Test Coverage') {
+        //     steps {
+        //         dir('frontend') {
+        //             sh 'yarn unit:coverage'
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend/coverage/lcov-report', reportFiles: 'index.html', reportName: 'Unit Test Coverage Report', reportTitles: 'Unit Test Coverage Report'])
+        //     }
+        // }
+        // stage('Component Test') {
+        //     steps {
+        //         dir('frontend') {
+        //             sh "yarn component"
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend', reportFiles: 'test-report.html', reportName: 'Component Test Report', reportTitles: 'Component Test Report'])
+        //     }
+        // }
+        // stage('Component Test Coverage') {
+        //     steps {
+        //         dir('frontend') {
+        //             sh 'yarn component:coverage'
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend/coverage/lcov-report', reportFiles: 'index.html', reportName: 'Component Test Coverage Report', reportTitles: 'Component Test Coverage Report'])
+        //     }
+        // }
+        // stage('E2E Test') {
+        //     steps {
+        //         dir('frontend') {
+        //             sh "yarn e2e"
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './frontend', reportFiles: 'e2e.html', reportName: 'E2E Test Report', reportTitles: 'E2E Test Report'])
+        //     }
+        // }
+        // stage('Build') {
+        //     steps {
+        //         dir('frontend') {
+        //             sh "yarn build"
+        //         }
+        //     }
+        // }
         stage('Deploy') {
             steps {
                 withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_FRONTEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
@@ -78,18 +78,26 @@ pipeline {
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
                         try {
-                            sshCommand remote: remote, command: "git clone -b develop https://github.com/docxed/virusbooking.git"
-                            sshCommand remote: remote, command: "echo TTB_TAG=2.0." + BUILD_NUMBER + " > .env"
-                            sshCommand remote: remote, command: "echo TTF_TAG=2.0." + BUILD_NUMBER + " >> .env"
+                            sshCommand remote: remote, command: "git clone -b main https://github.com/docxed/virusbooking.git"
+                            
+                            // Write AutoTag via BUILD NO.
+                            def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=${BUILD_NUMBER}"
+                            writeFile(file: '.env', text: tag)
+                            sshPut remote: remote, from: '.env', into: '.'
+                            
+                            // Build & Run Container
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache frontend"
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d frontend"
+
                         } catch (err) {
                             echo "Error: ${err.message}"
                             echo "Error: ${err.stack}"
                         } finally {
-                            sshCommand remote: remote, command: "rm -r virusbooking"
-                            sshCommand remote: remote, command: "rm -r .env"
+                            
+                            // Clear files
+                            sshRemove remote: remote, path: "virusbooking"
+                            sshRemove remote: remote, path: ".env"
                         }
                     }
                 }
