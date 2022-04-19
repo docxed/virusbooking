@@ -125,8 +125,9 @@ pipeline {
                         // Logout
                         sshCommand remote: remote, command: "docker logout"
 
-                        // Pull
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
+                        sshRemove remote: remote, path: "virusbooking"
+                        sshRemove remote: remote, path: ".env"
+                        
                     }
                 }
             }
@@ -142,14 +143,16 @@ pipeline {
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
 
+                        // Pull
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
+
                         // Down
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
 
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
                         
-                        sshCommand remote: remote, command: "rm -r .env"
-                        sshCommand remote: remote, command: "rm -r virusbooking"
+                        
                     }
                 }
             }
