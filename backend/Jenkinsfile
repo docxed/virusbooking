@@ -147,10 +147,10 @@ pipeline {
 
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-
+                        
                         // Clear files
-                        sshRemove remote: remote, path: "./virusbooking"
-                        sshRemove remote: remote, path: "./.env"
+                        writeFile file: 'clearfiles.sh', text: 'rm -r virusbooking && rm -r .env'
+                        sshScript remote: remote, script: "clearfiles.sh"
                     }
                 }
             }
