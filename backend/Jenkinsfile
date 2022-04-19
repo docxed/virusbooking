@@ -148,16 +148,26 @@ pipeline {
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
                         
-                        // Clear files
-                        writeFile file: 'clearfiles.sh', text: 'rm -r virusbooking && rm -r .env'
-                        sshScript remote: remote, script: "clearfiles.sh"
                     }
                 }
             }
         }
         stage('Notification') {
             steps {
-                echo "Deploy Success"
+                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
+                    script {
+                        def remote = [:]
+                        remote.name = NAME
+                        remote.host = HOST
+                        remote.user = USER
+                        remote.password = PASSWORD
+                        remote.allowAnyHosts = true
+                        
+                        // Clear files
+                        writeFile file: 'clearfiles.sh', text: 'rm -r virusbooking && rm -r .env'
+                        sshScript remote: remote, script: "clearfiles.sh"
+                    }
+                }
             }
         }
     }
