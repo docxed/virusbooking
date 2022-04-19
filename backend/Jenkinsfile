@@ -95,7 +95,7 @@ pipeline {
                         sshPut remote: remote, from: '.env', into: '.'
 
                         // Build
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build backend"
                     }
                 }
             }
