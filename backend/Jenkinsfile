@@ -88,7 +88,6 @@ pipeline {
                         def env = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
                         writeFile(file: '.env', text: env)
                         sshPut remote: remote, from: '.env', into: './virusbooking/backend'
-                        }
 
                         // Write AutoTag via BUILD NO.
                         def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=2.0.${BUILD_NUMBER}"
