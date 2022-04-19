@@ -115,7 +115,7 @@ pipeline {
                         sshCommand remote: remote, command: "docker login --username ${D_USER} --password ${D_PASSWORD}"
 
                         // Push
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
 
                         // Logout
                         sshCommand remote: remote, command: "docker logout"
@@ -133,6 +133,9 @@ pipeline {
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
+
+                        // Down
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
 
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
