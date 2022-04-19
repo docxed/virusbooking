@@ -117,6 +117,9 @@ pipeline {
                         // Push
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
 
+                        // Remove Image
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml rm backend"
+
                         // Logout
                         sshCommand remote: remote, command: "docker logout"
                     }
