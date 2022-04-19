@@ -135,7 +135,7 @@ pipeline {
                     script {
                         def remote = [:]
                         remote.name = NAME
-                        remote.host = "159.223.45.216:22"
+                        remote.host = HOST
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
@@ -148,9 +148,10 @@ pipeline {
 
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml ps backend"
 
-                        sshCommand remote: remote, command: "sudo rm -r virusbooking"
-                        sshCommand remote: remote, command: "sudo rm -r .env"
+                        sshRemove remote: remote, path: "virusbooking"
+                        sshRemove remote: remote, path: "docker.env"
                         
                     }
                 }
