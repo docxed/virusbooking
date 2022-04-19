@@ -94,16 +94,11 @@ pipeline {
                             def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=2.0.${BUILD_NUMBER}"
                             writeFile(file: '.env', text: tag)
                             sshPut remote: remote, from: '.env', into: '.'
-
-                            sshCommand remote: remote, command: "docker login --username ${D_USER} --password ${D_PASSWORD}"
                             
                             // Build & Run Container
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-
-                            sshCommand remote: remote, command: "docker logout"
 
                         }  catch (err) {
                             echo "Error: ${err.message}"
