@@ -144,7 +144,7 @@ pipeline {
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
 
                         // Up
-                        sshCommand remote: remote, command: "docker stack deploy --compose-file virusbooking/docker-compose-deploy.yml backend"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
 
                         // Clear files
                         sshRemove remote: remote, path: "virusbooking"
