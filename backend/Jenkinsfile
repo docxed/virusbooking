@@ -148,13 +148,6 @@ pipeline {
                     }
                 }
             }
-            steps {
-                script {
-                    // Clear files
-                    sshRemove remote: remote, path: "virusbooking"
-                    sshRemove remote: remote, path: ".env"
-                }
-            }
         }
     }
 }
