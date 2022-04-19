@@ -94,7 +94,7 @@ pipeline {
                         // Write AutoTag via BUILD NO.
                         def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=2.0.${BUILD_NUMBER}"
                         writeFile(file: '.env', text: tag)
-                        sshPut remote: remote, from: '.env', into: '.'
+                        sshPut remote: remote, from: 'docker.env', into: '.'
 
                         // Build
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
@@ -150,7 +150,7 @@ pipeline {
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
 
                         sshRemove remote: remote, path: "virusbooking"
-                        sshRemove remote: remote, path: ".env"
+                        sshRemove remote: remote, path: "docker.env"
                         
                         
                     }

@@ -3,6 +3,10 @@ services:
   frontend:
     image: docxed/ttf:${TTF_TAG}
     build: ./frontend
+    env_file:
+      - docker.env
   backend:
     image: docxed/ttb:${TTB_TAG}
     build: ./backend
+    env_file:
+      - docker.env

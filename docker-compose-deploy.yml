@@ -4,7 +4,11 @@ services:
     image: docxed/ttf:${TTF_TAG}
     ports:
       - "1310:80"
+    env_file:
+      - docker.env
   backend:
     image: docxed/ttb:${TTB_TAG}
     ports:
       - "1311:3001"
+    env_file:
+      - docker.env
