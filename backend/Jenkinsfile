@@ -124,9 +124,6 @@ pipeline {
 
                         // Logout
                         sshCommand remote: remote, command: "docker logout"
-
-                        sshRemove remote: remote, path: "virusbooking"
-                        sshRemove remote: remote, path: ".env"
                         
                     }
                 }
@@ -151,6 +148,9 @@ pipeline {
 
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+
+                        sshRemove remote: remote, path: "virusbooking"
+                        sshRemove remote: remote, path: ".env"
                         
                         
                     }
