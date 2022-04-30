@@ -153,6 +153,10 @@ pipeline {
                 }
             }
             post {
+                success {
+                    sshRemove remote: remote, path: "virusbooking/"
+                    sshRemove remote: remote, path: ".env"
+                }
                 failure {
                     sshRemove remote: remote, path: "virusbooking/"
                     sshRemove remote: remote, path: ".env"
