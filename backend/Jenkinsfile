@@ -148,7 +148,6 @@ pipeline {
 
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml ps backend"
 
                     }
                 }
