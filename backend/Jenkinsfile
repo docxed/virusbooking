@@ -149,11 +149,8 @@ pipeline {
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
 
-                        // Clear
-                        def tag = "sudo rm -r virusbooking && sudo rm -r .env"
-                        writeFile(file: 'del.sh', text: tag)
-                        sshPut remote: remote, from: 'del.sh', into: './'
-                        sshScript remote: remote, script: 'del.sh'
+                        sshCommand remote: remote, command: "ls -a"
+
                     }
                 }
             }
