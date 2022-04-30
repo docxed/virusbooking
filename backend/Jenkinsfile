@@ -72,6 +72,63 @@ pipeline {
         //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'e2e.html', reportName: 'E2E Test Report', reportTitles: 'E2E Test Report'])
         //     }
         // }
+        stage('Build Image') {
+            steps {
+                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
+                    script {
+                        def remote = [:]
+                        remote.name = NAME
+                        remote.host = HOST
+                        remote.user = USER
+                        remote.password = PASSWORD
+                        remote.allowAnyHosts = true
+
+                        // Clone
+                        sshCommand remote: remote, command: "git clone -b main https://github.com/docxed/virusbooking.git"
+                        
+                        // Write env
+                        def env = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
+                        writeFile(file: '.env', text: env)
+                        sshPut remote: remote, from: '.env', into: './virusbooking/backend'
+
+                        // Write AutoTag via BUILD NO.
+                        def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=2.0.${BUILD_NUMBER}"
+                        writeFile(file: '.env', text: tag)
+                        sshPut remote: remote, from: '.env', into: './'
+
+                        // Build
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
+                    }
+                }
+            }
+        }
+        stage('Push Image') {
+            steps {
+                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
+                    script {
+                        def remote = [:]
+                        remote.name = NAME
+                        remote.host = HOST
+                        remote.user = USER
+                        remote.password = PASSWORD
+                        remote.allowAnyHosts = true
+
+                        // Login
+                        sshCommand remote: remote, command: "docker login --username ${D_USER} --password ${D_PASSWORD}"
+
+                        // Push
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
+
+                        // Remove Image
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml rm backend"
+
+                        // Logout
+                        sshCommand remote: remote, command: "docker logout"
+                        
+                    }
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
@@ -82,42 +139,17 @@ pipeline {
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
-                        try {
-                            sshCommand remote: remote, command: "git clone -b main https://github.com/docxed/virusbooking.git"
-                            
-                            // Write env
-                            def env = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
-                            writeFile(file: '.env', text: env)
-                            sshPut remote: remote, from: '.env', into: './virusbooking/backend'
-                            
-                            // Write AutoTag via BUILD NO.
-                            def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=2.0.${BUILD_NUMBER}"
-                            writeFile(file: '.env', text: tag)
-                            sshPut remote: remote, from: '.env', into: './'
-                            
-                            // Build & Run Container
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
-                            
-                            // Build
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
-                            
-                            // Login
-                            sshCommand remote: remote, command: "docker login --username ${D_USER} --password ${D_PASSWORD}"
-                            
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
 
-                            // Remove Image
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml rm backend"
+                        // Pull
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
 
-                            // Logout
-                            sshCommand remote: remote, command: "docker logout"
+                        // Down
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
 
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+                        // Up
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml ps backend"
 
-                        }  catch (err) {
-                            echo "Error: ${err.message}"
-                            echo "Error: ${err.stack}"
-                        }
                     }
                 }
             }
