@@ -152,12 +152,6 @@ pipeline {
                     }
                 }
             }
-            post {
-                always {
-                    sshRemove remote: remote, path: "virusbooking"
-                    sshRemove remote: remote, path: ".env"
-                }
-            }
         }
     }
 }
