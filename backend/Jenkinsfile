@@ -117,11 +117,6 @@ pipeline {
                         }  catch (err) {
                             echo "Error: ${err.message}"
                             echo "Error: ${err.stack}"
-                        } finally {
-
-                            // Clear files
-                            sshRemove remote: remote, path: "virusbooking"
-                            sshRemove remote: remote, path: ".env"
                         }
                     }
                 }
