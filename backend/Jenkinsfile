@@ -96,9 +96,9 @@ pipeline {
                             sshPut remote: remote, from: '.env', into: '.'
                             
                             // Build & Run Container
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+                            sshCommand remote: remote, command: "sudo docker-compose -f virusbooking/docker-compose-deploy.yml down"
+                            sshCommand remote: remote, command: "sudo docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
+                            sshCommand remote: remote, command: "sudo docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
 
                         }  catch (err) {
                             echo "Error: ${err.message}"
