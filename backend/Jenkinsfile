@@ -147,12 +147,15 @@ pipeline {
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
 
                         // Up
-                        // sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-
-                        sshRemove remote: remote, path: "virusbooking"
-                        sshRemove remote: remote, path: ".env"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
 
                     }
+                }
+            }
+            post {
+                always {
+                    sshRemove remote: remote, path: "virusbooking"
+                    sshRemove remote: remote, path: ".env"
                 }
             }
         }
