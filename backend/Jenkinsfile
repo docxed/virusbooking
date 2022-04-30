@@ -6,29 +6,153 @@ pipeline {
                 checkout scm
             }
         }
-        withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
-            script {
-                def remote = [:]
-                remote.name = NAME
-                remote.host = HOST
-                remote.user = USER
-                remote.password = PASSWORD
-                remote.allowAnyHosts = true
-            }
-        }
+        // stage('Download dependencies') {
+        //     steps {
+        //         dir('backend') {
+        //             sh 'yarn install'
+        //         }
+        //     }
+        // }
+        // stage('Write env') {
+        //     steps {
+        //         dir('backend') {
+        //             withCredentials([string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME')]) {
+        //                 script {
+        //                     def data = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
+        //                     writeFile(file: '.env', text: data)
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Build') {
+        //     steps {
+        //         dir('backend') {
+        //             sh 'yarn build'
+        //         }
+        //     }
+        // }
+        // stage('Unit Test') {
+        //     steps {
+        //         dir('backend') {
+        //             sh 'yarn unit'
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'unit.html', reportName: 'Unit Test Report', reportTitles: 'Unit Test Report'])
+        //     }
+        // }
+        // stage('Unit Test Coverage') {
+        //     steps {
+        //         dir('backend') {
+        //             sh 'yarn unit:coverage'
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'unit-coverage.html', reportName: 'Unit Test Coverage Report', reportTitles: 'Unit Test Coverage Report'])
+        //     }
+        // }
+        // stage('Component Test') {
+        //     steps {
+        //         dir('backend') {
+        //             sh 'yarn component'
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'component.html', reportName: 'Component Test Report', reportTitles: 'Component Test Report'])
+        //     }
+        // }
+        // stage('Component Test Coverage') {
+        //     steps {
+        //         dir('backend') {
+        //             sh 'yarn component:coverage'
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'component-coverage.html', reportName: 'Component Test Coverage Report', reportTitles: 'Component Test Coverage Report'])
+        //     }
+        // }
+        // stage('E2E Test') {
+        //     steps {
+        //         dir('backend') {
+        //             sh "yarn e2e"
+        //         }
+        //         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './backend', reportFiles: 'e2e.html', reportName: 'E2E Test Report', reportTitles: 'E2E Test Report'])
+        //     }
+        // }
         stage('Build Image') {
             steps {
                 withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
                     script {
-                        sshRemove remote: remote, path: ".env"
+                        def remote = [:]
+                        remote.name = NAME
+                        remote.host = HOST
+                        remote.user = USER
+                        remote.password = PASSWORD
+                        remote.allowAnyHosts = true
+
+                        // Clone
+                        sshCommand remote: remote, command: "git clone -b main https://github.com/docxed/virusbooking.git"
+                        
+                        // Write env
+                        def env = "TOKEN_KEY=${TOKEN_KEY}\nDB_HOST=${DB_HOST}\nDB_USER=${DB_USER}\nDB_PASSWORD=${DB_PASSWORD}\nDB_NAME=${DB_NAME}"
+                        writeFile(file: '.env', text: env)
+                        sshPut remote: remote, from: '.env', into: './virusbooking/backend'
+
+                        // Write AutoTag via BUILD NO.
+                        def tag = "TTB_TAG=2.0.${BUILD_NUMBER}\nTTF_TAG=2.0.${BUILD_NUMBER}"
+                        writeFile(file: '.env', text: tag)
+                        sshPut remote: remote, from: '.env', into: './'
+
+                        // Build
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
                     }
                 }
             }
         }
         stage('Push Image') {
             steps {
-                script {
-                    sshCommand remote: remote, command: "ls -a"
+                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
+                    script {
+                        def remote = [:]
+                        remote.name = NAME
+                        remote.host = HOST
+                        remote.user = USER
+                        remote.password = PASSWORD
+                        remote.allowAnyHosts = true
+
+                        // Login
+                        sshCommand remote: remote, command: "docker login --username ${D_USER} --password ${D_PASSWORD}"
+
+                        // Push
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
+
+                        // Remove Image
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml rm backend"
+
+                        // Logout
+                        sshCommand remote: remote, command: "docker logout"
+                        
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
+                    script {
+                        def remote = [:]
+                        remote.name = NAME
+                        remote.host = HOST
+                        remote.user = USER
+                        remote.password = PASSWORD
+                        remote.allowAnyHosts = true
+
+                        // Pull
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
+
+                        // Down
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
+
+                        // Up
+                        // sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+
+                        sshRemove remote: remote, path: "virusbooking"
+                        sshRemove remote: remote, path: ".env"
+
+                    }
                 }
             }
         }
