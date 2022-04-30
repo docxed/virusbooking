@@ -165,8 +165,8 @@ pipeline {
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
                         
-                        sshRemove remote: remote, path: "virusbooking/"
-                        sshRemove remote: remote, path: ".env"
+                        sshCommand remote: remote, command: "rm -r virusbooking"
+                        sshCommand remote: remote, command: "rm -r .env"
                     }
                 }
             }
