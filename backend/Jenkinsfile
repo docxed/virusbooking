@@ -150,6 +150,9 @@ pipeline {
 
                         // Clear files
                         sshRemove remote: remote, path: "virusbooking"
+
+                        sshCommand remote: remote, command: "curl localhost:1311"
+
                     }
                 }
             }
