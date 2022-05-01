@@ -132,7 +132,7 @@ pipeline {
                     script {
                         def remote = [:]
                         remote.name = NAME
-                        remote.host = HOST:22
+                        remote.host = HOST
                         remote.user = USER
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
