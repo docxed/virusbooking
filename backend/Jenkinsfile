@@ -150,6 +150,7 @@ pipeline {
 
                             // Up
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+                            timeout(time: 10, unit: 'SECONDS')
                         }  catch (err) {
                             echo "Error: ${err.message}"
                             echo "Error: ${err.stack}"
