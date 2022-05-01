@@ -95,7 +95,7 @@ pipeline {
                             sshPut remote: remote, from: '.env', into: '.'
 
                             // Login
-                            sshCommand remote: remote, command: "docker login --username ${D_USER} --password ${D_PASSWORD}"
+                            sshCommand remote: remote, command: "docker login -u ${D_USER} -p ${D_PASSWORD}"
                             
                             // Build & Run Container
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
