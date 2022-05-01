@@ -142,23 +142,22 @@ pipeline {
 
                         try {
                             
-                        // Pull
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
+                            // Pull
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
 
-                        // Down
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
+                            // Down
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
 
-                        // Up
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-
+                            // Up
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
                         }  catch (err) {
                             echo "Error: ${err.message}"
                             echo "Error: ${err.stack}"
                         } finally {
 
                             // Clear files
-                            sshRemove remote: remote, path: "virusbooking/"
-                            sshRemove remote: remote, path: ".env"
+                            sshCommand remote: remote, command: "rm -rf .env"
+                            sshCommand remote: remote, command: "rm -rf virusbooking"
                         }
                     }
                 }
