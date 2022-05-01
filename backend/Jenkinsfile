@@ -140,6 +140,8 @@ pipeline {
                         remote.password = PASSWORD
                         remote.allowAnyHosts = true
 
+                        try {
+                            
                         // Pull
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
 
@@ -149,9 +151,15 @@ pipeline {
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
 
-                        sshCommand remote: remote, command: "rm -rf virusbooking"
-                        sshCommand remote: remote, command: "rm -rf .env"
+                        }  catch (err) {
+                            echo "Error: ${err.message}"
+                            echo "Error: ${err.stack}"
+                        } finally {
 
+                            // Clear files
+                            sshRemove remote: remote, path: "virusbooking/"
+                            sshRemove remote: remote, path: ".env"
+                        }
                     }
                 }
             }
