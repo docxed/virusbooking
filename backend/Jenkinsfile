@@ -121,9 +121,6 @@ pipeline {
 
                         // Remove Image
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml rm backend"
-
-                        // Logout
-                        sshCommand remote: remote, command: "docker logout"
                         
                     }
                 }
@@ -141,21 +138,20 @@ pipeline {
                         remote.allowAnyHosts = true
 
                         // Down
-                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down --remove-orphans"
+                        sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
                         
                         // Pull
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
 
                         // Up
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-            
-                        echo "Error: ${err.message}"
-                        echo "Error: ${err.stack}"
-        
 
                         // Clear files
                         sshRemove remote: remote, path: ".env"
                         sshRemove remote: remote, path: "virusbooking"
+
+                        // Logout
+                        sshCommand remote: remote, command: "docker logout"
                     }
                 }
             }
