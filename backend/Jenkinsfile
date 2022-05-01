@@ -122,6 +122,9 @@ pipeline {
                         // Remove Local Image
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml rm backend"
                         
+                        // Logout
+                        sshCommand remote: remote, command: "docker logout"
+                        
                     }
                 }
             }
@@ -147,10 +150,7 @@ pipeline {
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
                         
                         sshRemove remote: remote, path: "virusbooking"
-
-                        // Logout
-                        sshCommand remote: remote, command: "docker logout"
-
+                        sshRemove remote: remote, path: ".env"
                     }
                 }
             }
@@ -158,7 +158,6 @@ pipeline {
     }
     // post {
     //     always {
-    //         cleanWs()
     //         withCredentials([string(credentialsId: 'T01_HOST_NAME', variable: 'NAME'), string(credentialsId: 'T01_BACKEND_HOST', variable: 'HOST'), usernamePassword(credentialsId: 'T01_HOST_ACCOUNT', passwordVariable: 'PASSWORD', usernameVariable: 'USER'), string(credentialsId: 'T01_TOKEN_KEY', variable: 'TOKEN_KEY'), string(credentialsId: 'T01_DB_HOST', variable: 'DB_HOST'), string(credentialsId: 'T01_DB_USER', variable: 'DB_USER'), string(credentialsId: 'T01_DB_PASSWORD', variable: 'DB_PASSWORD'), string(credentialsId: 'T01_DB_NAME', variable: 'DB_NAME'), usernamePassword(credentialsId: 'T01_DOCKER_ACCOUNT', passwordVariable: 'D_PASSWORD', usernameVariable: 'D_USER')]) {
     //             script {
     //                 def remote = [:]
@@ -168,7 +167,7 @@ pipeline {
     //                 remote.password = PASSWORD
     //                 remote.allowAnyHosts = true
 
-    //                 sshCommand remote: remote, command: "cat .env"
+    //                 
     //             }
     //         }
     //     }
