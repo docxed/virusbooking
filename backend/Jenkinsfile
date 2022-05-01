@@ -122,9 +122,6 @@ pipeline {
                         // Remove Local Image
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml rm backend"
                         
-                        // Logout
-                        sshCommand remote: remote, command: "docker logout"
-                        
                     }
                 }
             }
@@ -151,6 +148,9 @@ pipeline {
                         
                         sshRemove remote: remote, path: "virusbooking"
                         sshRemove remote: remote, path: ".env"
+
+                        // Logout
+                        sshCommand remote: remote, command: "docker logout"
                     }
                 }
             }
