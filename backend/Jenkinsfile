@@ -84,7 +84,7 @@ pipeline {
                         remote.allowAnyHosts = true
 
                         // Clear
-                        sshCommand remote: remote, command: "rm -rf virusbooking && rm -rf .env"
+                        sshCommand remote: remote, command: "ls"
                     }
                 }
             }
