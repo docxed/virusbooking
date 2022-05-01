@@ -1,11 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Clean up') {
-            steps {
-                cleanWs()
-            }
-        }
         stage('Pull code') {
             steps {
                 checkout scm
@@ -169,10 +164,9 @@ pipeline {
                     remote.password = PASSWORD
                     remote.allowAnyHosts = true
 
-                    sshCommand remote: remote, command: "rm -rf virusbooking && rm -rf .env"
+                    sshCommand remote: remote, command: "cat .env"
                 }
             }
-            cleanWs()
         }
     }
 }
