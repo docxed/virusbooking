@@ -141,12 +141,12 @@ pipeline {
                         remote.allowAnyHosts = true
 
                         try {
-                            
-                            // Pull
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
 
                             // Down
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
+                            
+                            // Pull
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml pull backend"
 
                             // Up
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
