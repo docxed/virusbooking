@@ -122,6 +122,8 @@ pipeline {
                         // Remove Local Image
                         sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml rm backend"
                         
+                        // Logout
+                        sshCommand remote: remote, command: "docker logout"
                     }
                 }
             }
@@ -149,8 +151,7 @@ pipeline {
                         // Clear files
                         sshCommand remote: remote, command: "rm -rf virusbooking && rm -rf .env"
 
-                        // Logout
-                        sshCommand remote: remote, command: "docker logout"
+                        
                         sshCommand remote: remote, command: "curl localhost:1311"
 
                     }
