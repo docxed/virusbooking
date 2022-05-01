@@ -151,8 +151,9 @@ pipeline {
                         // Clear files
                         sshCommand remote: remote, command: "rm -rf virusbooking && rm -rf .env"
 
-                        
-                        sshCommand remote: remote, command: "curl localhost:1311"
+                        sshCommand remote: remote, command: "docker images"
+                        sshCommand remote: remote, command: "docker ps"
+
 
                     }
                 }
