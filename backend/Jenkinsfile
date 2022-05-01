@@ -150,12 +150,12 @@ pipeline {
 
                             // Up
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
-                            timeout(time: 20, unit: 'SECONDS')
                         }  catch (err) {
                             echo "Error: ${err.message}"
                             echo "Error: ${err.stack}"
                         } finally {
 
+                            timeout(time: 20, unit: 'SECONDS')
                             // Clear files
                             sshRemove remote: remote, path: ".env"
                             sshRemove remote: remote, path: "virusbooking"
