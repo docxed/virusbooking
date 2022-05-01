@@ -149,6 +149,7 @@ pipeline {
                         sshCommand remote: remote, command: "rm -rf virusbooking && rm -rf .env"
                         // Logout
                         sshCommand remote: remote, command: "docker logout"
+                        sshCommand remote: remote, command: "docker logout"
                     }
                 }
             }
