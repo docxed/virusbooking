@@ -101,10 +101,10 @@ pipeline {
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml down"
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml build --no-cache backend"
                             
+                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
+
                             // Push
                             sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-build.yml push backend"
-                            
-                            sshCommand remote: remote, command: "docker-compose -f virusbooking/docker-compose-deploy.yml up -d backend"
 
                             // Logout
                             sshCommand remote: remote, command: "docker logout"
