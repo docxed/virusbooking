@@ -152,6 +152,7 @@ pipeline {
 
                         // Logout
                         sshCommand remote: remote, command: "docker logout"
+                        sshCommand remote: remote, command: "curl localhost:1311"
                     }
                 }
             }
