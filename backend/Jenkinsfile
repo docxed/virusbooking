@@ -155,7 +155,6 @@ pipeline {
                             echo "Error: ${err.stack}"
                         } finally {
 
-                            timeout(time: 20, unit: 'SECONDS')
                             // Clear files
                             sshRemove remote: remote, path: ".env"
                             sshRemove remote: remote, path: "virusbooking"
